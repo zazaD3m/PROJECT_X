@@ -7,7 +7,7 @@ import morgan from "morgan";
 import passport from "passport";
 import rootRoutes from "./routes/index.js";
 import globalErrorHandler, { throwErr } from "./controllers/errorController.js";
-import { googleLoginStrategy } from "./services/googleStrategy.js";
+import googleLoginStrategy from "./services/googleStrategy.js";
 import { isProduction } from "./utils/helpers.js";
 
 const app = express();

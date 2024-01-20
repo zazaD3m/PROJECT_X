@@ -1,4 +1,4 @@
-import { isProduction } from "./helpers";
+import { isProduction } from "./helpers.js";
 
 export const CLIENT_URL = isProduction
   ? process.env.CLIENT_URL_PROD
