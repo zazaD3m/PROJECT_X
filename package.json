@@ -1,0 +1,19 @@
+{
+  "name": "project_x",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server/src/server.js",
+  "type": "module",
+  "scripts": {
+    "server": "npm run dev --prefix server",
+    "client": "npm run dev --prefix client",
+    "admin": "npm run dev --prefix admin",
+    "server-client": "npm run dev-client --prefix server",
+    "server-admin": "npm run dev-admin --prefix server",
+    "server-all": "npm run dev-all --prefix server"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}

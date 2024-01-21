@@ -1,14 +1,17 @@
 {
-  "name": "api",
+  "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "server": "nodemon server.js",
-    "start": "node server.js",
-    "client": "npm run dev --prefix frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client\" "
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "client": "npm run dev --prefix ../client",
+    "admin": "npm run dev --prefix ../admin",
+    "dev-client": "concurrently \"npm run dev\" \"npm run client\" ",
+    "dev-admin": "concurrently \"npm run dev\" \"npm run admin\" ",
+    "dev-all": "concurrently \"npm run dev\" \"npm run client\" \"npm run admin\" "
   },
   "author": "",
   "license": "ISC",
