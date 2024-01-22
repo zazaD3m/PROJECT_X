@@ -35,7 +35,7 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
     }
   );
 
-  const user = await User.findById(userId).lean();
+  const user = await User.findById(userId);
 
   if (!user) {
     throwErr("User not found, try again.", 404);
@@ -44,6 +44,14 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
   req.user = user;
   next();
 });
+
+export const isAdmin = (req, res, next) => {
+  const { role } = req.user;
+  if (role !== "admin") {
+    throw new CustomError("Forbidden", 403);
+  }
+  next();
+};
 
 export const checkGoogleAuth = asyncHandler(async (req, res, next) => {
   let token;

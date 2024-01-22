@@ -1,11 +1,41 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, model, ObjectId } from "mongoose";
 import bcrypt from "bcryptjs";
 
-const userSchema = mongoose.Schema(
+const userSchema = new Schema(
   {
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: false },
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    phoneNumber: {
+      type: String,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    address: { type: String },
+    role: {
+      type: String,
+      default: "user",
+    },
+    isBlocked: {
+      type: Boolean,
+      default: false,
+    },
+    cart: [{ type: ObjectId, ref: "Product" }],
+    wishlist: [{ type: ObjectId, ref: "Product" }],
+    // passwordChangedAt: Date,
+    // passwordResetToken: String,
+    // passwordResetExpires: Date,
   },
   {
     timestamps: true,
@@ -13,9 +43,6 @@ const userSchema = mongoose.Schema(
 );
 
 userSchema.pre("save", async function (next) {
-  // when User.save() happens we check if password was modified or it is a new user
-  // if User was modified but password stayed the same we just go to next middleware
-  // else we crypt password and save to db
   if (!this.isModified("password")) {
     next();
   }
@@ -24,7 +51,6 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-// checks if password that user entered is matched with password saved in db
 userSchema.methods.matchPassword = async function (enteredPassword) {
   if (!this.password) {
     return null;
@@ -32,6 +58,6 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-const User = mongoose.model("User", userSchema);
+const User = model("User", userSchema, "users");
 
 export default User;

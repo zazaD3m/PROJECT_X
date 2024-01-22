@@ -2,7 +2,7 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import User from "../models/userModel.js";
 import { API_URL } from "../utils/constants.js";
 
-export default () =>
+const googleStrategy = () =>
   new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
@@ -30,3 +30,4 @@ export default () =>
   );
 
 // The done function is part of the Passport.js callback and is used to indicate the completion of the authentication process. The first argument (null in this case) is reserved for an error, and the second argument (token) is what will be attached to req.user.
+passport.use(googleStrategy);

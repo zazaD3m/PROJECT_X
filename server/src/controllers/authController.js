@@ -9,37 +9,31 @@ import {
   generateGoogleToken,
   generateAccessToken,
 } from "../services/jwt.js";
+import { formatAdminInfo, formatUserInfo } from "../utils/helpers.js";
 
-// GOOGLE AUTH START
+// @desc    Register a new user
+// route    POST /api/auth/register
+// @access  Public //
+export const registerUser = asyncHandler(async (req, res) => {
+  const inputData = req.body;
 
-// @desc    Redirect to client google auth route
-// route    GET /api/auth/google/redirect
-// @access  Public // don't need to be logged in to access
-export const googleLoginCallback = asyncHandler(async (req, res) => {
-  const { id } = req.user;
-  generateGoogleToken(res, id);
-  return res.redirect(`${CLIENT_URL}/auth/google/getuser`);
-});
+  const newUser = await User.create(inputData);
 
-// @desc    Auth user/set token
-// route    GET /api/auth/google/getuser
-// @access  Public // don't need to be logged in to access
-export const googleGetUser = asyncHandler(async (req, res) => {
-  // Gets user data from checkGoogleAuth middleware
-  const { name, email, _id } = req.user;
-
-  if (!name || !email || !_id) {
+  if (!newUser) {
     throwErr("Internal server error", 500);
   }
+
+  const { _id } = newUser;
 
   generateRefreshToken(res, _id);
   const accessToken = generateAccessToken(_id);
 
-  return res.status(201).json({ accessToken, userInfo: { name, email } });
-});
-// GOOGLE AUTH END
+  const formatedUser = formatUserInfo(newUser, accessToken);
 
-// @desc    Auth user/set token
+  return res.status(201).json(formatedUser);
+});
+
+// @desc    login user/set token
 // route    POST /api/auth/login
 // @access  Public // don't need to be logged in to access
 export const loginUser = asyncHandler(async (req, res) => {
@@ -47,16 +41,82 @@ export const loginUser = asyncHandler(async (req, res) => {
 
   const foundUser = await User.findOne({ email }).exec();
 
-  if (foundUser && (await foundUser.matchPassword(password))) {
-    generateRefreshToken(res, foundUser._id);
-    const accessToken = generateAccessToken(foundUser._id);
-    return res.status(201).json({
-      accessToken,
-      userInfo: { name: foundUser.name, email: foundUser.email },
-    });
-  } else {
+  if (!(foundUser && (await foundUser.matchPassword(password)))) {
     throwErr("Unauthorized", 401);
   }
+
+  generateRefreshToken(res, foundUser._id);
+  const accessToken = generateAccessToken(foundUser._id);
+
+  const formatedUser = formatUserInfo(foundUser, accessToken);
+
+  return res.status(201).json(formatedUser);
+});
+
+// @desc    Login admin/set token
+// route    POST /api/auth/admin-login
+// @access  Public //
+export const loginAdmin = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  const foundUser = await User.findOne({ email }).exec();
+
+  if (!foundUser) {
+    throwErr("Unauthorized", 401);
+  }
+
+  if (!(await foundUser.matchPassword(password))) {
+    throwErr("Unauthorized", 401);
+  }
+
+  if (foundUser.role !== "admin") {
+    throwErr("Unauthorized", 401);
+  }
+
+  generateRefreshToken(res, foundUser._id);
+  const accessToken = generateAccessToken(foundUser._id);
+
+  const formatedUser = formatAdminInfo(foundUser, accessToken);
+
+  return res.status(201).json(formatedUser);
+});
+
+// @desc    Logout user
+// route    POST /api/auth/logout
+// @access  Public //
+export const logoutUser = asyncHandler(async (req, res) => {
+  clearRefreshToken(res);
+  return res.status(200).json({ message: "User logged out" });
+});
+
+// @desc    Update user profile
+// route    PUT /api/auth/update
+// @access  Private //
+export const updateUserProfile = asyncHandler(async (req, res) => {
+  const user = req.user;
+  const newUser = req.body;
+
+  if (!(await user.matchPassword(newUser.password))) {
+    throwErr("Wrong password", 400);
+  }
+
+  if (newUser.newPassword) {
+    user.password = newUser.newPassword;
+    delete newUser.newPassword;
+    delete newUser.password;
+  }
+
+  for (const key in newUser) {
+    if (user[key] !== newUser[key]) {
+      user[key] = newUser[key];
+    }
+  }
+
+  const updatedUser = await user.save();
+
+  const formatedUser = formatUserInfo(updatedUser);
+
+  return res.status(201).json(formatedUser);
 });
 
 // @desc    Refresh accessToken
@@ -96,67 +156,36 @@ export const refresh = asyncHandler(async (req, res) => {
 // @access Private
 export const getMe = asyncHandler(async (req, res) => {
   const userInfo = req.user;
-  return res
-    .status(200)
-    .json({ userInfo: { name: userInfo.name, email: userInfo.email } });
+  const formatedUser = formatUserInfo(userInfo);
+
+  return res.status(200).json(formatedUser);
 });
 
-// @desc    Register a new user
-// route    POST /api/auth/register
-// @access  Public //
-export const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+// GOOGLE AUTH START
 
-  const userExists = await User.findOne({ email }).lean();
+// @desc    Redirect to client google auth route
+// route    GET /api/auth/google/redirect
+// @access  Public // don't need to be logged in to access
+export const googleLoginCallback = asyncHandler(async (req, res) => {
+  const { id } = req.user;
+  generateGoogleToken(res, id);
+  return res.redirect(`${CLIENT_URL}/auth/google/getuser`);
+});
 
-  if (userExists) {
-    throwErr("User already exists", 409);
-  }
+// @desc    Auth user/set token
+// route    GET /api/auth/google/getuser
+// @access  Public // don't need to be logged in to access
+export const googleGetUser = asyncHandler(async (req, res) => {
+  // Gets user data from checkGoogleAuth middleware
+  const { name, email, _id } = req.user;
 
-  const newUser = await User.create({
-    name,
-    email,
-    password,
-  });
-
-  if (!newUser) {
+  if (!name || !email || !_id) {
     throwErr("Internal server error", 500);
   }
-
-  const { _id } = newUser;
 
   generateRefreshToken(res, _id);
   const accessToken = generateAccessToken(_id);
 
   return res.status(201).json({ accessToken, userInfo: { name, email } });
 });
-
-// @desc    Logout user
-// route    POST /api/auth/logout
-// @access  Public //
-export const logoutUser = asyncHandler(async (req, res) => {
-  const cookies = req.cookies;
-
-  clearRefreshToken(res);
-
-  return res.status(200).json({ message: "User logged out" });
-});
-
-// @desc    Update user profile
-// route    PUT /api/auth/updateuser
-// @access  Private //
-export const updateUserProfile = asyncHandler(async (req, res) => {
-  const user = { ...req.user };
-
-  if (req.body.name) {
-    user.name = req.body.name;
-  }
-  if (req.body.password) {
-    user.password = req.body.password;
-  }
-
-  const updateUser = await User.findByIdAndUpdate(req.user._id, user);
-  return res
-    .status(201)
-    .json({ userInfo: { name: updateUser.name, email: updateUser.email } });
-});
+// GOOGLE AUTH END

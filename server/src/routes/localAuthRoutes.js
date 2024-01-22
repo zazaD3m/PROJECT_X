@@ -6,19 +6,36 @@ import {
   refresh,
   registerUser,
   updateUserProfile,
+  loginAdmin,
 } from "../controllers/authController.js";
 import { authenticateUser } from "../middleware/authMiddleware.js";
+import {
+  loginValidator,
+  registerValidator,
+  updateUserValidator,
+} from "../validations/authValidation.js";
+import {
+  validate,
+  validateRegister,
+} from "../middleware/validationMiddleware.js";
 
 // /api/auth
 const router = Router();
 
-router.post("/register", registerUser);
+router.post("/register", [registerValidator, validateRegister], registerUser);
 
-router.post("/login", loginUser);
+router.post("/login", [loginValidator, validate], loginUser);
+
+router.post("/admin-login", [loginValidator, validate], loginAdmin);
 
 router.post("/logout", logoutUser);
 
-router.put("/update", authenticateUser, updateUserProfile);
+router.put(
+  "/update",
+  authenticateUser,
+  [updateUserValidator, validate],
+  updateUserProfile
+);
 
 // @desc - give user new access token
 router.get("/refresh-token", refresh);

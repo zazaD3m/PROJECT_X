@@ -7,7 +7,7 @@ import morgan from "morgan";
 import passport from "passport";
 import rootRoutes from "./routes/index.js";
 import globalErrorHandler, { throwErr } from "./controllers/errorController.js";
-import googleLoginStrategy from "./services/googleStrategy.js";
+// import googleLoginStrategy from "./services/googleStrategy.js";
 import { isProduction } from "./utils/helpers.js";
 
 const app = express();
@@ -15,10 +15,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
 app.use(cookieParser());
 app.use(morgan("dev"));
 
-passport.use(googleLoginStrategy);
+// passport.use(googleLoginStrategy);
 
 app.use("/api", rootRoutes);
 
