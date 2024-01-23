@@ -62,15 +62,15 @@ export const loginAdmin = asyncHandler(async (req, res) => {
   const foundUser = await User.findOne({ email }).exec();
 
   if (!foundUser) {
-    throwErr("Unauthorized", 401);
+    throwErr("Wrong email address or password", 401);
   }
 
   if (!(await foundUser.matchPassword(password))) {
-    throwErr("Unauthorized", 401);
+    throwErr("Wrong email address or password", 401);
   }
 
   if (foundUser.role !== "admin") {
-    throwErr("Unauthorized", 401);
+    throwErr("Wrong email address or password", 401);
   }
 
   generateRefreshToken(res, foundUser._id);

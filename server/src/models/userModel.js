@@ -1,5 +1,7 @@
-import mongoose, { Schema, model, ObjectId } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 import bcrypt from "bcryptjs";
+
+const { ObjectId } = mongoose.Schema.Types;
 
 const userSchema = new Schema(
   {
@@ -31,7 +33,7 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    cart: [{ type: ObjectId, ref: "Product" }],
+    cart: [],
     wishlist: [{ type: ObjectId, ref: "Product" }],
     // passwordChangedAt: Date,
     // passwordResetToken: String,

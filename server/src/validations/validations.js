@@ -1,5 +1,6 @@
 import { isObjectIdOrHexString } from "mongoose";
-import { CustomError } from "../utils/CustomError.js";
+import { body, checkExact } from "express-validator";
+import { throwErr } from "../controllers/errorController.js";
 
 export const validateObjectId = (id) => {
   let isValid;
@@ -10,6 +11,11 @@ export const validateObjectId = (id) => {
   }
 
   if (!isValid) {
-    throw new CustomError("Bad request", 400);
+    throwErr("Bad request", 400);
   }
 };
+
+export const brandValidator = [
+  body("title").notEmpty().trim().escape(),
+  checkExact(),
+];

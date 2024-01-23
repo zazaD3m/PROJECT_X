@@ -1,8 +1,8 @@
-import expressAsyncHandler from "express-async-handler";
+import asyncHandler from "express-async-handler";
 import { validationResult } from "express-validator";
 import { CustomError } from "../utils/CustomError.js";
 
-export const validate = expressAsyncHandler(async (req, res, next) => {
+export const validate = asyncHandler(async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     console.log(errors.array());
@@ -12,7 +12,7 @@ export const validate = expressAsyncHandler(async (req, res, next) => {
   next();
 });
 
-export const validateRegister = expressAsyncHandler(async (req, res, next) => {
+export const validateRegister = asyncHandler(async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     console.log(errors.array());

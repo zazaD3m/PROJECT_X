@@ -48,7 +48,7 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 export const isAdmin = (req, res, next) => {
   const { role } = req.user;
   if (role !== "admin") {
-    throw new CustomError("Forbidden", 403);
+    throwErr("Forbidden", 403);
   }
   next();
 };

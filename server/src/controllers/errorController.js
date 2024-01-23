@@ -15,7 +15,8 @@ const castErrorHandler = (err) => {
 };
 
 const duplicateKeyErrorHandler = (err) => {
-  return new CustomError("Email already in use", 409);
+  if (err.keyValue.email) return new CustomError("Email already in use", 409);
+  return new CustomError("Duplicate input", 409);
 };
 
 const prodErrors = (res, error) => {

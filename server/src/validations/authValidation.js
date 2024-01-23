@@ -1,6 +1,6 @@
 import { body, checkExact } from "express-validator";
 import User from "../models/userModel.js";
-import expressAsyncHandler from "express-async-handler";
+import asyncHandler from "express-async-handler";
 
 export const loginValidator = [
   body("email").notEmpty().trim().escape().isEmail().normalizeEmail(),
@@ -16,7 +16,7 @@ export const registerValidator = [
     .isEmail()
     .normalizeEmail()
     .custom(
-      expressAsyncHandler(async (value) => {
+      asyncHandler(async (value) => {
         const emailIsTaken = await User.findOne({ email: value });
         if (emailIsTaken) {
           throw new Error("Email is already taken");

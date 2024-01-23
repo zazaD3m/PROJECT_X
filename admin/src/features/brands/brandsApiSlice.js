@@ -1,7 +1,7 @@
 import { apiSlice } from "../api/apiSlice";
 import { clearCredentials, setCredentials } from "./authSlice";
 import { clearUser, setUser } from "../user/userSlice";
-import { AUTH_URL } from "../../lib/constants";
+import { BRANDS_URL } from "../../lib/constants";
 
 // this will inject endpoints into main apiSlice
 const authApiSlice = apiSlice.injectEndpoints({
