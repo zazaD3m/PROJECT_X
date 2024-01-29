@@ -7,30 +7,30 @@ import {
   ContainerHeader,
   ContainerTitle,
 } from "../../components/ui/container";
-import { useGetBrandByIdQuery } from "../../features/brands/brandsApiSlice";
-import EditBrandForm from "./components/EditBrandForm";
+import EditColorForm from "./components/EditColorForm";
+import { useGetColorByIdQuery } from "../../features/colors/colorsApiSlice";
 import Loader from "../../components/Loader";
 
-const EditBrand = () => {
-  const { brandId } = useParams();
+const EditColor = () => {
+  const { colorId } = useParams();
 
-  const { data: brand, isSuccess, isLoading } = useGetBrandByIdQuery(brandId);
+  const { data: color, isSuccess, isLoading } = useGetColorByIdQuery(colorId);
 
   return (
     <Container>
       <ContainerHeader>
         <ContainerTitle>
-          Edit Brand{isSuccess ? `: ${brand.brandName}` : null}
+          Edit Color{isSuccess ? `: ${color.colorName}` : null}
         </ContainerTitle>
         <Button asChild variant="outline" size="lg">
-          <Link to="/catalog/brands">All Brands</Link>
+          <Link to="/catalog/colors">All Colors</Link>
         </Button>
       </ContainerHeader>
       <ContainerContent>
         {isLoading && <Loader />}
-        {isSuccess && <EditBrandForm brand={brand} />}
+        {isSuccess && <EditColorForm color={color} />}
       </ContainerContent>
     </Container>
   );
 };
-export default EditBrand;
+export default EditColor;

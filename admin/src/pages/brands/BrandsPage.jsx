@@ -25,10 +25,6 @@ const BrandsPage = () => {
   const { isSuccess } = useGetBrandsQuery("getBrands");
 
   const data = useSelector(selectAllBrands);
-  const brandsData = data.map((el) => ({
-    id: el._id,
-    brand: el.brandName,
-  }));
 
   return (
     <Container>
@@ -41,7 +37,7 @@ const BrandsPage = () => {
       <ContainerContent>
         {isSuccess ? (
           <DynamicTable
-            data={brandsData}
+            data={data}
             filters={filters}
             columns={columns}
             defaultSort={defaultSort}

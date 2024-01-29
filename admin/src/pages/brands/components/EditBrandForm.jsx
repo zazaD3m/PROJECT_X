@@ -21,7 +21,7 @@ import {
 import Loader from "../../../components/Loader";
 import { useState } from "react";
 import DeleteConfirmationDialog from "../../../components/DeleteConfirmationDialog";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const brandSchema = yup.object({
   brandName: yup
@@ -41,30 +41,50 @@ const EditBrandForm = ({ brand = "" }) => {
 
   const form = useForm({
     defaultValues: {
-      brandName: brand.brandName,
+      brandName: brand.brandName || "",
     },
     resolver: yupResolver(brandSchema),
     mode: "onSubmit",
   });
 
-  const { handleSubmit, control, formState } = form;
+  const { handleSubmit, control, formState, setFocus, setError } = form;
 
   const { isDirty, isValid } = formState;
 
   async function handleBrandUpdate(data) {
     const { brandName } = data;
-    await updateBrand({ brandId: brand._id, brandName });
+    try {
+      const updatedBrand = await updateBrand({
+        brandId: brand._id,
+        brandName,
+      }).unwrap();
+      toast({
+        variant: "success",
+        title: `brand ${brandName} has been succesfully changed to ${updatedBrand.brandName}`,
+      });
+    } catch (err) {
+      if (err.status === 409) {
+        toast({
+          variant: "destructive",
+          title: `${brandName}, already exists`,
+        });
+        setError("brandName", {
+          type: "custom",
+          message: `Brand ${brandName}, already exists!`,
+        });
+        setFocus("brandName");
+      }
+    }
   }
 
   async function handleBrandDelete() {
     try {
-      await deleteBrand({ brandId: brand._id });
+      await deleteBrand({ brandId: brand._id }).unwrap();
       navigate("/catalog/brands");
     } catch (err) {
       toast({
         variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "There was a problem with your request.",
+        title: "Something went wrong, Try again!",
       });
     }
   }
@@ -89,9 +109,6 @@ const EditBrandForm = ({ brand = "" }) => {
             />
           </CardContent>
           <CardFooter className="flex-col gap-y-4">
-            {isError && (
-              <div className="text-destructive">{error.data.message}</div>
-            )}
             {isLoading || isDelLoading ? (
               <Loader />
             ) : (

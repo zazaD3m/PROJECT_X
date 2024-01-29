@@ -8,13 +8,13 @@ import {
 } from "../../components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
 
-export const brandFilters = ["brand"];
-export const brandDefaultSort = [{ id: "brand", asc: true }];
+export const brandFilters = ["brandName"];
+export const brandDefaultSort = [{ id: "brandName", asc: true }];
 export const brandAddNewLink = "addbrand";
 
 export const brandColumns = [
   {
-    accessorKey: "brand",
+    accessorKey: "brandName",
     header: ({ column }) => {
       return (
         <Button
@@ -28,14 +28,16 @@ export const brandColumns = [
       );
     },
     cell: ({ row }) => (
-      <div className="px-2 text-base lowercase">{row.getValue("brand")}</div>
+      <div className="px-2 text-base lowercase">
+        {row.getValue("brandName")}
+      </div>
     ),
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const brandId = row.original.id;
+      const brandId = row.original._id;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
