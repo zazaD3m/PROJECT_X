@@ -20,4 +20,10 @@ export const brandValidator = [
   checkExact(),
 ];
 
+export const colorValidator = [
+  body("colorName").notEmpty().trim().escape().toLowerCase(),
+  body("hexValue").notEmpty().trim().escape(),
+  checkExact(),
+];
+
 export const paramIdValidator = [param("id").notEmpty().trim().escape()];

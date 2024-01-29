@@ -10,12 +10,15 @@ import { lazy, Suspense } from "react";
 import LoginPage from "./pages/auth/LoginPage";
 const DashboardPage = lazy(() => import("./pages/dashboard/DashboardPage"));
 const BrandsPage = lazy(() => import("./pages/brands/BrandsPage"));
+const ColorsPage = lazy(() => import("./pages/colors/ColorsPage"));
 // PAGES END
 
-// BRANDS START
+// CATALOG COMPONENTS START
 import AddBrand from "./pages/brands/AddBrand";
 import EditBrand from "./pages/brands/EditBrand";
-// BRANDS END
+import AddColor from "./pages/colors/AddColor";
+import EditColor from "./pages/colors/EditColor";
+// CATALOG COMPONENTS END
 
 import RequireAuth from "./components/RequireAuth";
 import Loader from "./components/Loader";
@@ -49,6 +52,18 @@ const router = createBrowserRouter(
                 />
                 <Route path="addbrand" element={<AddBrand />} />
                 <Route path="editbrand/:brandId" element={<EditBrand />} />
+              </Route>
+              <Route path="colors">
+                <Route
+                  index
+                  element={
+                    <Suspense fallback={<Loader />}>
+                      <ColorsPage />
+                    </Suspense>
+                  }
+                />
+                <Route path="addcolor" element={<AddColor />} />
+                <Route path="editcolor/:colorId" element={<EditColor />} />
               </Route>
             </Route>
           </Route>

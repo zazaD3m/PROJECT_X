@@ -11,7 +11,7 @@ export const createBrand = asyncHandler(async (req, res) => {
 
   const newBrand = await Brand.create({ brandName });
 
-  if (!newBrand) throw new CustomError("Server error", 500);
+  if (!newBrand) throwErr("Server error", 500);
 
   return res.status(201).json(newBrand);
 });
