@@ -1,5 +1,5 @@
 import { isObjectIdOrHexString } from "mongoose";
-import { body, checkExact } from "express-validator";
+import { body, checkExact, param } from "express-validator";
 import { throwErr } from "../controllers/errorController.js";
 
 export const validateObjectId = (id) => {
@@ -16,6 +16,8 @@ export const validateObjectId = (id) => {
 };
 
 export const brandValidator = [
-  body("title").notEmpty().trim().escape(),
+  body("brandName").notEmpty().trim().escape().toLowerCase(),
   checkExact(),
 ];
+
+export const paramIdValidator = [param("id").notEmpty().trim().escape()];

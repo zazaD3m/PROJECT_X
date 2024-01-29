@@ -2,7 +2,7 @@ import mongoose, { Schema, model } from "mongoose";
 
 const brandSchema = new Schema(
   {
-    title: {
+    brandName: {
       type: String,
       required: true,
       unique: true,

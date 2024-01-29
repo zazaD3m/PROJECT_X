@@ -1,133 +1,106 @@
+import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 import { apiSlice } from "../api/apiSlice";
-import { clearCredentials, setCredentials } from "./authSlice";
-import { clearUser, setUser } from "../user/userSlice";
+
 import { BRANDS_URL } from "../../lib/constants";
 
-// this will inject endpoints into main apiSlice
-const authApiSlice = apiSlice.injectEndpoints({
+const brandsAdapter = createEntityAdapter({
+  selectId: (brand) => brand._id,
+  sortComparer: (a, b) => a.brandName.localeCompare(b.brandName),
+});
+
+const initialState = brandsAdapter.getInitialState();
+
+const brandsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation({
-      query: (credentials) => ({
-        url: `${AUTH_URL}/login`,
-        method: "POST",
-        body: { ...credentials },
-      }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const res = await queryFulfilled;
-          const { accessToken, userInfo } = res.data;
-
-          dispatch(setCredentials({ accessToken }));
-          dispatch(setUser({ userInfo }));
-        } catch (err) {
-          console.log("devERR:", err);
-          dispatch(clearCredentials());
-          dispatch(clearUser());
-        }
+    getBrands: builder.query({
+      query: () => `${BRANDS_URL}`,
+      transformResponse: (responseData) => {
+        return brandsAdapter.setAll(initialState, responseData);
       },
+      providesTags: (result, error, arg) =>
+        result
+          ? [
+              { type: "Brand", id: "LIST" },
+              ...result.ids.map((id) => ({ type: "Brand", id })),
+            ]
+          : { type: "Brand", id: "LIST" },
     }),
-    adminLogin: builder.mutation({
-      query: (credentials) => ({
-        url: `${AUTH_URL}/admin-login`,
-        method: "POST",
-        body: { ...credentials },
-      }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const res = await queryFulfilled;
-          const { accessToken, userInfo } = res.data;
-
-          dispatch(setCredentials({ accessToken }));
-          dispatch(setUser({ userInfo }));
-        } catch (err) {
-          console.log("devERR:", err);
-          dispatch(clearCredentials());
-          dispatch(clearUser());
-        }
-      },
+    getBrandById: builder.query({
+      query: (brandId) => `${BRANDS_URL}/brand/${brandId}`,
     }),
-    logout: builder.mutation({
-      query: () => ({
-        url: `${AUTH_URL}/logout`,
+    createBrand: builder.mutation({
+      query: ({ brandName }) => ({
+        url: `${BRANDS_URL}`,
         method: "POST",
+        body: { brandName },
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      invalidatesTags: [{ type: "Brand", id: "LIST" }],
+    }),
+    updateBrand: builder.mutation({
+      query: ({ brandId, brandName }) => ({
+        url: `${BRANDS_URL}/brand/${brandId}`,
+        method: "PUT",
+        body: { brandName },
+      }),
+      async onQueryStarted(
+        { brandId, brandName },
+        { dispatch, queryFulfilled },
+      ) {
+        const putResult = dispatch(
+          brandsApiSlice.util.updateQueryData(
+            "getBrandById",
+            brandId,
+            (draft) => {
+              draft.brandName = brandName;
+            },
+          ),
+        );
         try {
           await queryFulfilled;
-
-          dispatch(clearCredentials());
-          dispatch(clearUser());
-          dispatch(apiSlice.util.resetApiState());
         } catch (err) {
-          console.log("devERR:", err);
-          dispatch(clearCredentials());
-          dispatch(clearUser());
-          dispatch(apiSlice.util.resetApiState());
+          putResult.undo();
         }
       },
+      invalidatesTags: (result, error, arg) => [
+        { type: "Brand", id: arg.brandId },
+      ],
     }),
-    register: builder.mutation({
-      query: (credentials) => ({
-        url: `${AUTH_URL}/register`,
-        method: "POST",
-        body: { ...credentials },
+    deleteBrand: builder.mutation({
+      query: ({ brandId }) => ({
+        url: `${BRANDS_URL}/brand/${brandId}`,
+        method: "DELETE",
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const res = await queryFulfilled;
-          const { accessToken, userInfo } = res.data;
-
-          dispatch(setCredentials({ accessToken }));
-          dispatch(setUser({ userInfo }));
-        } catch (err) {
-          console.log("devErr:", err);
-          dispatch(clearCredentials());
-          dispatch(clearUser());
-        }
-      },
-    }),
-    updateUser: builder.mutation({
-      query: (credentials) => ({
-        url: `${AUTH_URL}/update`,
-        method: "PUT",
-        body: { ...credentials },
-      }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const res = await queryFulfilled;
-          const { userInfo } = res.data;
-          dispatch(setUser({ userInfo }));
-        } catch (err) {
-          console.log("devErr:", err);
-        }
-      },
-    }),
-    getMe: builder.mutation({
-      query: () => ({
-        url: `${AUTH_URL}/me`,
-        method: "GET",
-      }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const res = await queryFulfilled;
-          const { userInfo } = res.data;
-
-          dispatch(setUser({ userInfo }));
-        } catch (err) {
-          dispatch(clearCredentials());
-          dispatch(clearUser());
-          console.log("devERR:", err);
-        }
-      },
+      invalidatesTags: (result, error, arg) => [
+        { type: "Brand", id: arg.brandId },
+      ],
     }),
   }),
 });
 
 export const {
-  useLoginMutation,
-  useAdminLoginMutation,
-  useLogoutMutation,
-  useRegisterMutation,
-  useGetMeMutation,
-  useUpdateUserMutation,
-} = authApiSlice;
+  useCreateBrandMutation,
+  useUpdateBrandMutation,
+  useGetBrandsQuery,
+  useGetBrandByIdQuery,
+  useDeleteBrandMutation,
+} = brandsApiSlice;
+
+export const selectBrandsResult =
+  brandsApiSlice.endpoints.getBrands.select("getBrands");
+
+export const selectBrandsData = createSelector(
+  selectBrandsResult,
+  (brandsResult) => brandsResult.data, // normalized state object with ids & entities
+);
+
+export const {
+  selectAll: selectAllBrands, // maps over ids array, and returns sorted array of entities
+  selectById: selectBrandById, // needs state and entity ID , returns entity with that ID
+  selectEntities: selectBrandEntities, // returns entities lookup table
+  selectIds: selectBrandIds, // selects array of ids
+  selectTotal: selectTotalBrands, // returns total num of entities stored in state
+
+  // Pass in a selector that returns the brands slice of state
+} = brandsAdapter.getSelectors(
+  (state) => selectBrandsData(state) ?? initialState,
+);

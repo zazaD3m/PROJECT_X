@@ -40,6 +40,9 @@ const globalErrorHandler = (error, req, res, next) => {
   error.status = error.status || "error";
 
   if (!isProduction) {
+    if (error.code === 11000) {
+      error = duplicateKeyErrorHandler(error);
+    }
     devErrors(res, error);
   } else if (isProduction) {
     if (error.name === "CastError") {

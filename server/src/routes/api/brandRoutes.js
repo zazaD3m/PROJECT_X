@@ -6,7 +6,10 @@ import {
   deleteBrand,
   getBrand,
 } from "../../controllers/brandController.js";
-import { brandValidator } from "../../validations/validations.js";
+import {
+  brandValidator,
+  paramIdValidator,
+} from "../../validations/validations.js";
 import { validate } from "../../middleware/validationMiddleware.js";
 
 const router = Router();
@@ -17,9 +20,9 @@ router
   .get(getAllBrands);
 
 router
-  .route("/brand/:brandId")
-  .put([brandValidator, validate], updateBrand)
-  .delete(deleteBrand)
-  .get(getBrand);
+  .route("/brand/:id")
+  .put([paramIdValidator, brandValidator, validate], updateBrand)
+  .delete([paramIdValidator, validate], deleteBrand)
+  .get([paramIdValidator, validate], getBrand);
 
 export default router;

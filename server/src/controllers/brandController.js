@@ -7,7 +7,9 @@ import { throwErr } from "./errorController.js";
 // @desc Create new brand
 // route POST /api/brands/
 export const createBrand = asyncHandler(async (req, res) => {
-  const newBrand = await Brand.create({ title: req.body.title });
+  const { brandName } = req.body;
+
+  const newBrand = await Brand.create({ brandName });
 
   if (!newBrand) throw new CustomError("Server error", 500);
 
@@ -27,12 +29,13 @@ export const getAllBrands = asyncHandler(async (req, res) => {
 // @desc Update brand
 // route PUT /api/brands/brand/:brandId
 export const updateBrand = asyncHandler(async (req, res) => {
-  const { brandId } = req.params;
+  const { id: brandId } = req.params;
+  const { brandName } = req.body;
   validateObjectId(brandId);
 
   const updatedBrand = await Brand.findByIdAndUpdate(
     brandId,
-    { title: req.body.title },
+    { brandName },
     {
       new: true,
     }
@@ -46,7 +49,7 @@ export const updateBrand = asyncHandler(async (req, res) => {
 // @desc Delete brand
 // route DELETE /api/brands/brand/:brandId
 export const deleteBrand = asyncHandler(async (req, res) => {
-  const { brandId } = req.params;
+  const { id: brandId } = req.params;
   validateObjectId(brandId);
 
   const deletedBrand = await Brand.findByIdAndDelete(brandId);
@@ -59,7 +62,7 @@ export const deleteBrand = asyncHandler(async (req, res) => {
 // @desc Get brand
 // route GET /api/brand/:brandId
 export const getBrand = asyncHandler(async (req, res) => {
-  const { brandId } = req.params;
+  const { id: brandId } = req.params;
   validateObjectId(brandId);
 
   const brand = await Brand.findById(brandId).lean();

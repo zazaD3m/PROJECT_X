@@ -30,10 +30,25 @@ export const registerValidator = [
     minNumbers: 0,
     minSymbols: 0,
   }),
-  body("firstName").notEmpty().trim().escape(),
-  body("lastName").optional({ values: "falsy" }).notEmpty().trim().escape(),
-  body("phoneNumber").optional({ values: "falsy" }).notEmpty().trim().escape(),
-  body("address").optional({ values: "falsy" }).notEmpty().trim().escape(),
+  body("firstName").notEmpty().trim().escape().toLowerCase(),
+  body("lastName")
+    .optional({ values: "falsy" })
+    .notEmpty()
+    .trim()
+    .escape()
+    .toLowerCase(),
+  body("phoneNumber")
+    .optional({ values: "falsy" })
+    .notEmpty()
+    .trim()
+    .escape()
+    .toLowerCase(),
+  body("address")
+    .optional({ values: "falsy" })
+    .notEmpty()
+    .trim()
+    .escape()
+    .toLowerCase(),
   checkExact(),
 ];
 
@@ -52,9 +67,24 @@ export const updateUserValidator = [
       minNumbers: 0,
       minSymbols: 0,
     }),
-  body("firstName").notEmpty().trim().escape(),
-  body("lastName").optional({ values: "falsy" }).notEmpty().trim().escape(),
-  body("phoneNumber").optional({ values: "falsy" }).notEmpty().trim().escape(),
-  body("address").optional({ values: "falsy" }).notEmpty().trim().escape(),
+  body("firstName").notEmpty().trim().escape().toLowerCase(),
+  body("lastName")
+    .optional({ values: "falsy" })
+    .notEmpty()
+    .trim()
+    .escape()
+    .toLowerCase(),
+  body("phoneNumber")
+    .optional({ values: "falsy" })
+    .notEmpty()
+    .trim()
+    .escape()
+    .toLowerCase(),
+  body("address")
+    .optional({ values: "falsy" })
+    .notEmpty()
+    .trim()
+    .escape()
+    .toLowerCase(),
   checkExact(),
 ];

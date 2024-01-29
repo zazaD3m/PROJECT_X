@@ -26,7 +26,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
     result.error.data.message === "accessToken expired"
   ) {
     const refreshResult = await baseQuery(
-      "/api/auth/refresh-token",
+      "/auth/refresh-token",
       api,
       extraOptions,
     );
@@ -46,7 +46,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 
 const apiSlice = createApi({
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["auth", "user"],
+  tagTypes: ["auth", "user", "Brand"],
   endpoints: (builder) => ({}),
 });
 
