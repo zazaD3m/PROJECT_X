@@ -8,14 +8,14 @@ import {
   ShoppingCart,
   User2,
 } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "../ui/accordion";
-import { SheetClose } from "../ui/sheet";
+} from "../../ui/accordion";
+import { SheetClose } from "../../ui/sheet";
 
 const navbarContent = [
   {

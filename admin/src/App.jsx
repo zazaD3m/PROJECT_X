@@ -22,7 +22,7 @@ import EditColor from "./pages/colors/EditColor";
 
 import RequireAuth from "./components/RequireAuth";
 import Loader from "./components/Loader";
-import RootLayout from "./components/RootLayout";
+import RootLayout from "./components/layout/RootLayout";
 import SyncUserInfo from "./components/SyncUserInfo";
 
 const router = createBrowserRouter(

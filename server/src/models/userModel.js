@@ -35,9 +35,9 @@ const userSchema = new Schema(
     },
     cart: [],
     wishlist: [{ type: ObjectId, ref: "Product" }],
-    // passwordChangedAt: Date,
-    // passwordResetToken: String,
-    // passwordResetExpires: Date,
+    passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
   },
   {
     timestamps: true,

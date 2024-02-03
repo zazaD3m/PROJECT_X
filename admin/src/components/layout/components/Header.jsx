@@ -1,15 +1,15 @@
 import { Menu, Search } from "lucide-react";
 
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
+import { Sheet, SheetContent, SheetTrigger } from "../../ui/sheet";
 import NavigationMenu from "./NavigationMenu";
-import ThemeModeToggle from "../ThemeModeToggle";
+import ThemeModeToggle from "../../ThemeModeToggle";
 
 const Header = () => {
   return (
-    <header className="flex h-12 w-full gap-x-8 border-b bg-background px-2 py-1 pr-4">
-      <div>
+    <header className="fixed left-0 right-0 top-0 z-20 flex h-14 items-center border-b bg-background px-4 ">
+      {/* <div>
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon">
@@ -22,7 +22,7 @@ const Header = () => {
             </SheetContent>
           </nav>
         </Sheet>
-      </div>
+      </div> */}
       <div className="flex w-full max-w-sm items-center space-x-2">
         <Input className="max-w-xs" type="text" placeholder="Search ..." />
         <Button variant="outline" size="icon" type="submit">
