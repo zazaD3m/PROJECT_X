@@ -8,6 +8,5 @@ import User from "../models/userModel.js";
 export const getAllUsers = asyncHandler(async (req, res) => {
   const users = await User.find();
   if (!users) throwErr("Internal Server Error", 500);
-  console.log(users);
   res.status(200).json(users);
 });

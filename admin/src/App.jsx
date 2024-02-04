@@ -24,6 +24,7 @@ import RequireAuth from "./components/RequireAuth";
 import Loader from "./components/Loader";
 import RootLayout from "./components/layout/RootLayout";
 import SyncUserInfo from "./components/SyncUserInfo";
+import CustomersPage from "./pages/customers/CustomersPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -37,6 +38,14 @@ const router = createBrowserRouter(
               element={
                 <Suspense fallback={<Loader />}>
                   <DashboardPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="customers"
+              element={
+                <Suspense fallback={<Loader />}>
+                  <CustomersPage />
                 </Suspense>
               }
             />
