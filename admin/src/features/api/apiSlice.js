@@ -20,9 +20,19 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
 
-  // Should only happen if API authMiddleware gets accessToken but it is timedout
   if (
-    result?.error?.status === 401 &&
+    result?.error &&
+    result.error.status === 403 &&
+    result.error.data.message === "Not admin"
+  ) {
+    api.dispatch(clearCredentials());
+    api.dispatch(clearUser());
+    api.abort();
+  }
+
+  if (
+    result?.error &&
+    result.error.status === 401 &&
     result.error.data.message === "accessToken expired"
   ) {
     const refreshResult = await baseQuery(
@@ -31,7 +41,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       extraOptions,
     );
 
-    if (refreshResult?.data) {
+    if (refreshResult.data) {
       api.dispatch(setCredentials({ ...refreshResult.data }));
       result = await baseQuery(args, api, extraOptions);
     } else {

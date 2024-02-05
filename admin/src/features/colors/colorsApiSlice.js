@@ -24,7 +24,7 @@ const colorsApiSlice = apiSlice.injectEndpoints({
               { type: "Color", id: "LIST" },
               ...result.ids.map((id) => ({ type: "Color", id })),
             ]
-          : { type: "Color", id: "LIST" },
+          : [{ type: "Color", id: "LIST" }],
     }),
     getColorById: builder.query({
       query: (colorId) => `${COLORS_URL}/color/${colorId}`,

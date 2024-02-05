@@ -3,6 +3,7 @@ import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
 import { throwErr } from "../controllers/errorController.js";
 import { isProduction } from "../utils/helpers.js";
+import { clearRefreshToken } from "../services/jwt.js";
 
 export const authenticateUser = asyncHandler(async (req, res, next) => {
   const authHeader = req.headers.authorization || req.headers.Authorization;
@@ -48,7 +49,8 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 export const isAdmin = (req, res, next) => {
   const { role } = req.user;
   if (role !== "admin") {
-    throwErr("Forbidden", 403);
+    clearRefreshToken(res);
+    throwErr("Not admin", 403);
   }
   next();
 };

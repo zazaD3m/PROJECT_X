@@ -11,6 +11,7 @@ import LoginPage from "./pages/auth/LoginPage";
 const DashboardPage = lazy(() => import("./pages/dashboard/DashboardPage"));
 const BrandsPage = lazy(() => import("./pages/brands/BrandsPage"));
 const ColorsPage = lazy(() => import("./pages/colors/ColorsPage"));
+const CategoriesPage = lazy(() => import("./pages/categories/CategoriesPage"));
 // PAGES END
 
 // CATALOG COMPONENTS START
@@ -18,6 +19,7 @@ import AddBrand from "./pages/brands/AddBrand";
 import EditBrand from "./pages/brands/EditBrand";
 import AddColor from "./pages/colors/AddColor";
 import EditColor from "./pages/colors/EditColor";
+import AddCategory from "./pages/categories/AddCategory";
 // CATALOG COMPONENTS END
 
 import RequireAuth from "./components/RequireAuth";
@@ -73,6 +75,17 @@ const router = createBrowserRouter(
                 />
                 <Route path="addcolor" element={<AddColor />} />
                 <Route path="editcolor/:colorId" element={<EditColor />} />
+              </Route>
+              <Route path="categories">
+                <Route
+                  index
+                  element={
+                    <Suspense fallback={<Loader />}>
+                      <CategoriesPage />
+                    </Suspense>
+                  }
+                />
+                <Route path="addcolor" element={<AddCategory />} />
               </Route>
             </Route>
           </Route>

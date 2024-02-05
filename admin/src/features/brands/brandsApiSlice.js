@@ -24,7 +24,7 @@ const brandsApiSlice = apiSlice.injectEndpoints({
               { type: "Brand", id: "LIST" },
               ...result.ids.map((id) => ({ type: "Brand", id })),
             ]
-          : { type: "Brand", id: "LIST" },
+          : [{ type: "Brand", id: "LIST" }],
     }),
     getBrandById: builder.query({
       query: (brandId) => `${BRANDS_URL}/brand/${brandId}`,

@@ -23,12 +23,15 @@ const userApiSlice = apiSlice.injectEndpoints({
               { type: "Users", id: "LIST" },
               ...result.ids.map((id) => ({ type: "Users", id })),
             ]
-          : { type: "Users", id: "LIST" },
+          : [{ type: "Users", id: "LIST" }],
+    }),
+    getAUser: builder.query({
+      query: () => `${USERS_URL}/test`,
     }),
   }),
 });
 
-export const { useGetAllUsersQuery } = userApiSlice;
+export const { useGetAllUsersQuery, useGetAUserQuery } = userApiSlice;
 
 export const selectUsersResult =
   userApiSlice.endpoints.getAllUsers.select("getAllUsers");

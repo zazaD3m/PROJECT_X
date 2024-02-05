@@ -1,4 +1,4 @@
 const DashboardPage = () => {
-  return <div className="h-[2000px]">DashboardPage</div>;
+  return <div className="flex h-[2000px] justify-center">DashboardPage</div>;
 };
 export default DashboardPage;
