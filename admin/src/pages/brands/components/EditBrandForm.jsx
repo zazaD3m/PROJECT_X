@@ -92,7 +92,10 @@ const EditBrandForm = ({ brand = "" }) => {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={handleSubmit(handleBrandUpdate)}>
+        <form
+          onSubmit={handleSubmit(handleBrandUpdate)}
+          className="mx-auto max-w-xs"
+        >
           <CardContent>
             <FormField
               control={control}
@@ -108,7 +111,7 @@ const EditBrandForm = ({ brand = "" }) => {
               )}
             />
           </CardContent>
-          <CardFooter className="flex-col gap-y-4">
+          <CardFooter className="flex-col gap-y-4 px-16">
             {isLoading || isDelLoading ? (
               <Loader />
             ) : (

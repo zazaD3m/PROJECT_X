@@ -1,4 +1,56 @@
+import { Link } from "react-router-dom";
+import { Button } from "../../components/ui/button";
+import {
+  Container,
+  ContainerContent,
+  ContainerHeader,
+  ContainerTitle,
+} from "../../components/ui/container";
+import {
+  selectAllCategories,
+  useGetCategoriesQuery,
+} from "../../features/categories/categoriesApiSlice";
+import Loader from "../../components/Loader";
+import DynamicTable from "../../components/dynamic-table/DynamicTable";
+import { useSelector } from "react-redux";
+import {
+  categoryAddNewLink as addNewLink,
+  categoryColumns as columns,
+  categoryFilters as filters,
+  categoryFacetedFilter as facetedFilter,
+  categoryDefaultSort as defaultSort,
+  categoryColumnFilter as columnFilter,
+} from "./categoriesTableData";
+
 const CategoriesPage = () => {
-  return <div>CategoriesPage</div>;
+  const { isSuccess } = useGetCategoriesQuery();
+
+  const data = useSelector(selectAllCategories);
+
+  return (
+    <Container>
+      <ContainerHeader>
+        <ContainerTitle>All Brands</ContainerTitle>
+        <Button asChild variant="outline" size="lg">
+          <Link to="/dashboard">Go Back</Link>
+        </Button>
+      </ContainerHeader>
+      <ContainerContent>
+        {isSuccess ? (
+          <DynamicTable
+            data={data}
+            filters={filters}
+            columns={columns}
+            defaultSort={defaultSort}
+            facetedFilter={facetedFilter}
+            addNewLink={addNewLink}
+            columnFilter={columnFilter}
+          />
+        ) : (
+          <Loader />
+        )}
+      </ContainerContent>
+    </Container>
+  );
 };
 export default CategoriesPage;

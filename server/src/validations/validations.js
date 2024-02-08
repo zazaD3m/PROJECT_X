@@ -26,4 +26,22 @@ export const colorValidator = [
   checkExact(),
 ];
 
+export const categoryValidator = [
+  body("mainCategoryName").notEmpty().trim().escape().toLowerCase(),
+  body("isMainCategory").isBoolean(),
+  body("subCategoryName")
+    .optional({ values: "falsy" })
+    .notEmpty()
+    .trim()
+    .escape()
+    .toLowerCase(),
+  body("genderName")
+    .notEmpty()
+    .trim()
+    .escape()
+    .isIn(["woman", "man", "girl", "boy"])
+    .toLowerCase(),
+  checkExact(),
+];
+
 export const paramIdValidator = [param("id").notEmpty().trim().escape()];

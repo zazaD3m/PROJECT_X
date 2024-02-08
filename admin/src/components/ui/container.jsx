@@ -30,7 +30,7 @@ const ContainerTitle = React.forwardRef(({ className, ...props }, ref) => (
 ContainerTitle.displayName = "ContainerTitle";
 
 const ContainerContent = React.forwardRef(({ className, ...props }, ref) => (
-  <h1
+  <div
     ref={ref}
     className={cn(
       "rounded-lg border bg-card p-4 text-card-foreground shadow-sm",

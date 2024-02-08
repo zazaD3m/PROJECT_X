@@ -10,9 +10,11 @@ const SyncUserInfo = () => {
     const handleStorageChange = (e) => {
       if (e.key === "persist:root" && e.newValue !== e.oldValue) {
         const storageData = JSON.parse(e.newValue);
+        if (!storageData) return;
         const updatedUserInfo = JSON.parse(storageData.user).userInfo;
+        const updatedSiteInfo = JSON.parse(storageData.user).siteInfo;
         const updatedToken = JSON.parse(storageData.auth).token;
-        if (updatedToken && updatedUserInfo) {
+        if (updatedToken && updatedUserInfo && updatedSiteInfo) {
           dispatch({
             type: "persist/REHYDRATE",
             key: "root",
@@ -22,7 +24,9 @@ const SyncUserInfo = () => {
               },
               user: {
                 userInfo: updatedUserInfo,
+                siteInfo: updatedSiteInfo,
               },
+
               _persist: {
                 version: 1,
                 rehydrated: true,

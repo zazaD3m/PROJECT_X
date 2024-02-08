@@ -28,11 +28,13 @@ import {
   TableRow,
 } from "../ui/table";
 import { FacetedFilter } from "../data-table/FacetedFilter";
+import { cn } from "../../lib/utils";
 
 const DynamicTable = ({
   filters,
   data,
   columns,
+  columnFilter,
   defaultSort,
   facetedFilter,
   addNewLink,
@@ -70,12 +72,12 @@ const DynamicTable = ({
       <div className="mb-4 flex flex-col items-end gap-4 lg:flex-row lg:items-center">
         {filters.map((filter, i) => (
           <Input
-            placeholder={`Find by ${filter}`}
-            value={table.getColumn(filter)?.getFilterValue() ?? ""}
+            placeholder={`Find by ${filter.label}`}
+            value={table.getColumn(filter.value)?.getFilterValue() ?? ""}
             onChange={(event) =>
-              table.getColumn(filter)?.setFilterValue(event.target.value)
+              table.getColumn(filter.value)?.setFilterValue(event.target.value)
             }
-            className="max-w-xs self-center"
+            className={cn("max-w-xs self-center", filter.className)}
             key={i}
           />
         ))}
@@ -102,34 +104,40 @@ const DynamicTable = ({
             <X className="ml-2 h-4 w-4" />
           </Button>
         )}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {columnFilter && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {columnFilter[column.id]}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
         {addNewLink && (
-          <Button asChild variant="outline" className="gap-x-1">
+          <Button
+            asChild
+            variant="outline"
+            className={cn("gap-x-1", !columnFilter && "ml-auto")}
+          >
             <Link to={addNewLink}>
               <Plus className="h-4 w-4" />
               Add New

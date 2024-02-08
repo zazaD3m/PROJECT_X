@@ -5,7 +5,7 @@ const userSlice = createSlice({
   name: "user",
   initialState: {
     userInfo: null,
-    siteInfo: { theme: "system", sidebarIsOpen: false },
+    siteInfo: { theme: "system" },
   },
   reducers: {
     setUser: (state, action) => {
@@ -19,14 +19,10 @@ const userSlice = createSlice({
       const theme = action.payload;
       state.siteInfo.theme = theme;
     },
-    toggleSidebar: (state, action) => {
-      state.siteInfo.sidebarIsOpen = !state.siteInfo.sidebarIsOpen;
-    },
   },
 });
 
-export const { setUser, clearUser, setTheme, toggleSidebar } =
-  userSlice.actions;
+export const { setUser, clearUser, setTheme } = userSlice.actions;
 
 export default userSlice.reducer;
 

@@ -65,7 +65,10 @@ const AddBrandForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="mx-auto max-w-xs space-y-4"
+      >
         <CardContent>
           <FormField
             control={control}
@@ -88,9 +91,9 @@ const AddBrandForm = () => {
             <Button
               disabled={!isDirty || !isValid}
               type="submit"
-              className="w-full"
+              className="mx-auto min-w-40"
             >
-              Add
+              Add Brand
             </Button>
           )}
         </CardFooter>

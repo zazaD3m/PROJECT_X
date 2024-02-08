@@ -19,6 +19,8 @@ import AddBrand from "./pages/brands/AddBrand";
 import EditBrand from "./pages/brands/EditBrand";
 import AddColor from "./pages/colors/AddColor";
 import EditColor from "./pages/colors/EditColor";
+import AddMainCategory from "./pages/categories/AddMainCategory";
+import AddSubCategory from "./pages/categories/AddSubCategory";
 import AddCategory from "./pages/categories/AddCategory";
 // CATALOG COMPONENTS END
 
@@ -85,7 +87,11 @@ const router = createBrowserRouter(
                     </Suspense>
                   }
                 />
-                <Route path="addcolor" element={<AddCategory />} />
+                <Route path="addcategory">
+                  <Route index element={<AddCategory />} />
+                  <Route path="addmaincategory" element={<AddMainCategory />} />
+                  <Route path="addsubcategory" element={<AddSubCategory />} />
+                </Route>
               </Route>
             </Route>
           </Route>

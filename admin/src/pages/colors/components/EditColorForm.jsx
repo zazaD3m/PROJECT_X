@@ -92,7 +92,10 @@ const AddColorForm = ({ color }) => {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={handleSubmit(handleColorUpdate)}>
+        <form
+          onSubmit={handleSubmit(handleColorUpdate)}
+          className="mx-auto max-w-lg"
+        >
           <CardContent>
             <FormField
               control={control}

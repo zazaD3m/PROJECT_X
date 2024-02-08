@@ -3,7 +3,7 @@ import { isProduction } from "../utils/helpers.js";
 
 export const generateAccessToken = (userId) => {
   const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "15m",
+    expiresIn: "72h",
   });
   return accessToken;
 };

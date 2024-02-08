@@ -8,7 +8,9 @@ import {
 } from "../../components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
 
-export const colorFilters = ["colorName"];
+export const colorFilters = [
+  { value: "colorName", label: "Color", className: "w-60" },
+];
 export const colorDefaultSort = [{ id: "colorName", asc: true }];
 export const colorAddNewLink = "addcolor";
 

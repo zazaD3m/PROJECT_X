@@ -8,7 +8,9 @@ import {
 } from "../../components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
 
-export const brandFilters = ["brandName"];
+export const brandFilters = [
+  { value: "brandName", label: "Brand", className: "w-60" },
+];
 export const brandDefaultSort = [{ id: "brandName", asc: true }];
 export const brandAddNewLink = "addbrand";
 
