@@ -12,6 +12,7 @@ const DashboardPage = lazy(() => import("./pages/dashboard/DashboardPage"));
 const BrandsPage = lazy(() => import("./pages/brands/BrandsPage"));
 const ColorsPage = lazy(() => import("./pages/colors/ColorsPage"));
 const CategoriesPage = lazy(() => import("./pages/categories/CategoriesPage"));
+const ProductsPage = lazy(() => import("./pages/products/ProductsPage"));
 // PAGES END
 
 // CATALOG COMPONENTS START
@@ -22,6 +23,7 @@ import EditColor from "./pages/colors/EditColor";
 import AddMainCategory from "./pages/categories/AddMainCategory";
 import AddSubCategory from "./pages/categories/AddSubCategory";
 import AddCategory from "./pages/categories/AddCategory";
+import AddProduct from "./pages/products/AddProduct";
 // CATALOG COMPONENTS END
 
 import RequireAuth from "./components/RequireAuth";
@@ -92,6 +94,17 @@ const router = createBrowserRouter(
                   <Route path="addmaincategory" element={<AddMainCategory />} />
                   <Route path="addsubcategory" element={<AddSubCategory />} />
                 </Route>
+              </Route>
+              <Route path="products">
+                <Route
+                  index
+                  element={
+                    <Suspense fallback={<Loader />}>
+                      <ProductsPage />
+                    </Suspense>
+                  }
+                />
+                <Route path="addproduct" element={<AddProduct />}></Route>
               </Route>
             </Route>
           </Route>

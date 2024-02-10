@@ -30,9 +30,9 @@ const CategoriesPage = () => {
   return (
     <Container>
       <ContainerHeader>
-        <ContainerTitle>All Brands</ContainerTitle>
+        <ContainerTitle>All Categories</ContainerTitle>
         <Button asChild variant="outline" size="lg">
-          <Link to="/dashboard">Go Back</Link>
+          <Link to="/dashboard">Go Back To Dashboard</Link>
         </Button>
       </ContainerHeader>
       <ContainerContent>

@@ -20,6 +20,8 @@ export const brandValidator = [
   checkExact(),
 ];
 
+export const productValidator = [];
+
 export const colorValidator = [
   body("colorName").notEmpty().trim().escape().toLowerCase(),
   body("hexValue").notEmpty().trim().escape(),
@@ -27,14 +29,13 @@ export const colorValidator = [
 ];
 
 export const categoryValidator = [
-  body("mainCategoryName").notEmpty().trim().escape().toLowerCase(),
+  body("mainCategoryName").notEmpty().trim().escape(),
   body("isMainCategory").isBoolean(),
   body("subCategoryName")
     .optional({ values: "falsy" })
     .notEmpty()
     .trim()
-    .escape()
-    .toLowerCase(),
+    .escape(),
   body("genderName")
     .notEmpty()
     .trim()

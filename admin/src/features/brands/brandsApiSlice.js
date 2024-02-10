@@ -86,8 +86,7 @@ export const {
   useDeleteBrandMutation,
 } = brandsApiSlice;
 
-export const selectBrandsResult =
-  brandsApiSlice.endpoints.getBrands.select("getBrands");
+export const selectBrandsResult = brandsApiSlice.endpoints.getBrands.select();
 
 export const selectBrandsData = createSelector(
   selectBrandsResult,

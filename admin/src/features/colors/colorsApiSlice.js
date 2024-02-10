@@ -87,8 +87,7 @@ export const {
   useDeleteColorMutation,
 } = colorsApiSlice;
 
-export const selectColorsResult =
-  colorsApiSlice.endpoints.getColors.select("getColors");
+export const selectColorsResult = colorsApiSlice.endpoints.getColors.select();
 
 export const selectColorsData = createSelector(
   selectColorsResult,
