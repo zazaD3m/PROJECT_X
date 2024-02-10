@@ -12,6 +12,7 @@ import { Form } from "../../../../components/ui/form";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useCreateProductMutation } from "../../../../features/products/productsApiSlice";
 
 const addProductSchema = yup.object().shape({
   productTitle: yup.string().required("Product title is required"),
@@ -54,6 +55,8 @@ const addProductSchema = yup.object().shape({
 });
 
 const AddProductForm = () => {
+  const [createProduct, { isSuccess }] = useCreateProductMutation({});
+
   const form = useForm({
     defaultValues: {
       productTitle: "",
@@ -100,11 +103,12 @@ const AddProductForm = () => {
 
     // console.log([...newProductFormData]);
 
-    for (var [key, value] of newProductFormData.entries()) {
-      console.log(key, value);
-    }
+    // for (var [key, value] of newProductFormData.entries()) {
+    //   console.log(key, value);
+    // }
 
-    console.log(newProductFormData.getAll("images"));
+    // console.log(newProductFormData.getAll("images"));
+    await createProduct(newProductFormData);
   }
 
   return (

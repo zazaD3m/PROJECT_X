@@ -6,16 +6,21 @@ import {
   // deleteProduct,
   // getProduct,
 } from "../../controllers/productController.js";
+// import {
+//   productValidator,
+//   // paramIdValidator,
+// } from "../../validations/validations.js";
+// import { validate } from "../../middleware/validationMiddleware.js";
 import {
-  productValidator,
-  // paramIdValidator,
-} from "../../validations/validations.js";
-import { validate } from "../../middleware/validationMiddleware.js";
+  uploadImage,
+  uploadImages,
+} from "../../middleware/uploadImageMiddleware.js";
 
 const router = Router();
 
 router.route("/").post(
   // [productValidator, validate],
+  [uploadImage.array("images", 4), uploadImages],
   createProduct
 );
 // .get(getAllProducts);

@@ -1,10 +1,9 @@
 import { Router } from "express";
-import { validate } from "../../middleware/validationMiddleware.js";
-import { authenticateUser, isAdmin } from "../../middleware/authMiddleware.js";
+// import { validate } from "../../middleware/validationMiddleware.js";
 import { getAllUsers } from "../../controllers/userController.js";
 
 const router = Router();
 
-router.route("/").get(authenticateUser, isAdmin, getAllUsers);
+router.route("/").get(getAllUsers);
 
 export default router;

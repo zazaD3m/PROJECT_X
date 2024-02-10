@@ -13,6 +13,6 @@ router.use("/brands", authenticateUser, isAdmin, brandRoutes);
 router.use("/colors", authenticateUser, isAdmin, colorRoutes);
 router.use("/categories", authenticateUser, isAdmin, categoryRoutes);
 router.use("/products", authenticateUser, isAdmin, productRoutes);
-router.use("/users", userRoutes);
+router.use("/users", authenticateUser, isAdmin, userRoutes);
 
 export default router;
