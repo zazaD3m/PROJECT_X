@@ -2,36 +2,36 @@ import mongoose, { Schema, model } from "mongoose";
 
 const productSchema = new Schema(
   {
-    productTitle: {
+    title: {
       type: String,
     },
-    productSlug: {
+    slug: {
       type: String,
     },
-    productDescription: {
+    description: {
       type: String,
     },
-    productPrice: {
+    price: {
       type: Number,
       index: true,
     },
-    productMainCategory: {
+    mainCategory: {
       type: String,
       index: true,
     },
-    productSubCategory: {
+    subCategory: {
       type: String,
       index: true,
     },
-    productGender: {
+    gender: {
       type: String,
       index: true,
     },
-    productBrand: {
+    brand: {
       type: String,
       index: true,
     },
-    productColor: {
+    color: {
       type: String,
       index: true,
     },
