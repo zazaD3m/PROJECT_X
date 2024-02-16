@@ -20,7 +20,11 @@ export const brandValidator = [
   checkExact(),
 ];
 
-export const productValidator = [];
+export const productValidator = [
+  body("description").notEmpty().trim().escape(),
+  body("title").notEmpty().trim().escape(),
+  body("price").notEmpty().trim().escape().toInt(),
+];
 
 export const colorValidator = [
   body("colorName").notEmpty().trim().escape().toLowerCase(),

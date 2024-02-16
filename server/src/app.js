@@ -36,11 +36,6 @@ if (isProduction) {
   app.get("/", (req, res) => res.send("Server is ready"));
 }
 
-// for pages there are no routes in API
-app.all("*", (req, res, next) => {
-  throwErr(`Can't find ${req.originalUrl} on the server!`, 404);
-});
-
 app.use(globalErrorHandler);
 
 export { app };

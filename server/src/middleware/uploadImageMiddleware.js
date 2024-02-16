@@ -1,51 +1,74 @@
 import multer from "multer";
-import path from "path";
-import fs from "fs";
+import sharp from "sharp";
+import { cloudinary } from "../config/cloudinary.js";
+import { CustomError } from "../utils/CustomError.js";
+import uniqid from "uniqid";
 
-import { currDir } from "../utils/currDir.js";
-import asyncHandler from "express-async-handler";
-import { cloudinaryImgUploader } from "../services/cloudinary.js";
-
-const __dirname = currDir(import.meta.url);
-
-const multerStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../public/images/products"));
-  },
-  filename: function (req, file, cb) {
-    if (file) {
-      const uniquesuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-      cb(null, uniquesuffix + ".jpeg");
-    } else {
-      cb(null, false);
-    }
-  },
-});
+const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith("image")) {
-    cb(null, true);
-  } else {
-    cb({ message: "Unsupported file format!" }, false);
+  if (!file.mimetype.startsWith("image")) {
+    return cb(new CustomError("Please upload a valid image file", 400));
   }
+  cb(undefined, true);
 };
 
-export const uploadImage = multer({
+export const multerUpload = multer({
   storage: multerStorage,
   fileFilter: multerFilter,
+  limits: {
+    fileSize: 3000000,
+  },
 });
 
-export const uploadImages = asyncHandler(async (req, res, next) => {
-  const imgUrls = [];
-  const files = req.files;
+export const uploadToCloudinary = async (req, res, next) => {
+  const { color, gender, subCategory, brand } = req.body;
 
-  for (const file of files) {
-    const { path } = file;
-    const newPath = await cloudinaryImgUploader(path, "products");
-    imgUrls.push(newPath);
-    fs.unlinkSync(path);
+  try {
+    const files = req.files;
+    if (!files || files.length === 0) {
+      return next(new CustomError("No files provided", 400));
+    }
+    const newImages = [];
+    for (const file of files) {
+      const publicId = `${brand}-${subCategory}-${color}-for-${gender}-${uniqid()}`;
+      const resizedBuffer = await sharp(file.buffer)
+        .webp({ lossless: true, quality: 100 })
+        .resize({ width: 600, height: 600, fit: "contain" })
+        .toBuffer();
+
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: "image",
+          folder: "products",
+          access_mode: "public",
+          public_id: publicId,
+        },
+        (err, result) => {
+          if (err) {
+            console.error("Cloudinary upload error:", err);
+            return next(err);
+          }
+          if (!result) {
+            console.error("Cloudinary upload error: Result is undefined");
+            return next(new Error("Cloudinary upload result is undefined"));
+          }
+          newImages.push({
+            href: result.secure_url,
+            public_id: result.public_id,
+          });
+
+          if (newImages.length === files.length) {
+            //All files processed now get your images here
+            req.body.newImages = newImages;
+            next();
+          }
+        }
+      );
+      uploadStream.end(resizedBuffer);
+    }
+  } catch (error) {
+    console.error("Error in uploadToCloudinary middleware:", error);
+    next(error);
   }
-  req.body.images = imgUrls;
-
-  next();
-});
+};

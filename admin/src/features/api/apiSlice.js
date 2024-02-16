@@ -1,7 +1,10 @@
 /* eslint-disable no-unused-vars */
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { Mutex } from "async-mutex";
 import { clearCredentials, setCredentials } from "../auth/authSlice";
 import { clearUser } from "../user/userSlice";
+
+const mutex = new Mutex();
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "/api",
@@ -18,6 +21,7 @@ const baseQuery = fetchBaseQuery({
 });
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
+  await mutex.waitForUnlock();
   let result = await baseQuery(args, api, extraOptions);
 
   if (
@@ -35,19 +39,28 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
     result.error.status === 401 &&
     result.error.data.message === "accessToken expired"
   ) {
-    const refreshResult = await baseQuery(
-      "/auth/refresh-token",
-      api,
-      extraOptions,
-    );
-
-    if (refreshResult.data) {
-      api.dispatch(setCredentials({ ...refreshResult.data }));
-      result = await baseQuery(args, api, extraOptions);
+    if (!mutex.isLocked()) {
+      const release = await mutex.acquire();
+      try {
+        const refreshResult = await baseQuery(
+          "/auth/refresh-token",
+          api,
+          extraOptions,
+        );
+        if (refreshResult.data) {
+          api.dispatch(setCredentials({ ...refreshResult.data }));
+          result = await baseQuery(args, api, extraOptions);
+        } else {
+          api.dispatch(clearCredentials());
+          api.dispatch(clearUser());
+          return refreshResult;
+        }
+      } finally {
+        release();
+      }
     } else {
-      api.dispatch(clearCredentials());
-      api.dispatch(clearUser());
-      return refreshResult;
+      await mutex.waitForUnlock();
+      result = await baseQuery(args, api, extraOptions);
     }
   }
 

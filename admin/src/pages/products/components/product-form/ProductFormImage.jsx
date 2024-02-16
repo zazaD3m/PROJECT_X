@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Dropzone from "../../../../components/ui/dropZone";
 import {
@@ -14,8 +14,17 @@ const ProductFormImage = ({
   setValue,
   setError,
   clearErrors,
+  watch,
 }) => {
+  const inputImg = watch(name);
   const [imgPreview, setImgPreview] = useState("");
+
+  useEffect(() => {
+    if (!inputImg) {
+      URL.revokeObjectURL(imgPreview);
+      setImgPreview("");
+    }
+  }, [inputImg]);
 
   function handleOnDrop(acceptedFiles) {
     if (acceptedFiles && acceptedFiles.length > 0) {
@@ -35,7 +44,7 @@ const ProductFormImage = ({
         setImgPreview("");
       } else {
         const displayUrl = URL.createObjectURL(file);
-        setValue(name, file);
+        setValue(name, file, { shouldDirty: true, shouldTouch: true });
         clearErrors(name);
         setImgPreview(displayUrl);
       }

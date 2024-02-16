@@ -24,6 +24,7 @@ import AddMainCategory from "./pages/categories/AddMainCategory";
 import AddSubCategory from "./pages/categories/AddSubCategory";
 import AddCategory from "./pages/categories/AddCategory";
 import AddProduct from "./pages/products/AddProduct";
+import EditProduct from "./pages/products/EditProduct";
 // CATALOG COMPONENTS END
 
 import RequireAuth from "./components/RequireAuth";
@@ -104,7 +105,11 @@ const router = createBrowserRouter(
                     </Suspense>
                   }
                 />
-                <Route path="addproduct" element={<AddProduct />}></Route>
+                <Route path="addproduct" element={<AddProduct />} />
+                <Route
+                  path="editproduct/:productId"
+                  element={<EditProduct />}
+                />
               </Route>
             </Route>
           </Route>
