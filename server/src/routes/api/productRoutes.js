@@ -20,19 +20,7 @@ import { validate } from "../../middleware/validationMiddleware.js";
 
 const router = Router();
 
-router
-  .route("/")
-  .post(
-    [authenticateUser, isAdmin],
-    multerUpload.fields([
-      { name: "image1" },
-      { name: "image2" },
-      { name: "image3" },
-      { name: "image4" },
-    ]),
-    uploadToCloudinary,
-    createProduct
-  );
+router.route("/").post([productValidator, validate], createProduct);
 
 // .get(getAllProducts);
 

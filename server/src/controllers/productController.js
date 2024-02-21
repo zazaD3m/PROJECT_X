@@ -7,31 +7,7 @@ import { ThrowErr } from "../utils/CustomError.js";
 // @desc Create new product
 // route POST /api/products/
 export const createProduct = asyncHandler(async (req, res) => {
-  const {
-    brand,
-    color,
-    description,
-    gender,
-    mainCategory,
-    subCategory,
-    price,
-    title,
-    slug,
-    newImages: images,
-  } = req.body;
-
-  const newProduct = await Product.create({
-    brand,
-    color,
-    description,
-    gender,
-    mainCategory,
-    subCategory,
-    price,
-    title,
-    slug,
-    images,
-  });
+  const newProduct = await Product.create(req.body);
 
   if (!newProduct) {
     ThrowErr.ServerError();

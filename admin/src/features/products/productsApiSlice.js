@@ -33,7 +33,6 @@ const productsApiSlice = apiSlice.injectEndpoints({
         url: `${PRODUCTS_URL}`,
         method: "POST",
         body: productData,
-        formData: true,
       }),
       invalidatesTags: [{ type: "Product", id: "LIST" }],
     }),

@@ -35,6 +35,11 @@ const productSchema = new Schema(
       type: String,
       index: true,
     },
+    hidden: {
+      type: Boolean,
+      default: true,
+      index: true,
+    },
     images: { type: Object },
   },
   { timestamps: true }

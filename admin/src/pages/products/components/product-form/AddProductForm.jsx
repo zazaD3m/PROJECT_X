@@ -7,16 +7,15 @@ import ProductFormBrand from "./ProductFormBrand";
 import ProductFormColor from "./ProductFormColor";
 import ProductFormImage from "./ProductFormImage";
 
-import { DevTool } from "@hookform/devtools";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect } from "react";
 
 import { Button } from "../../../../components/ui/button";
 import { Form } from "../../../../components/ui/form";
 
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useCreateProductMutation } from "../../../../features/products/productsApiSlice";
-import { useEffect } from "react";
 import { useToast } from "../../../../components/ui/use-toast";
 import Loader from "../../../../components/Loader";
 
@@ -76,7 +75,6 @@ const AddProductForm = () => {
     getValues,
     watch,
     clearErrors,
-    reset,
   } = form;
 
   useEffect(() => {
@@ -101,149 +99,147 @@ const AddProductForm = () => {
     }
   }, [isSuccess, isError]);
 
-  async function handleAddProduct(data) {
-    const newProductFormData = new FormData();
+  const handleAddProduct = async (data) => {
+    const newProduct = {};
     const slug = `${data.productBrand}-${data.productSubCategory}-${data.productColor}-for-${data.productGender}`;
 
-    newProductFormData.append("color", data.productColor);
-    newProductFormData.append("brand", data.productBrand);
-    newProductFormData.append("description", data.productDescription);
-    newProductFormData.append("gender", data.productGender);
-    newProductFormData.append("mainCategory", data.productMainCategory);
-    newProductFormData.append("subCategory", data.productSubCategory);
-    newProductFormData.append("price", data.productPrice);
-    newProductFormData.append("title", data.productTitle);
-    newProductFormData.append("slug", slug);
-    newProductFormData.append("image1", data.productImage1);
-    newProductFormData.append("image2", data.productImage2);
+    newProduct.color = data.productColor;
+    newProduct.brand = data.productBrand;
+    newProduct.description = data.productDescription;
+    newProduct.gender = data.productGender;
+    newProduct.mainCategory = data.productMainCategory;
+    newProduct.subCategory = data.productSubCategory;
+    newProduct.price = data.productPrice;
+    newProduct.title = data.productTitle;
+    newProduct.slug = slug;
+    newProduct.images = {};
+    newProduct.images[1] = { ...data.productImage1, alt: slug };
+    newProduct.images[2] = { ...data.productImage2, alt: slug };
     if (data.productImage3) {
-      newProductFormData.append("image3", data.productImage3);
+      newProduct.images[3] = { ...data.productImage3, alt: slug };
     }
     if (data.productImage4) {
-      newProductFormData.append("image4", data.productImage4);
+      newProduct.images[4] = { ...data.productImage4, alt: slug };
     }
 
-    await createProduct(newProductFormData);
-  }
+    await createProduct(newProduct);
+  };
 
   return (
-    <>
-      <Form {...form}>
-        <form onSubmit={handleSubmit(handleAddProduct)} className="space-y-8">
-          <div className="grid grid-cols-12  gap-x-16 gap-y-8">
-            <div className="col-span-3 row-span-2 space-y-6">
-              <ProductFormText
+    <Form {...form}>
+      <form onSubmit={handleSubmit(handleAddProduct)} className="space-y-8">
+        <div className="grid grid-cols-12  gap-x-16 gap-y-8">
+          <div className="col-span-3 row-span-2 space-y-6">
+            <ProductFormText
+              control={control}
+              name="productTitle"
+              placeholder="Title"
+            />
+            <ProductFormText
+              control={control}
+              name="productDescription"
+              placeholder="Description"
+            />
+            <ProductFormText
+              control={control}
+              name="productPrice"
+              placeholder="Price"
+              inputType="number"
+            />
+          </div>
+          <div className="col-span-3">
+            <ProductFormGender
+              control={control}
+              resetField={resetField}
+              watch={watch}
+            />
+          </div>
+          <div className="col-span-3 ">
+            <ProductFormMainCategory
+              control={control}
+              setValue={setValue}
+              resetField={resetField}
+              watch={watch}
+            />
+          </div>
+          <div className="col-span-3">
+            <ProductFormSubCategory
+              control={control}
+              setValue={setValue}
+              watch={watch}
+            />
+          </div>
+          <div className="col-span-3 col-start-7">
+            <ProductFormBrand control={control} setValue={setValue} />
+          </div>
+          <div className="col-span-3 col-start-10">
+            <ProductFormColor control={control} setValue={setValue} />
+          </div>
+        </div>
+        <div className="space-y-3">
+          <h2 className="cursor-default text-lg font-semibold">Images</h2>
+          <div className="flex gap-x-8">
+            <div className="h-40 w-40">
+              <ProductFormImage
+                isCreateProductSuccess={isSuccess}
+                getValue={getValues}
+                name="productImage1"
                 control={control}
-                name="productTitle"
-                placeholder="Title"
-              />
-              <ProductFormText
-                control={control}
-                name="productDescription"
-                placeholder="Description"
-              />
-              <ProductFormText
-                control={control}
-                name="productPrice"
-                placeholder="Price"
-                inputType="number"
-              />
-            </div>
-            <div className="col-span-3">
-              <ProductFormGender
-                control={control}
-                resetField={resetField}
-                watch={watch}
-              />
-            </div>
-            <div className="col-span-3 ">
-              <ProductFormMainCategory
-                control={control}
+                isCreateSuccess={isSuccess}
                 setValue={setValue}
-                resetField={resetField}
-                watch={watch}
+                setError={setError}
+                clearErrors={clearErrors}
               />
             </div>
-            <div className="col-span-3">
-              <ProductFormSubCategory
+            <div className="h-40 w-40">
+              <ProductFormImage
+                isCreateProductSuccess={isSuccess}
+                getValue={getValues}
+                name="productImage2"
                 control={control}
+                isCreateSuccess={isSuccess}
                 setValue={setValue}
-                watch={watch}
+                setError={setError}
+                clearErrors={clearErrors}
               />
             </div>
-            <div className="col-span-3 col-start-7">
-              <ProductFormBrand control={control} setValue={setValue} />
+            <div className="h-40 w-40">
+              <ProductFormImage
+                isCreateProductSuccess={isSuccess}
+                getValue={getValues}
+                name="productImage3"
+                control={control}
+                isCreateSuccess={isSuccess}
+                setValue={setValue}
+                setError={setError}
+                clearErrors={clearErrors}
+              />
             </div>
-            <div className="col-span-3 col-start-10">
-              <ProductFormColor control={control} setValue={setValue} />
-            </div>
-          </div>
-          <div className="space-y-3">
-            <h2 className="cursor-default text-lg font-semibold">Images</h2>
-            <div className="flex gap-x-8">
-              <div className="h-40 w-40">
-                <ProductFormImage
-                  getValue={getValues}
-                  name="productImage1"
-                  control={control}
-                  watch={watch}
-                  isCreateSuccess={isSuccess}
-                  setValue={setValue}
-                  setError={setError}
-                  clearErrors={clearErrors}
-                />
-              </div>
-              <div className="h-40 w-40">
-                <ProductFormImage
-                  getValue={getValues}
-                  name="productImage2"
-                  control={control}
-                  watch={watch}
-                  isCreateSuccess={isSuccess}
-                  setValue={setValue}
-                  setError={setError}
-                  clearErrors={clearErrors}
-                />
-              </div>
-              <div className="h-40 w-40">
-                <ProductFormImage
-                  getValue={getValues}
-                  name="productImage3"
-                  control={control}
-                  watch={watch}
-                  isCreateSuccess={isSuccess}
-                  setValue={setValue}
-                  setError={setError}
-                  clearErrors={clearErrors}
-                />
-              </div>
-              <div className="h-40 w-40">
-                <ProductFormImage
-                  getValue={getValues}
-                  name="productImage4"
-                  control={control}
-                  watch={watch}
-                  isCreateSuccess={isSuccess}
-                  setValue={setValue}
-                  setError={setError}
-                  clearErrors={clearErrors}
-                />
-              </div>
+            <div className="h-40 w-40">
+              <ProductFormImage
+                isCreateProductSuccess={isSuccess}
+                getValue={getValues}
+                name="productImage4"
+                control={control}
+                isCreateSuccess={isSuccess}
+                setValue={setValue}
+                setError={setError}
+                clearErrors={clearErrors}
+              />
             </div>
           </div>
-          <div className="flex justify-center pt-8">
-            {isLoading ? (
-              <Loader />
-            ) : (
-              <Button type="submit" className="mx-auto min-w-40">
-                Add Product
-              </Button>
-            )}
-          </div>
-        </form>
-      </Form>
-      <DevTool control={control} />
-    </>
+        </div>
+        <div className="flex justify-center pt-8">
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <Button type="submit" className="mx-auto min-w-40">
+              Add Product
+            </Button>
+          )}
+        </div>
+      </form>
+    </Form>
   );
 };
 export default AddProductForm;

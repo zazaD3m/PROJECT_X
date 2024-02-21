@@ -13,10 +13,10 @@ const imagesApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     deleteImage: builder.mutation({
-      query: (public_id) => ({
+      query: (data) => ({
         url: `${PRODUCT_IMAGES_URL}`,
         method: "DELETE",
-        body: { public_id: public_id },
+        body: data,
       }),
     }),
   }),

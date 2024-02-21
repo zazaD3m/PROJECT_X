@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 
 import Dropzone from "../../../../components/ui/dropZone";
@@ -12,6 +13,7 @@ import {
   useDeleteImageMutation,
   useUploadImageMutation,
 } from "../../../../features/images/imagesApiSlice";
+import { useParams } from "react-router-dom";
 
 const ProductFormImage = ({
   name,
@@ -20,10 +22,11 @@ const ProductFormImage = ({
   setError,
   getValue,
   clearErrors,
-  isCreateSuccess,
-  watch,
+  isCreateProductSuccess,
+  page = "",
 }) => {
   const [imgPreview, setImgPreview] = useState("");
+  const { productId } = useParams();
 
   const [
     uploadImage,
@@ -45,6 +48,21 @@ const ProductFormImage = ({
   ] = useDeleteImageMutation();
 
   useEffect(() => {
+    if (isCreateProductSuccess) {
+      setImgPreview("");
+    }
+  }, [isCreateProductSuccess]);
+
+  useEffect(() => {
+    if (page !== "edit") {
+      return;
+    }
+    setImgPreview(getValue(name)?.href ? getValue(name).href : "");
+  }, []);
+
+  // add index to image object when uploading image
+
+  useEffect(() => {
     if (isUploadLoading) {
       setImgPreview("loading");
     }
@@ -52,7 +70,7 @@ const ProductFormImage = ({
       setImgPreview("");
       clearErrors(name);
       setValue(name, newImageData, { shouldDirty: true, shouldTouch: true });
-      setImgPreview(getValue(name).href);
+      setImgPreview(getValue(name)?.href ? getValue(name).href : "");
     }
     if (isUploadError) {
       setImgPreview("");
@@ -74,20 +92,13 @@ const ProductFormImage = ({
       setValue(name, null, { shouldDirty: true });
     }
     if (isDeleteError) {
-      setImgPreview(getValue(name).href);
+      setImgPreview(getValue(name)?.href ? getValue(name).href : "");
       setError(name, {
         message: "Try Again",
         type: "typeError",
       });
     }
   }, [isDeleteSuccess, isDeleteLoading, isDeleteError]);
-
-  // useEffect(() => {
-  //   if (isCreateSuccess) {
-  //     URL.revokeObjectURL(imgPreview);
-  //     setImgPreview("");
-  //   }
-  // }, [isCreateSuccess]);
 
   const handleOnDrop = async (acceptedFiles) => {
     if (!acceptedFiles || (acceptedFiles && acceptedFiles.length <= 0)) {
@@ -127,7 +138,16 @@ const ProductFormImage = ({
   };
 
   const handleRemove = async () => {
-    await deleteImage(getValue(name).public_id);
+    const public_id = getValue(name).public_id;
+    const reqObj = {
+      public_id: public_id,
+    };
+    if (productId) {
+      reqObj.productId = productId;
+      const imageIndex = name[name.length - 1];
+      reqObj.imageIndex = imageIndex;
+    }
+    await deleteImage(reqObj);
   };
   return (
     <>
@@ -149,12 +169,6 @@ const ProductFormImage = ({
           </FormItem>
         )}
       />
-      {/* {watch("productImage") && (
-        <div className="relative flex items-center justify-center gap-3 p-4">
-          <FileCheck2Icon className="h-4 w-4" />
-          <p className="text-sm font-medium">{watch("productImage")?.name}</p>
-        </div>
-      )} */}
     </>
   );
 };
