@@ -2,14 +2,16 @@ import asyncHandler from "express-async-handler";
 
 import Color from "../models/colorModel.js";
 import { validateObjectId } from "../validations/validations.js";
-import { throwErr } from "./errorController.js";
+import { ThrowErr } from "../utils/CustomError.js";
 
 // @desc Create new color
 // route POST /api/colors/
 export const createColor = asyncHandler(async (req, res) => {
   const newColor = await Color.create(req.body);
 
-  if (!newColor) throwErr("Server error", 500);
+  if (!newColor) {
+    ThrowErr.ServerError();
+  }
 
   const { colorName, hexValue, _id } = newColor;
 
@@ -21,7 +23,9 @@ export const createColor = asyncHandler(async (req, res) => {
 export const getAllColors = asyncHandler(async (req, res) => {
   const colors = await Color.find().lean().select(["colorName", "hexValue"]);
 
-  if (!colors) throwErr("Server error", 500);
+  if (!colors) {
+    ThrowErr.ServerError();
+  }
 
   res.status(200).json(colors);
 });
@@ -36,7 +40,9 @@ export const updateColor = asyncHandler(async (req, res) => {
     new: true,
   });
 
-  if (!updatedColor) throwErr("Server error", 500);
+  if (!updatedColor) {
+    ThrowErr.ServerError();
+  }
 
   const { colorName, hexValue, _id } = updatedColor;
 
@@ -51,7 +57,9 @@ export const deleteColor = asyncHandler(async (req, res) => {
 
   const deletedColor = await Color.findByIdAndDelete(colorId);
 
-  if (!deletedColor) throwErr("Server error", 500);
+  if (!deletedColor) {
+    ThrowErr.ServerError();
+  }
 
   const { colorName, hexValue, _id } = deletedColor;
 
@@ -68,7 +76,9 @@ export const getColor = asyncHandler(async (req, res) => {
     .lean()
     .select(["colorName", "hexValue"]);
 
-  if (!color) throwErr("Server error", 500);
+  if (!color) {
+    ThrowErr.ServerError();
+  }
 
   res.status(200).json(color);
 });

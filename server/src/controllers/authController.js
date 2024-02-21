@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
 import { CLIENT_URL } from "../utils/constants.js";
-import { throwErr } from "./errorController.js";
 import {
   clearRefreshToken,
   generateRefreshToken,
@@ -10,6 +9,7 @@ import {
   generateAccessToken,
 } from "../services/jwt.js";
 import { formatAdminInfo, formatUserInfo } from "../utils/helpers.js";
+import { ThrowErr } from "../utils/CustomError.js";
 
 // @desc    Register a new user
 // route    POST /api/auth/register
@@ -20,7 +20,7 @@ export const registerUser = asyncHandler(async (req, res) => {
   const newUser = await User.create(inputData);
 
   if (!newUser) {
-    throwErr("Internal server error", 500);
+    ThrowErr.ServerError();
   }
 
   const { _id } = newUser;
@@ -42,7 +42,7 @@ export const loginUser = asyncHandler(async (req, res) => {
   const foundUser = await User.findOne({ email }).exec();
 
   if (!(foundUser && (await foundUser.matchPassword(password)))) {
-    throwErr("Unauthorized", 401);
+    ThrowErr.Unauthorized();
   }
 
   generateRefreshToken(res, foundUser._id);
@@ -62,15 +62,15 @@ export const loginAdmin = asyncHandler(async (req, res) => {
   const foundUser = await User.findOne({ email }).exec();
 
   if (!foundUser) {
-    throwErr("Wrong email address or password", 401);
+    ThrowErr.Unauthorized();
   }
 
   if (!(await foundUser.matchPassword(password))) {
-    throwErr("Wrong email address or password", 401);
+    ThrowErr.Unauthorized();
   }
 
   if (foundUser.role !== "admin") {
-    throwErr("Wrong email address or password", 401);
+    ThrowErr.Unauthorized();
   }
 
   generateRefreshToken(res, foundUser._id);
@@ -97,7 +97,7 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
   const newUser = req.body;
 
   if (!(await user.matchPassword(newUser.password))) {
-    throwErr("Wrong password", 400);
+    ThrowErr.BadRequest("Wrong Password");
   }
 
   if (newUser.newPassword) {
@@ -127,7 +127,7 @@ export const refresh = asyncHandler(async (req, res) => {
   if (!cookies?.jwt) {
     res.status(401);
     clearRefreshToken(res);
-    throwErr("Unauthorized", 401);
+    ThrowErr.Unauthorized();
   }
 
   let userId;
@@ -139,7 +139,7 @@ export const refresh = asyncHandler(async (req, res) => {
     function (err, decoded) {
       if (err || !decoded?.userId) {
         clearRefreshToken(res);
-        throwErr("Unauthorized", 401);
+        ThrowErr.Unauthorized();
       } else {
         userId = decoded.userId;
       }
@@ -180,7 +180,7 @@ export const googleGetUser = asyncHandler(async (req, res) => {
   const { name, email, _id } = req.user;
 
   if (!name || !email || !_id) {
-    throwErr("Internal server error", 500);
+    ThrowErr.ServerError();
   }
 
   generateRefreshToken(res, _id);

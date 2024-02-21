@@ -1,14 +1,5 @@
 import mongoose, { Schema, model } from "mongoose";
 
-const imageSchema = new Schema(
-  {
-    href: String,
-    alt: String,
-    public_id: String,
-  },
-  { _id: false }
-);
-
 const productSchema = new Schema(
   {
     title: {
@@ -44,19 +35,13 @@ const productSchema = new Schema(
       type: String,
       index: true,
     },
-    images: [imageSchema],
+    images: { type: Object },
   },
   { timestamps: true }
 );
 
 productSchema.pre("save", function (next) {
-  const slug = `${this.brand}-${this.subCategory}-${this.color}-for-${this.gender}`;
-  this.slug = slug + "-" + this._id;
-  this.images = this.images.map((img) => ({
-    href: img.href,
-    public_id: img.public_id,
-    alt: slug,
-  }));
+  this.slug = this.slug + "-" + this._id;
   next();
 });
 

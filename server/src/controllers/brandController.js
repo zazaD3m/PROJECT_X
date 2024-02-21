@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 
 import Brand from "../models/brandModel.js";
 import { validateObjectId } from "../validations/validations.js";
-import { throwErr } from "./errorController.js";
+import { ThrowErr } from "../utils/CustomError.js";
 
 // @desc Create new brand
 // route POST /api/brands/
@@ -11,7 +11,9 @@ export const createBrand = asyncHandler(async (req, res) => {
 
   const newBrand = await Brand.create({ brandName });
 
-  if (!newBrand) throwErr("Server error", 500);
+  if (!newBrand) {
+    ThrowErr.ServerError();
+  }
 
   return res.status(201).json(newBrand);
 });
@@ -21,7 +23,9 @@ export const createBrand = asyncHandler(async (req, res) => {
 export const getAllBrands = asyncHandler(async (req, res) => {
   const brands = await Brand.find().lean();
 
-  if (!brands) throwErr("Server error", 500);
+  if (!brands) {
+    ThrowErr.ServerError();
+  }
 
   res.status(200).json(brands);
 });
@@ -41,7 +45,9 @@ export const updateBrand = asyncHandler(async (req, res) => {
     }
   );
 
-  if (!updatedBrand) throwErr("Server error", 500);
+  if (!updatedBrand) {
+    ThrowErr.ServerError();
+  }
 
   res.status(201).json(updatedBrand);
 });
@@ -54,7 +60,9 @@ export const deleteBrand = asyncHandler(async (req, res) => {
 
   const deletedBrand = await Brand.findByIdAndDelete(brandId);
 
-  if (!deletedBrand) throwErr("Server error", 500);
+  if (!deletedBrand) {
+    ThrowErr.ServerError();
+  }
 
   res.status(200).json(deletedBrand);
 });
@@ -67,7 +75,9 @@ export const getBrand = asyncHandler(async (req, res) => {
 
   const brand = await Brand.findById(brandId).lean();
 
-  if (!brand) throwErr("Server error", 500);
+  if (!brand) {
+    ThrowErr.ServerError();
+  }
 
   res.status(200).json(brand);
 });

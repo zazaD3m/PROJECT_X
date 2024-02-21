@@ -2,13 +2,14 @@ import { Router } from "express";
 import {
   multerUpload,
   uploadToCloudinary,
-} from "../../middleware/uploadImageMiddleware.js";
+} from "../../middleware/imageMiddleware.js";
 import { authenticateUser, isAdmin } from "../../middleware/authMiddleware.js";
 import {
   createProduct,
   // getAllProducts,
-  // updateProduct,
+  updateProduct,
   // deleteProduct,
+  // deleteProductImage,
   getProduct,
 } from "../../controllers/productController.js";
 import {
@@ -23,15 +24,29 @@ router
   .route("/")
   .post(
     [authenticateUser, isAdmin],
-    multerUpload.array("images", 4),
+    multerUpload.fields([
+      { name: "image1" },
+      { name: "image2" },
+      { name: "image3" },
+      { name: "image4" },
+    ]),
     uploadToCloudinary,
     createProduct
   );
 
 // .get(getAllProducts);
 
-router.route("/product/:id").get([paramIdValidator, validate], getProduct);
+router
+  .route("/product/:id")
+  .get([paramIdValidator, validate], getProduct)
+  .put(
+    [paramIdValidator, validate],
+    multerUpload.array("images", 4),
+    updateProduct
+  );
 //   .delete([paramIdValidator, validate], deleteProduct)
 //   .get([paramIdValidator, validate], getProduct);
+
+// router.route("/product/image").delete(deleteProductImage);
 
 export default router;

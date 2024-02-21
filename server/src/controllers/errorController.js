@@ -55,8 +55,4 @@ const globalErrorHandler = (error, req, res, next) => {
   }
 };
 
-export const throwErr = (msg, statusCode) => {
-  throw new CustomError(msg, statusCode);
-};
-
 export default globalErrorHandler;

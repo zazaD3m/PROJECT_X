@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 
 import Category from "../models/categoryModel.js";
 import { validateObjectId } from "../validations/validations.js";
-import { throwErr } from "./errorController.js";
+import { ThrowErr } from "../utils/CustomError.js";
 
 // @desc Create new category
 // route POST /api/categories/
@@ -13,11 +13,11 @@ export const createCategory = asyncHandler(async (req, res) => {
   const tempNewCategory = { mainCategoryName, isMainCategory, genderName };
 
   if (subCategoryName && isMainCategory) {
-    throwErr("Bad request", 400);
+    ThrowErr.BadRequest();
   }
 
   if (!subCategoryName && !isMainCategory) {
-    throwErr("Bad request", 400);
+    ThrowErr.BadRequest();
   }
 
   if (subCategoryName) {
@@ -27,13 +27,13 @@ export const createCategory = asyncHandler(async (req, res) => {
   const duplicateCategory = await Category.findOne(tempNewCategory).lean();
 
   if (duplicateCategory) {
-    throwErr("Category already exists", 409);
+    ThrowErr.Conflict("Category already exists");
   }
 
   const newCategory = await Category.create(tempNewCategory);
 
   if (!newCategory) {
-    throwErr("Server error", 500);
+    ThrowErr.ServerError();
   }
 
   return res.status(201).json(newCategory);
@@ -45,7 +45,7 @@ export const getAllCategories = asyncHandler(async (req, res) => {
   const categories = await Category.find();
 
   if (!categories) {
-    throwErr("Server Error", 500);
+    ThrowErr.ServerError();
   }
 
   res.status(200).json(categories);

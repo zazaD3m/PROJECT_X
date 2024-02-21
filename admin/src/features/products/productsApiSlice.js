@@ -38,30 +38,12 @@ const productsApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: [{ type: "Product", id: "LIST" }],
     }),
     updateProduct: builder.mutation({
-      query: ({ productId, productName }) => ({
+      query: ({ productData, productId }) => ({
         url: `${PRODUCTS_URL}/product/${productId}`,
         method: "PUT",
-        body: { productName },
+        body: productData,
+        formData: true,
       }),
-      async onQueryStarted(
-        { productId, productName },
-        { dispatch, queryFulfilled },
-      ) {
-        const putResult = dispatch(
-          productsApiSlice.util.updateQueryData(
-            "getProductById",
-            productId,
-            (draft) => {
-              draft.productName = productName;
-            },
-          ),
-        );
-        try {
-          await queryFulfilled;
-        } catch (err) {
-          putResult.undo();
-        }
-      },
       invalidatesTags: (result, error, arg) => [
         { type: "Product", id: arg.productId },
       ],
@@ -70,6 +52,16 @@ const productsApiSlice = apiSlice.injectEndpoints({
       query: ({ productId }) => ({
         url: `${PRODUCTS_URL}/product/${productId}`,
         method: "DELETE",
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: "Product", id: arg.productId },
+      ],
+    }),
+    deleteProductImage: builder.mutation({
+      query: ({ productId, public_id, imageIndex }) => ({
+        url: `${PRODUCTS_URL}/product/image`,
+        method: "DELETE",
+        body: { productId, public_id, imageIndex },
       }),
       invalidatesTags: (result, error, arg) => [
         { type: "Product", id: arg.productId },
@@ -84,6 +76,7 @@ export const {
   useGetProductsQuery,
   useGetProductByIdQuery,
   useDeleteProductMutation,
+  useDeleteProductImageMutation,
 } = productsApiSlice;
 
 export const selectProductsResult =

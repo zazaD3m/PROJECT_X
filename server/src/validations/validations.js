@@ -1,6 +1,6 @@
 import { isObjectIdOrHexString } from "mongoose";
 import { body, checkExact, param } from "express-validator";
-import { throwErr } from "../controllers/errorController.js";
+import { ThrowErr } from "../utils/CustomError.js";
 
 export const validateObjectId = (id) => {
   let isValid;
@@ -11,7 +11,7 @@ export const validateObjectId = (id) => {
   }
 
   if (!isValid) {
-    throwErr("Bad request", 400);
+    ThrowErr.BadRequest();
   }
 };
 

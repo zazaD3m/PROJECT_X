@@ -18,13 +18,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useCreateProductMutation } from "../../../../features/products/productsApiSlice";
 import { useEffect } from "react";
 import { useToast } from "../../../../components/ui/use-toast";
+import Loader from "../../../../components/Loader";
 
 const addProductSchema = yup.object().shape({
   productTitle: yup.string().required("Product title is required"),
   productDescription: yup.string().required("Product description is required"),
   productPrice: yup
     .number()
-    .typeError("Product price is required")
+    .required("Product price is required")
     .positive("Product price must be greater than 0"),
   productMainCategory: yup
     .string()
@@ -33,43 +34,19 @@ const addProductSchema = yup.object().shape({
   productGender: yup.string().required("Product gender is required"),
   productBrand: yup.string().required("Product brand is required"),
   productColor: yup.string().required("Product color is required"),
-  productImage1: yup
-    .mixed()
-    .nullable()
-    .required("Product image is required")
-    .test("fileSize", "The file should be less than 2.5mb", (value) => {
-      return value && value.size <= 2500000;
-    }),
-  productImage2: yup
-    .mixed()
-    .nullable()
-    .required("Product image is required")
-    .test("fileSize", "The file should be less than 2.5mb", (value) => {
-      return value && value.size <= 2500000;
-    }),
-  productImage3: yup
-    .mixed()
-    .nullable()
-    .optional()
-    .test("fileSize", "The file should be less than 2.5mb", (value) => {
-      if (!value) return true;
-      return value && value.size <= 2500000;
-    }),
-  productImage4: yup
-    .mixed()
-    .nullable()
-    .optional()
-    .test("fileSize", "The file should be less than 2.5mb", (value) => {
-      if (!value) return true;
-      return value && value.size <= 2500000;
-    }),
+  productImage1: yup.mixed().nullable().required("File is required"),
+  productImage2: yup.mixed().nullable().required("File is required"),
+  productImage3: yup.mixed().nullable().optional(),
+  productImage4: yup.mixed().nullable().optional(),
 });
 
 const AddProductForm = () => {
   const { toast } = useToast();
 
-  const [createProduct, { isSuccess, isError, data: newProductData }] =
-    useCreateProductMutation({});
+  const [
+    createProduct,
+    { isSuccess, isLoading, isError, data: newProductData },
+  ] = useCreateProductMutation();
 
   const form = useForm({
     defaultValues: {
@@ -96,6 +73,7 @@ const AddProductForm = () => {
     resetField,
     setError,
     setValue,
+    getValues,
     watch,
     clearErrors,
     reset,
@@ -107,20 +85,13 @@ const AddProductForm = () => {
         variant: "success",
         title: `${newProductData.title}, has been added to products`,
       });
-      reset({
-        productTitle: "",
-        productDescription: "",
-        productPrice: "",
-        productGender: newProductData.gender,
-        productMainCategory: "",
-        productSubCategory: "",
-        productBrand: "",
-        productColor: "",
-        productImage1: null,
-        productImage2: null,
-        productImage3: null,
-        productImage4: null,
-      });
+      resetField("productTitle");
+      resetField("productDescription");
+      resetField("productPrice");
+      resetField("productImage1");
+      resetField("productImage2");
+      resetField("productImage3");
+      resetField("productImage4");
     }
     if (isError) {
       toast({
@@ -132,6 +103,7 @@ const AddProductForm = () => {
 
   async function handleAddProduct(data) {
     const newProductFormData = new FormData();
+    const slug = `${data.productBrand}-${data.productSubCategory}-${data.productColor}-for-${data.productGender}`;
 
     newProductFormData.append("color", data.productColor);
     newProductFormData.append("brand", data.productBrand);
@@ -141,10 +113,15 @@ const AddProductForm = () => {
     newProductFormData.append("subCategory", data.productSubCategory);
     newProductFormData.append("price", data.productPrice);
     newProductFormData.append("title", data.productTitle);
-    newProductFormData.append("images", data.productImage1);
-    newProductFormData.append("images", data.productImage2);
-    newProductFormData.append("images", data.productImage3);
-    newProductFormData.append("images", data.productImage4);
+    newProductFormData.append("slug", slug);
+    newProductFormData.append("image1", data.productImage1);
+    newProductFormData.append("image2", data.productImage2);
+    if (data.productImage3) {
+      newProductFormData.append("image3", data.productImage3);
+    }
+    if (data.productImage4) {
+      newProductFormData.append("image4", data.productImage4);
+    }
 
     await createProduct(newProductFormData);
   }
@@ -206,9 +183,11 @@ const AddProductForm = () => {
             <div className="flex gap-x-8">
               <div className="h-40 w-40">
                 <ProductFormImage
+                  getValue={getValues}
                   name="productImage1"
                   control={control}
                   watch={watch}
+                  isCreateSuccess={isSuccess}
                   setValue={setValue}
                   setError={setError}
                   clearErrors={clearErrors}
@@ -216,9 +195,11 @@ const AddProductForm = () => {
               </div>
               <div className="h-40 w-40">
                 <ProductFormImage
+                  getValue={getValues}
                   name="productImage2"
                   control={control}
                   watch={watch}
+                  isCreateSuccess={isSuccess}
                   setValue={setValue}
                   setError={setError}
                   clearErrors={clearErrors}
@@ -226,9 +207,11 @@ const AddProductForm = () => {
               </div>
               <div className="h-40 w-40">
                 <ProductFormImage
+                  getValue={getValues}
                   name="productImage3"
                   control={control}
                   watch={watch}
+                  isCreateSuccess={isSuccess}
                   setValue={setValue}
                   setError={setError}
                   clearErrors={clearErrors}
@@ -236,9 +219,11 @@ const AddProductForm = () => {
               </div>
               <div className="h-40 w-40">
                 <ProductFormImage
+                  getValue={getValues}
                   name="productImage4"
                   control={control}
                   watch={watch}
+                  isCreateSuccess={isSuccess}
                   setValue={setValue}
                   setError={setError}
                   clearErrors={clearErrors}
@@ -246,8 +231,14 @@ const AddProductForm = () => {
               </div>
             </div>
           </div>
-          <div className="flex justify-center">
-            <Button type="submit">Add product</Button>
+          <div className="flex justify-center pt-8">
+            {isLoading ? (
+              <Loader />
+            ) : (
+              <Button type="submit" className="mx-auto min-w-40">
+                Add Product
+              </Button>
+            )}
           </div>
         </form>
       </Form>

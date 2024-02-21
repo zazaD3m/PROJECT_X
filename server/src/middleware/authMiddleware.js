@@ -1,21 +1,21 @@
 import jwt from "jsonwebtoken";
 import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
-import { throwErr } from "../controllers/errorController.js";
 import { isProduction } from "../utils/helpers.js";
 import { clearRefreshToken } from "../services/jwt.js";
+import { ThrowErr } from "../utils/CustomError.js";
 
 export const authenticateUser = asyncHandler(async (req, res, next) => {
   const authHeader = req.headers.authorization || req.headers.Authorization;
 
   if (!authHeader?.startsWith("Bearer ")) {
-    throwErr("Unauthorized", 401);
+    ThrowErr.Unauthorized();
   }
 
   const accessToken = authHeader.split(" ")[1];
 
   if (!accessToken) {
-    throwErr("Unauthorized", 401);
+    ThrowErr.Unauthorized();
   }
 
   let userId;
@@ -26,9 +26,9 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
     function (err, decoded) {
       if (err) {
         if (err.name === "TokenExpiredError") {
-          throwErr("accessToken expired", 401);
+          ThrowErr.Unauthorized("accessToken expired");
         } else {
-          throwErr("Unauthorized", 401);
+          ThrowErr.Unauthorized();
         }
       } else {
         userId = decoded.userId;
@@ -39,7 +39,7 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
   const user = await User.findById(userId);
 
   if (!user) {
-    throwErr("User not found, try again.", 404);
+    ThrowErr.NotFound();
   }
 
   req.user = user;
@@ -50,7 +50,7 @@ export const isAdmin = (req, res, next) => {
   const { role } = req.user;
   if (role !== "admin") {
     clearRefreshToken(res);
-    throwErr("Not admin", 403);
+    ThrowErr.Forbidden("Not admin");
   }
   next();
 };
@@ -61,7 +61,7 @@ export const checkGoogleAuth = asyncHandler(async (req, res, next) => {
   token = req.cookies.googleAuthToken;
 
   if (!token) {
-    throwErr("Unauthorized", 401);
+    ThrowErr.Unauthorized();
   }
 
   let userId;
@@ -71,7 +71,7 @@ export const checkGoogleAuth = asyncHandler(async (req, res, next) => {
     process.env.GOOGLE_TOKEN_SECRET,
     function (err, decoded) {
       if (err) {
-        throwErr("Unauthorized", 401);
+        ThrowErr.Unauthorized();
       } else {
         userId = decoded.userId;
       }
@@ -81,7 +81,7 @@ export const checkGoogleAuth = asyncHandler(async (req, res, next) => {
   const user = await User.findById(id).lean();
 
   if (!user) {
-    throwErr("User not found, try again.", 404);
+    ThrowErr.NotFound();
   }
 
   req.user = user;

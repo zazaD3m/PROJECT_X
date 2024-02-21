@@ -8,63 +8,127 @@ import {
   FormMessage,
 } from "../../../../components/ui/form";
 
+import {
+  useDeleteImageMutation,
+  useUploadImageMutation,
+} from "../../../../features/images/imagesApiSlice";
+
 const ProductFormImage = ({
   name,
   control,
   setValue,
   setError,
+  getValue,
   clearErrors,
+  isCreateSuccess,
   watch,
 }) => {
-  const inputImg = watch(name);
   const [imgPreview, setImgPreview] = useState("");
 
+  const [
+    uploadImage,
+    {
+      isSuccess: isUploadSuccess,
+      isLoading: isUploadLoading,
+      isError: isUploadError,
+      data: newImageData,
+    },
+  ] = useUploadImageMutation();
+
+  const [
+    deleteImage,
+    {
+      isSuccess: isDeleteSuccess,
+      isLoading: isDeleteLoading,
+      isError: isDeleteError,
+    },
+  ] = useDeleteImageMutation();
+
   useEffect(() => {
-    if (!inputImg) {
-      URL.revokeObjectURL(imgPreview);
-      setImgPreview("");
+    if (isUploadLoading) {
+      setImgPreview("loading");
     }
-  }, [inputImg]);
+    if (isUploadSuccess) {
+      setImgPreview("");
+      clearErrors(name);
+      setValue(name, newImageData, { shouldDirty: true, shouldTouch: true });
+      setImgPreview(getValue(name).href);
+    }
+    if (isUploadError) {
+      setImgPreview("");
+      setValue(name, null);
+      setError(name, {
+        message: "Try Again",
+        type: "typeError",
+      });
+    }
+  }, [isUploadLoading, isUploadSuccess, isUploadError]);
 
-  function handleOnDrop(acceptedFiles) {
-    if (acceptedFiles && acceptedFiles.length > 0) {
-      const file = acceptedFiles[0];
+  useEffect(() => {
+    if (isDeleteLoading) {
+      setImgPreview("loading");
+    }
+    if (isDeleteSuccess) {
+      setImgPreview("");
+      clearErrors(name);
+      setValue(name, null, { shouldDirty: true });
+    }
+    if (isDeleteError) {
+      setImgPreview(getValue(name).href);
+      setError(name, {
+        message: "Try Again",
+        type: "typeError",
+      });
+    }
+  }, [isDeleteSuccess, isDeleteLoading, isDeleteError]);
 
-      const allowedTypes = ["image/jpeg"];
-      const fileType = allowedTypes.find(
-        (allowedType) => allowedType === file.type,
-      );
+  // useEffect(() => {
+  //   if (isCreateSuccess) {
+  //     URL.revokeObjectURL(imgPreview);
+  //     setImgPreview("");
+  //   }
+  // }, [isCreateSuccess]);
 
-      if (!fileType) {
-        setValue(name, null);
-        setError(name, {
-          message: "File type is not valid",
-          type: "typeError",
-        });
-        setImgPreview("");
-      } else {
-        const displayUrl = URL.createObjectURL(file);
-        setValue(name, file, { shouldDirty: true, shouldTouch: true });
-        clearErrors(name);
-        setImgPreview(displayUrl);
-      }
-    } else {
+  const handleOnDrop = async (acceptedFiles) => {
+    if (!acceptedFiles || (acceptedFiles && acceptedFiles.length <= 0)) {
       setValue(name, null);
       setError(name, {
         message: "File is required",
         type: "typeError",
       });
       setImgPreview("");
+      return;
     }
-  }
-  function handleRemove() {
-    setValue(name, null);
-    setError(name, {
-      message: "File is required",
-      type: "typeError",
-    });
-    setImgPreview("");
-  }
+
+    const file = acceptedFiles[0];
+    const allowedTypes = ["image/jpeg"];
+    const allowedSize = 2500000; // 2.5 mb
+    const isValidType = allowedTypes.find(
+      (allowedType) => allowedType === file.type,
+    );
+    const isValidSize = file.size <= allowedSize;
+
+    if (!isValidType || !isValidSize) {
+      setValue(name, null);
+      setError(name, {
+        message: isValidType
+          ? `Size should be less than ${allowedSize / 1000000} mb`
+          : `Image should be ${allowedTypes[0]} format`,
+        type: "typeError",
+      });
+      setImgPreview("");
+      return;
+    }
+
+    const newImageFormData = new FormData();
+    newImageFormData.append("productImage", file);
+
+    await uploadImage(newImageFormData);
+  };
+
+  const handleRemove = async () => {
+    await deleteImage(getValue(name).public_id);
+  };
   return (
     <>
       <FormField
@@ -75,7 +139,7 @@ const ProductFormImage = ({
             <FormControl>
               <Dropzone
                 {...field}
-                dropMessage="Drop file or click here"
+                dropMessage="Click Here"
                 handleOnDrop={handleOnDrop}
                 handleRemove={handleRemove}
                 imgPreview={imgPreview}
