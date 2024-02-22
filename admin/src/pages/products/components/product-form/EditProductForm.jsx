@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { useToast } from "../../../../components/ui/use-toast";
 import { useUpdateProductMutation } from "../../../../features/products/productsApiSlice";
 import Loader from "../../../../components/Loader";
+import { useParams } from "react-router-dom";
 
 const editProductSchema = yup.object().shape({
   productTitle: yup.string().required("Product title is required"),
@@ -40,6 +41,8 @@ const editProductSchema = yup.object().shape({
 
 const EditProductForm = ({ product }) => {
   const { toast } = useToast();
+  const { productId } = useParams();
+  console.log(productId);
 
   const [
     updateProduct,
@@ -77,27 +80,27 @@ const EditProductForm = ({ product }) => {
     getFieldState,
   } = form;
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast({
-        variant: "success",
-        title: `${updatedProductData.title}, has been update`,
-      });
-      resetField("productTitle");
-      resetField("productDescription");
-      resetField("productPrice");
-      resetField("productImage1");
-      resetField("productImage2");
-      resetField("productImage3");
-      resetField("productImage4");
-    }
-    if (isError) {
-      toast({
-        variant: "destructive",
-        title: `Server Error, Try again`,
-      });
-    }
-  }, [isSuccess, isError]);
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     toast({
+  //       variant: "success",
+  //       title: `${updatedProductData.title}, has been update`,
+  //     });
+  //     resetField("productTitle");
+  //     resetField("productDescription");
+  //     resetField("productPrice");
+  //     resetField("productImage1");
+  //     resetField("productImage2");
+  //     resetField("productImage3");
+  //     resetField("productImage4");
+  //   }
+  //   if (isError) {
+  //     toast({
+  //       variant: "destructive",
+  //       title: `Server Error, Try again`,
+  //     });
+  //   }
+  // }, [isSuccess, isError]);
 
   const handleAddProduct = async (data) => {
     const updatedProduct = {};
@@ -125,7 +128,7 @@ const EditProductForm = ({ product }) => {
     console.log("data=", data);
     console.log("updated product=", updatedProduct);
 
-    // await updateProduct(updatedProduct);
+    await updateProduct({ productData: updatedProduct, productId });
   };
 
   return (

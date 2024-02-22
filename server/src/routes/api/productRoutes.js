@@ -8,7 +8,7 @@ import {
   createProduct,
   // getAllProducts,
   updateProduct,
-  // deleteProduct,
+  deleteProduct,
   // deleteProductImage,
   getProduct,
 } from "../../controllers/productController.js";
@@ -20,7 +20,13 @@ import { validate } from "../../middleware/validationMiddleware.js";
 
 const router = Router();
 
-router.route("/").post([productValidator, validate], createProduct);
+router
+  .route("/")
+  .post(
+    [authenticateUser, isAdmin],
+    [productValidator, validate],
+    createProduct
+  );
 
 // .get(getAllProducts);
 
@@ -28,11 +34,15 @@ router
   .route("/product/:id")
   .get([paramIdValidator, validate], getProduct)
   .put(
-    [paramIdValidator, validate],
-    multerUpload.array("images", 4),
+    [authenticateUser, isAdmin],
+    [paramIdValidator, productValidator, validate],
     updateProduct
+  )
+  .delete(
+    [authenticateUser, isAdmin],
+    [paramIdValidator, validate],
+    deleteProduct
   );
-//   .delete([paramIdValidator, validate], deleteProduct)
 //   .get([paramIdValidator, validate], getProduct);
 
 // router.route("/product/image").delete(deleteProductImage);

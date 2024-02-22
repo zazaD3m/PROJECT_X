@@ -41,7 +41,6 @@ const productsApiSlice = apiSlice.injectEndpoints({
         url: `${PRODUCTS_URL}/product/${productId}`,
         method: "PUT",
         body: productData,
-        formData: true,
       }),
       invalidatesTags: (result, error, arg) => [
         { type: "Product", id: arg.productId },

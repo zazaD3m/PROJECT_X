@@ -66,7 +66,7 @@ export const uploadToCloudinary = async (req, res, next) => {
   }
 };
 
-export const deleteImageFromCloudinary = async (req, res, next) => {
+export const deleteImageFromCloudinaryMiddleware = async (req, res, next) => {
   const { public_id } = req.body;
   if (!public_id) {
     ThrowErr.BadRequest();
@@ -93,4 +93,20 @@ export const deleteImageFromCloudinary = async (req, res, next) => {
   } catch (err) {
     next(new CustomError("Server Error", 500));
   }
+};
+
+export const deleteImageFromCloudinary = (public_id) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.destroy(
+      public_id,
+      { invalidate: true },
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      }
+    );
+  });
 };

@@ -57,7 +57,8 @@ const ProductFormImage = ({
     if (page !== "edit") {
       return;
     }
-    setImgPreview(getValue(name)?.href ? getValue(name).href : "");
+    const tempImgPreview = getValue(name)?.href ? getValue(name).href : "";
+    setImgPreview(tempImgPreview);
   }, []);
 
   // add index to image object when uploading image
@@ -70,7 +71,8 @@ const ProductFormImage = ({
       setImgPreview("");
       clearErrors(name);
       setValue(name, newImageData, { shouldDirty: true, shouldTouch: true });
-      setImgPreview(getValue(name)?.href ? getValue(name).href : "");
+      const tempImgPreview = getValue(name)?.href ? getValue(name).href : "";
+      setImgPreview(tempImgPreview);
     }
     if (isUploadError) {
       setImgPreview("");
@@ -92,7 +94,8 @@ const ProductFormImage = ({
       setValue(name, null, { shouldDirty: true });
     }
     if (isDeleteError) {
-      setImgPreview(getValue(name)?.href ? getValue(name).href : "");
+      const tempImgPreview = getValue(name)?.href ? getValue(name).href : "";
+      setImgPreview(tempImgPreview);
       setError(name, {
         message: "Try Again",
         type: "typeError",
@@ -120,11 +123,12 @@ const ProductFormImage = ({
     const isValidSize = file.size <= allowedSize;
 
     if (!isValidType || !isValidSize) {
+      const errorMsg = isValidType
+        ? `Size should be less than ${allowedSize / 1000000} mb`
+        : `Image should be ${allowedTypes[0]} format`;
       setValue(name, null);
       setError(name, {
-        message: isValidType
-          ? `Size should be less than ${allowedSize / 1000000} mb`
-          : `Image should be ${allowedTypes[0]} format`,
+        message: errorMsg,
         type: "typeError",
       });
       setImgPreview("");
@@ -136,7 +140,6 @@ const ProductFormImage = ({
 
     await uploadImage(newImageFormData);
   };
-
   const handleRemove = async () => {
     const public_id = getValue(name).public_id;
     const reqObj = {

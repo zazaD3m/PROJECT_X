@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import Product from "../models/productModel.js";
 import { validateObjectId } from "../validations/validations.js";
 import { ThrowErr } from "../utils/CustomError.js";
+import { deleteImageFromCloudinary } from "../middleware/imageMiddleware.js";
 // import { deleteFromCloudinary } from "../middleware/imageMiddleware.js";
 
 // @desc Create new product
@@ -36,8 +37,11 @@ export const getProduct = asyncHandler(async (req, res) => {
 export const updateProduct = asyncHandler(async (req, res) => {
   const { id: productId } = req.params;
   validateObjectId(productId);
+  const updatedProduct = { ...req.body };
 
-  const product = await Product.findById(productId).lean();
+  const product = await Product.findByIdAndUpdate(productId, updatedProduct, {
+    new: true,
+  });
 
   if (!product) {
     ThrowErr.ServerError();
@@ -46,24 +50,27 @@ export const updateProduct = asyncHandler(async (req, res) => {
   res.status(200).json(product);
 });
 
-// // @desc Delete product image
-// // route DELETE /api/products/product/image
-// export const deleteProductImage = asyncHandler(async (req, res) => {
-//   const { public_id, imageIndex, productId } = req.body;
-//   validateObjectId(productId);
+// @desc Delete product
+// route DELETE /api/products/product/:id
+export const deleteProduct = asyncHandler(async (req, res) => {
+  const { id: productId } = req.params;
+  validateObjectId(productId);
 
-//   const { result: imgDelRes } = await deleteFromCloudinary(public_id);
+  const deletedProduct = await Product.findByIdAndDelete(productId);
+  if (!deletedProduct) {
+    ThrowErr.ServerError();
+  }
+  if (Object.keys(deletedProduct.images).length < 1) {
+    return res.status(200).json({ message: "Success" });
+  }
 
-//   if (imgDelRes !== "ok") {
-//     ThrowErr.ServerError();
-//   }
-//   const updatedProduct = await Product.findByIdAndUpdate(productId, {
-//     $unset: { [`images.${imageIndex}`]: 1 },
-//   });
+  for (let key in deletedProduct.images) {
+    const public_id = deletedProduct.images[key].public_id;
+    const deletedImage = await deleteImageFromCloudinary(public_id);
+    if (!deletedImage) {
+      ThrowErr.ServerError();
+    }
+  }
 
-//   if (!updatedProduct) {
-//     ThrowErr.ServerError();
-//   }
-
-//   res.status(200).json({ message: "Success" });
-// });
+  res.status(200).json({ message: "Product deleted successfully" });
+});

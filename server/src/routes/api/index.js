@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authenticateUser, isAdmin } from "../../middleware/authMiddleware.js";
+import { ThrowErr } from "../../utils/CustomError.js";
 
 import brandRoutes from "./brandRoutes.js";
 import colorRoutes from "./colorRoutes.js";
@@ -13,8 +14,12 @@ const router = Router();
 router.use("/brands", authenticateUser, isAdmin, brandRoutes);
 router.use("/colors", authenticateUser, isAdmin, colorRoutes);
 router.use("/categories", authenticateUser, isAdmin, categoryRoutes);
-router.use("/products", productRoutes);
 router.use("/images", authenticateUser, isAdmin, imageRoutes);
+router.use("/products", productRoutes);
 router.use("/users", authenticateUser, isAdmin, userRoutes);
+
+router.all("*", (req, res, next) => {
+  ThrowErr.NotFound(`Can't find ${req.originalUrl} on the server!`);
+});
 
 export default router;

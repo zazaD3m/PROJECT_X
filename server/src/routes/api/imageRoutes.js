@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {
-  deleteImageFromCloudinary,
+  deleteImageFromCloudinaryMiddleware,
   multerUpload,
   uploadToCloudinary,
 } from "../../middleware/imageMiddleware.js";
@@ -18,6 +18,6 @@ router
     uploadToCloudinary,
     uploadProductImage
   )
-  .delete(deleteImageFromCloudinary, deleteProductImage);
+  .delete(deleteImageFromCloudinaryMiddleware, deleteProductImage);
 
 export default router;

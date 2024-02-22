@@ -21,6 +21,9 @@ export const deleteProductImage = asyncHandler(async (req, res) => {
   if (!productId) {
     return res.status(200).json({ message: "Image deleted successfully" });
   }
+  if (!imageIndex) {
+    ThrowErr.ServerError();
+  }
 
   const updatedProduct = await Product.findByIdAndUpdate(productId, {
     $unset: { [`images.${imageIndex}`]: 1 },
