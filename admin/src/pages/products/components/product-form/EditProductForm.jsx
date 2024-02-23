@@ -13,11 +13,15 @@ import { Form } from "../../../../components/ui/form";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "../../../../components/ui/use-toast";
-import { useUpdateProductMutation } from "../../../../features/products/productsApiSlice";
+import {
+  useDeleteProductMutation,
+  useUpdateProductMutation,
+} from "../../../../features/products/productsApiSlice";
 import Loader from "../../../../components/Loader";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import DeleteConfirmationDialog from "../../../../components/DeleteConfirmationDialog";
 
 const editProductSchema = yup.object().shape({
   productTitle: yup.string().required("Product title is required"),
@@ -41,13 +45,28 @@ const editProductSchema = yup.object().shape({
 
 const EditProductForm = ({ product }) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const { productId } = useParams();
-  console.log(productId);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const [
     updateProduct,
-    { isSuccess, isLoading, isError, data: updatedProductData },
+    {
+      isSuccess: isUpdateSuccess,
+      isLoading: isUpdateLoading,
+      isError: isUpdateError,
+      data: updatedProductData,
+    },
   ] = useUpdateProductMutation();
+
+  const [
+    deleteProduct,
+    {
+      isSuccess: isDeleteSuccess,
+      isLoading: isDeleteLoading,
+      isError: isDeleteError,
+    },
+  ] = useDeleteProductMutation();
 
   const form = useForm({
     defaultValues: {
@@ -80,27 +99,32 @@ const EditProductForm = ({ product }) => {
     getFieldState,
   } = form;
 
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     toast({
-  //       variant: "success",
-  //       title: `${updatedProductData.title}, has been update`,
-  //     });
-  //     resetField("productTitle");
-  //     resetField("productDescription");
-  //     resetField("productPrice");
-  //     resetField("productImage1");
-  //     resetField("productImage2");
-  //     resetField("productImage3");
-  //     resetField("productImage4");
-  //   }
-  //   if (isError) {
-  //     toast({
-  //       variant: "destructive",
-  //       title: `Server Error, Try again`,
-  //     });
-  //   }
-  // }, [isSuccess, isError]);
+  useEffect(() => {
+    if (isUpdateSuccess) {
+      toast({
+        variant: "success",
+        title: `${updatedProductData.title}, has been updated`,
+      });
+    }
+    if (isUpdateError) {
+      toast({
+        variant: "destructive",
+        title: `Server Error, Try again`,
+      });
+    }
+  }, [isUpdateSuccess, isUpdateError]);
+
+  useEffect(() => {
+    if (isDeleteSuccess) {
+      navigate("..");
+    }
+    if (isUpdateError) {
+      toast({
+        variant: "destructive",
+        title: `Server Error, Try again`,
+      });
+    }
+  }, [isDeleteSuccess, isDeleteError]);
 
   const handleAddProduct = async (data) => {
     const updatedProduct = {};
@@ -125,10 +149,11 @@ const EditProductForm = ({ product }) => {
       updatedProduct.images[4] = { ...data.productImage4, alt: slug };
     }
 
-    console.log("data=", data);
-    console.log("updated product=", updatedProduct);
-
     await updateProduct({ productData: updatedProduct, productId });
+  };
+
+  const handleDeleteProduct = async () => {
+    await deleteProduct({ productId });
   };
 
   return (
@@ -252,17 +277,34 @@ const EditProductForm = ({ product }) => {
               </div>
             </div>
           </div>
-          <div className="flex justify-center pt-8">
-            {isLoading ? (
+          <div className="grid grid-cols-7 pt-8">
+            {isUpdateLoading || isDeleteLoading ? (
               <Loader />
             ) : (
-              <Button type="submit" className="mx-auto min-w-40">
-                Update Product
-              </Button>
+              <>
+                <Button type="submit" className="col-start-4 min-w-40">
+                  Update Product
+                </Button>
+                <Button
+                  variant="destructive"
+                  className="col-start-7 min-w-40"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowDeleteDialog(true);
+                  }}
+                >
+                  Delete Product
+                </Button>
+              </>
             )}
           </div>
         </form>
       </Form>
+      <DeleteConfirmationDialog
+        showDeleteDialog={showDeleteDialog}
+        setShowDeleteDialog={setShowDeleteDialog}
+        deleteAction={handleDeleteProduct}
+      />
       <DevTool control={control} />
     </>
   );

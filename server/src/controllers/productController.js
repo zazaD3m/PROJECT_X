@@ -61,14 +61,22 @@ export const deleteProduct = asyncHandler(async (req, res) => {
     ThrowErr.ServerError();
   }
   if (Object.keys(deletedProduct.images).length < 1) {
-    return res.status(200).json({ message: "Success" });
+    return res.status(200).json({ message: "Product deleted successfully" });
   }
 
-  for (let key in deletedProduct.images) {
+  const retryImageDelete = [];
+
+  for (const key in deletedProduct.images) {
     const public_id = deletedProduct.images[key].public_id;
     const deletedImage = await deleteImageFromCloudinary(public_id);
-    if (!deletedImage) {
-      ThrowErr.ServerError();
+    if (deletedImage.result !== "ok") {
+      retryImageDelete.push(public_id);
+    }
+  }
+
+  if (retryImageDelete.length > 0) {
+    for (const e of retryImageDelete) {
+      await deleteImageFromCloudinary(e);
     }
   }
 

@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Container,
   ContainerContent,
@@ -12,9 +12,11 @@ import EditProductForm from "./components/product-form/EditProductForm";
 import { useGetCategoriesQuery } from "../../features/categories/categoriesApiSlice";
 import { useGetBrandsQuery } from "../../features/brands/brandsApiSlice";
 import { useGetColorsQuery } from "../../features/colors/colorsApiSlice";
+import { useEffect } from "react";
 
 const EditProduct = () => {
   const { productId } = useParams();
+  const navigate = useNavigate();
 
   const { isSuccess: isCategoriesSuccess, isLoading: isCategoriesLoading } =
     useGetCategoriesQuery();
@@ -27,7 +29,14 @@ const EditProduct = () => {
     data: product,
     isSuccess: isProductSuccess,
     isLoading: isProductLoading,
+    isError: isProductError,
   } = useGetProductByIdQuery(productId);
+
+  useEffect(() => {
+    if (isProductError) {
+      navigate("..");
+    }
+  }, [isProductError]);
 
   return (
     <Container>

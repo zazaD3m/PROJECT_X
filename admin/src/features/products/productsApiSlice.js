@@ -27,6 +27,7 @@ const productsApiSlice = apiSlice.injectEndpoints({
     }),
     getProductById: builder.query({
       query: (productId) => `${PRODUCTS_URL}/product/${productId}`,
+      providesTags: (result, error, arg) => [{ type: "Product", id: arg }],
     }),
     createProduct: builder.mutation({
       query: (productData) => ({
@@ -52,7 +53,7 @@ const productsApiSlice = apiSlice.injectEndpoints({
         method: "DELETE",
       }),
       invalidatesTags: (result, error, arg) => [
-        { type: "Product", id: arg.productId },
+        { type: "Product", id: "LIST" },
       ],
     }),
     deleteProductImage: builder.mutation({
