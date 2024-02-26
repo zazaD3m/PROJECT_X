@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -19,7 +20,7 @@ import {
 } from "../../../features/colors/colorsApiSlice";
 import Loader from "../../../components/Loader";
 import { useToast } from "../../../components/ui/use-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DeleteConfirmationDialog from "../../../components/DeleteConfirmationDialog";
 
@@ -34,8 +35,24 @@ const AddColorForm = ({ color }) => {
   const [colorValue, setColorValue] = useState(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-  const [updateColor, { isLoading }] = useUpdateColorMutation();
-  const [deleteColor, { isLoading: isDelLoading }] = useDeleteColorMutation();
+  const [
+    updateColor,
+    {
+      data: updatedColorData,
+      isSuccess: isUpdateSuccess,
+      isError: isUpdateError,
+      isLoading: isUpdateLoading,
+      error: updateError,
+    },
+  ] = useUpdateColorMutation();
+  const [
+    deleteColor,
+    {
+      isLoading: isDeleteLoading,
+      isSuccess: isDeleteSuccess,
+      isError: isDeleteError,
+    },
+  ] = useDeleteColorMutation();
 
   const form = useForm({
     defaultValues: {
@@ -50,44 +67,61 @@ const AddColorForm = ({ color }) => {
 
   const { isDirty, isValid } = formState;
 
-  async function handleColorUpdate(data) {
-    const { colorName, hexValue } = data;
-    try {
-      const updatedColor = await updateColor({
-        colorName,
-        hexValue,
-        colorId: color._id,
-      }).unwrap();
+  useEffect(() => {
+    if (isDeleteSuccess) {
+      navigate("/catalog/colors");
+    }
+    if (isDeleteError) {
+      toast({
+        variant: "destructive",
+        title: "Server error, Try again",
+      });
+    }
+  }, [isDeleteSuccess, isDeleteError]);
+
+  useEffect(() => {
+    if (isUpdateSuccess) {
       toast({
         variant: "success",
-        title: `color ${colorName} has been succesfully changed to ${updatedColor.colorName}`,
+        title: `Changed color to ${updatedColorData.colorName}`,
       });
-    } catch (err) {
-      if (err.status === 409) {
+    }
+    if (isUpdateError) {
+      const errStatus = updateError.status;
+      if (errStatus === 409) {
         toast({
           variant: "destructive",
-          title: `${colorName}, already exists`,
+          title: `Color already exists`,
         });
         setError("colorName", {
           type: "custom",
-          message: `Color ${colorName}, already exists!`,
+          message: `Color, already exists`,
         });
+        return;
       }
-    }
-  }
-
-  async function handleColorDelete() {
-    try {
-      await deleteColor({ colorId: color._id }).unwrap();
-      navigate("/catalog/colors");
-    } catch (err) {
       toast({
         variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "There was a problem with your request.",
+        title: `Server error, Try again`,
+      });
+      setError("colorName", {
+        type: "custom",
+        message: `Server error, Try again`,
       });
     }
-  }
+  }, [isUpdateSuccess, isUpdateError]);
+
+  const handleColorUpdate = async (data) => {
+    const { colorName, hexValue } = data;
+    await updateColor({
+      colorName,
+      hexValue,
+      colorId: color._id,
+    });
+  };
+
+  const handleColorDelete = async () => {
+    await deleteColor({ colorId: color._id });
+  };
 
   return (
     <>
@@ -127,7 +161,7 @@ const AddColorForm = ({ color }) => {
             />
           </CardContent>
           <CardFooter className="flex-col gap-y-4">
-            {isLoading || isDelLoading ? (
+            {isUpdateLoading || isDeleteLoading ? (
               <Loader />
             ) : (
               <>

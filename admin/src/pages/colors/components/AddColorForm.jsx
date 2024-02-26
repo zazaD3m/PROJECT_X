@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -16,7 +17,7 @@ import { CardContent, CardFooter } from "../../../components/ui/card";
 import { useCreateColorMutation } from "../../../features/colors/colorsApiSlice";
 import Loader from "../../../components/Loader";
 import { useToast } from "../../../components/ui/use-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const colorSchema = yup.object({
   colorName: yup.string().required("Color name is required"),
@@ -27,7 +28,10 @@ const AddColorForm = () => {
   const { toast } = useToast();
   const [colorValue, setColorValue] = useState(null);
 
-  const [createColor, { isLoading }] = useCreateColorMutation();
+  const [
+    createColor,
+    { isLoading, isSuccess, isError, error, data: newColorData },
+  ] = useCreateColorMutation();
 
   const form = useForm({
     defaultValues: {
@@ -50,36 +54,40 @@ const AddColorForm = () => {
 
   const { isDirty, isValid } = formState;
 
-  async function handleCreateColor(data) {
-    const { colorName, hexValue } = data;
-    try {
-      await createColor({ colorName, hexValue }).unwrap();
-      setFocus("colorName");
+  useEffect(() => {
+    if (isSuccess) {
       toast({
         variant: "success",
-        title: `${colorName}, has been added to colors collection`,
+        title: `${newColorData.colorName}, has been added to colors collection`,
       });
-    } catch (err) {
-      if (err.status === 409) {
+    }
+    if (isError) {
+      const errStatus = error.status;
+      if (errStatus === 409) {
         toast({
           variant: "destructive",
-          title: `${colorName}, already exists`,
+          title: `Color, already exists`,
         });
         setError("colorName", {
           type: "custom",
-          message: `Color ${colorName}, already exists!`,
+          message: `Color, already exists`,
         });
       } else {
         toast({
           variant: "destructive",
-          title: "Something went wrong, Try again!",
+          title: "Server error, Try again",
         });
       }
     }
-    resetField("colorName");
+    resetField("colorName", { keepError: true });
     resetField("hexValue");
     setFocus("colorName");
-  }
+  }, [isSuccess, isError]);
+
+  const handleCreateColor = async (data) => {
+    const { colorName, hexValue } = data;
+    await createColor({ colorName, hexValue });
+  };
 
   return (
     <>
