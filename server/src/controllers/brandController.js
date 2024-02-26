@@ -23,7 +23,7 @@ export const createBrand = asyncHandler(async (req, res) => {
 export const getAllBrands = asyncHandler(async (req, res) => {
   const brands = await Brand.find().lean();
 
-  if (!brands) {
+  if (!brands || brands.length < 1) {
     ThrowErr.ServerError();
   }
 
