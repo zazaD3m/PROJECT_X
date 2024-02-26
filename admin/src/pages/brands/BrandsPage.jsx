@@ -22,10 +22,9 @@ import {
 } from "./brandsTableData";
 
 const BrandsPage = () => {
-  const { isSuccess } = useGetBrandsQuery("getBrands");
+  const { isSuccess } = useGetBrandsQuery();
 
   const data = useSelector(selectAllBrands);
-
   return (
     <Container>
       <ContainerHeader>

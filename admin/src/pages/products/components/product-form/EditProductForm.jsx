@@ -7,7 +7,6 @@ import ProductFormBrand from "./ProductFormBrand";
 import ProductFormColor from "./ProductFormColor";
 import ProductFormImage from "./ProductFormImage";
 
-import { DevTool } from "@hookform/devtools";
 import { Button } from "../../../../components/ui/button";
 import { Form } from "../../../../components/ui/form";
 import { useForm } from "react-hook-form";
@@ -279,7 +278,9 @@ const EditProductForm = ({ product }) => {
           </div>
           <div className="grid grid-cols-7 pt-8">
             {isUpdateLoading || isDeleteLoading ? (
-              <Loader />
+              <div className="col-start-4">
+                <Loader />
+              </div>
             ) : (
               <>
                 <Button type="submit" className="col-start-4 min-w-40">
@@ -305,7 +306,6 @@ const EditProductForm = ({ product }) => {
         setShowDeleteDialog={setShowDeleteDialog}
         deleteAction={handleDeleteProduct}
       />
-      <DevTool control={control} />
     </>
   );
 };

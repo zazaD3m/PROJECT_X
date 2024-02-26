@@ -36,7 +36,6 @@ export const updateBrand = asyncHandler(async (req, res) => {
   const { id: brandId } = req.params;
   const { brandName } = req.body;
   validateObjectId(brandId);
-
   const updatedBrand = await Brand.findByIdAndUpdate(
     brandId,
     { brandName },

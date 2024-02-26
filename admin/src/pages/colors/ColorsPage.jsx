@@ -22,7 +22,7 @@ import {
 } from "./colorsTableData";
 
 const ColorsPage = () => {
-  const { isSuccess } = useGetColorsQuery("getColors");
+  const { isSuccess } = useGetColorsQuery();
 
   const data = useSelector(selectAllColors);
 

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -19,7 +20,7 @@ import {
   useUpdateBrandMutation,
 } from "../../../features/brands/brandsApiSlice";
 import Loader from "../../../components/Loader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeleteConfirmationDialog from "../../../components/DeleteConfirmationDialog";
 import { useNavigate } from "react-router-dom";
 
@@ -36,8 +37,71 @@ const EditBrandForm = ({ brand = "" }) => {
   const { toast } = useToast();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-  const [updateBrand, { isError, isLoading, error }] = useUpdateBrandMutation();
-  const [deleteBrand, { isLoading: isDelLoading }] = useDeleteBrandMutation();
+  const [
+    updateBrand,
+    {
+      data: updatedBrandData,
+      isSuccess: isUpdateSuccess,
+      isError: isUpdateError,
+      isLoading: isUpdateLoading,
+      error: updateError,
+    },
+  ] = useUpdateBrandMutation();
+  const [
+    deleteBrand,
+    {
+      isSuccess: isDeleteSuccess,
+      isError: isDeleteError,
+      isLoading: isDeleteLoading,
+    },
+  ] = useDeleteBrandMutation();
+
+  // Brand update handler
+  useEffect(() => {
+    if (isUpdateSuccess) {
+      toast({
+        variant: "success",
+        title: `Updated brand name to ${updatedBrandData.brandName}`,
+      });
+    }
+    if (isUpdateError) {
+      const errStatus = updateError.status;
+      if (errStatus === 409) {
+        toast({
+          variant: "destructive",
+          title: `Brand already exists`,
+        });
+        setError("brandName", {
+          type: "custom",
+          message: `Brand, already exists`,
+        });
+        setFocus("brandName");
+        return;
+      }
+      toast({
+        variant: "destructive",
+        title: `Server error, Try again`,
+      });
+      setError("brandName", {
+        type: "custom",
+        message: `Server error, Try again`,
+      });
+      setFocus("brandName");
+    }
+  }, [isUpdateSuccess, isUpdateError]);
+
+  // Brand delete handler
+  useEffect(() => {
+    if (isDeleteSuccess) {
+      navigate("/catalog/brands");
+    }
+    if (isDeleteError) {
+      toast({
+        variant: "destructive",
+        title: "Server error, Try again",
+      });
+    }
+  }, [isDeleteSuccess, isDeleteError]);
 
   const form = useForm({
     defaultValues: {
@@ -51,43 +115,17 @@ const EditBrandForm = ({ brand = "" }) => {
 
   const { isDirty, isValid } = formState;
 
-  async function handleBrandUpdate(data) {
+  const handleBrandUpdate = async (data) => {
     const { brandName } = data;
-    try {
-      const updatedBrand = await updateBrand({
-        brandId: brand._id,
-        brandName,
-      }).unwrap();
-      toast({
-        variant: "success",
-        title: `brand ${brandName} has been succesfully changed to ${updatedBrand.brandName}`,
-      });
-    } catch (err) {
-      if (err.status === 409) {
-        toast({
-          variant: "destructive",
-          title: `${brandName}, already exists`,
-        });
-        setError("brandName", {
-          type: "custom",
-          message: `Brand ${brandName}, already exists!`,
-        });
-        setFocus("brandName");
-      }
-    }
-  }
+    await updateBrand({
+      brandId: brand._id,
+      brandName,
+    });
+  };
 
-  async function handleBrandDelete() {
-    try {
-      await deleteBrand({ brandId: brand._id }).unwrap();
-      navigate("/catalog/brands");
-    } catch (err) {
-      toast({
-        variant: "destructive",
-        title: "Something went wrong, Try again!",
-      });
-    }
-  }
+  const handleBrandDelete = async () => {
+    await deleteBrand({ brandId: brand._id });
+  };
 
   return (
     <>
@@ -112,7 +150,7 @@ const EditBrandForm = ({ brand = "" }) => {
             />
           </CardContent>
           <CardFooter className="flex-col gap-y-4 px-16">
-            {isLoading || isDelLoading ? (
+            {isUpdateLoading || isDeleteLoading ? (
               <Loader />
             ) : (
               <>

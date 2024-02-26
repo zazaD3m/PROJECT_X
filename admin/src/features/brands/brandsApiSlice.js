@@ -62,18 +62,14 @@ const brandsApiSlice = apiSlice.injectEndpoints({
           putResult.undo();
         }
       },
-      invalidatesTags: (result, error, arg) => [
-        { type: "Brand", id: arg.brandId },
-      ],
+      invalidatesTags: (result, error, arg) => [{ type: "Brand", id: "LIST" }],
     }),
     deleteBrand: builder.mutation({
       query: ({ brandId }) => ({
         url: `${BRANDS_URL}/brand/${brandId}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, arg) => [
-        { type: "Brand", id: arg.brandId },
-      ],
+      invalidatesTags: (result, error, arg) => [{ type: "Brand", id: "LIST" }],
     }),
   }),
 });

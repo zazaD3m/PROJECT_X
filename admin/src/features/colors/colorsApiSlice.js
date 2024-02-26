@@ -63,18 +63,14 @@ const colorsApiSlice = apiSlice.injectEndpoints({
           putResult.undo();
         }
       },
-      invalidatesTags: (result, error, arg) => [
-        { type: "Color", id: arg.colorId },
-      ],
+      invalidatesTags: (result, error, arg) => [{ type: "Color", id: "LIST" }],
     }),
     deleteColor: builder.mutation({
       query: ({ colorId }) => ({
         url: `${COLORS_URL}/color/${colorId}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, arg) => [
-        { type: "Color", id: arg.colorId },
-      ],
+      invalidatesTags: (result, error, arg) => [{ type: "Color", id: "LIST" }],
     }),
   }),
 });

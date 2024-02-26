@@ -1,4 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+
 import {
   Container,
   ContainerContent,
@@ -12,18 +15,10 @@ import EditProductForm from "./components/product-form/EditProductForm";
 import { useGetCategoriesQuery } from "../../features/categories/categoriesApiSlice";
 import { useGetBrandsQuery } from "../../features/brands/brandsApiSlice";
 import { useGetColorsQuery } from "../../features/colors/colorsApiSlice";
-import { useEffect } from "react";
 
 const EditProduct = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
-
-  const { isSuccess: isCategoriesSuccess, isLoading: isCategoriesLoading } =
-    useGetCategoriesQuery();
-  const { isSuccess: isBrandsSuccess, isLoading: isBrandsLoading } =
-    useGetBrandsQuery();
-  const { isSuccess: isColorsSuccess, isLoading: isColorsLoading } =
-    useGetColorsQuery();
 
   const {
     data: product,
@@ -37,6 +32,13 @@ const EditProduct = () => {
       navigate("..");
     }
   }, [isProductError]);
+
+  const { isSuccess: isCategoriesSuccess, isLoading: isCategoriesLoading } =
+    useGetCategoriesQuery();
+  const { isSuccess: isBrandsSuccess, isLoading: isBrandsLoading } =
+    useGetBrandsQuery();
+  const { isSuccess: isColorsSuccess, isLoading: isColorsLoading } =
+    useGetColorsQuery();
 
   return (
     <Container>
