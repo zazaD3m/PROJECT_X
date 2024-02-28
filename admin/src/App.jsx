@@ -13,6 +13,7 @@ const BrandsPage = lazy(() => import("./pages/brands/BrandsPage"));
 const ColorsPage = lazy(() => import("./pages/colors/ColorsPage"));
 const CategoriesPage = lazy(() => import("./pages/categories/CategoriesPage"));
 const ProductsPage = lazy(() => import("./pages/products/ProductsPage"));
+const CustomersPage = lazy(() => import("./pages/customers/CustomersPage"));
 // PAGES END
 
 // CATALOG COMPONENTS START
@@ -31,7 +32,6 @@ import RequireAuth from "./components/RequireAuth";
 import Loader from "./components/Loader";
 import RootLayout from "./components/layout/RootLayout";
 import SyncUserInfo from "./components/SyncUserInfo";
-import CustomersPage from "./pages/customers/CustomersPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

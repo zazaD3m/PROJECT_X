@@ -26,6 +26,10 @@ const categoriesApiSlice = apiSlice.injectEndpoints({
             ]
           : [{ type: "Category", id: "LIST" }],
     }),
+    getMainCategories: builder.query({
+      query: () => `${CATEGORIES_URL}/maincategories`,
+      providesTags: [{ type: "Category", id: "LIST" }],
+    }),
     // getColorById: builder.query({
     //   query: (colorId) => `${COLORS_URL}/color/${colorId}`,
     // }),
@@ -79,8 +83,11 @@ const categoriesApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetCategoriesQuery, useCreateCategoryMutation } =
-  categoriesApiSlice;
+export const {
+  useGetCategoriesQuery,
+  useCreateCategoryMutation,
+  useGetMainCategoriesQuery,
+} = categoriesApiSlice;
 
 export const selectCategoriesResult =
   categoriesApiSlice.endpoints.getCategories.select();

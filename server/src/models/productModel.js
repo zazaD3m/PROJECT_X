@@ -11,6 +11,10 @@ const productSchema = new Schema(
     description: {
       type: String,
     },
+    size: {
+      type: String,
+      index: true,
+    },
     price: {
       type: Number,
       index: true,

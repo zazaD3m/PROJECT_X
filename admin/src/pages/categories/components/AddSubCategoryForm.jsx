@@ -72,7 +72,6 @@ const AddSubCategoryForm = () => {
     };
     try {
       const res = await createCategory(newSubCategory).unwrap();
-      console.log(res);
       setFocus("subCategoryName");
       toast({
         variant: "success",

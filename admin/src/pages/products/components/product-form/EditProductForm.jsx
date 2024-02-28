@@ -7,6 +7,8 @@ import ProductFormBrand from "./ProductFormBrand";
 import ProductFormColor from "./ProductFormColor";
 import ProductFormImage from "./ProductFormImage";
 
+import { DevTool } from "@hookform/devtools";
+
 import { Button } from "../../../../components/ui/button";
 import { Form } from "../../../../components/ui/form";
 import { useForm } from "react-hook-form";
@@ -21,10 +23,15 @@ import {
 import Loader from "../../../../components/Loader";
 import { useNavigate, useParams } from "react-router-dom";
 import DeleteConfirmationDialog from "../../../../components/DeleteConfirmationDialog";
+import { getDefaultSizeType } from "../../constants/productSizes";
+import ProductFormSizeType from "./ProductFormSizeType";
+import ProductFormSize from "./ProductFormSize";
 
 const editProductSchema = yup.object().shape({
   productTitle: yup.string().required("Product title is required"),
   productDescription: yup.string().required("Product description is required"),
+  productSize: yup.string().required("Product size is required"),
+  productSizeType: yup.string().optional(),
   productPrice: yup
     .number()
     .required("Product price is required")
@@ -72,6 +79,8 @@ const EditProductForm = ({ product }) => {
       productTitle: product.title,
       productDescription: product.description,
       productPrice: product.price,
+      productSize: product.size,
+      productSizeType: getDefaultSizeType(product.size),
       productMainCategory: product.mainCategory,
       productSubCategory: product.subCategory,
       productGender: product.gender,
@@ -89,13 +98,11 @@ const EditProductForm = ({ product }) => {
   const {
     handleSubmit,
     control,
-    resetField,
     setError,
     setValue,
     watch,
     clearErrors,
     getValues,
-    getFieldState,
   } = form;
 
   useEffect(() => {
@@ -132,6 +139,7 @@ const EditProductForm = ({ product }) => {
     updatedProduct.color = data.productColor;
     updatedProduct.brand = data.productBrand;
     updatedProduct.description = data.productDescription;
+    updatedProduct.size = data.productSize;
     updatedProduct.gender = data.productGender;
     updatedProduct.mainCategory = data.productMainCategory;
     updatedProduct.subCategory = data.productSubCategory;
@@ -159,7 +167,7 @@ const EditProductForm = ({ product }) => {
     <>
       <Form {...form}>
         <form onSubmit={handleSubmit(handleAddProduct)} className="space-y-8">
-          <div className="grid grid-cols-12  gap-x-16 gap-y-8">
+          <div className="grid grid-cols-12 gap-x-16 gap-y-8">
             <div className="col-span-3 row-span-2 space-y-6">
               <ProductFormText
                 control={control}
@@ -181,7 +189,7 @@ const EditProductForm = ({ product }) => {
             <div className="col-span-3">
               <ProductFormGender
                 control={control}
-                resetField={resetField}
+                setValue={setValue}
                 watch={watch}
               />
             </div>
@@ -189,7 +197,6 @@ const EditProductForm = ({ product }) => {
               <ProductFormMainCategory
                 control={control}
                 setValue={setValue}
-                resetField={resetField}
                 watch={watch}
               />
             </div>
@@ -200,79 +207,69 @@ const EditProductForm = ({ product }) => {
                 watch={watch}
               />
             </div>
-            <div className="col-span-3 col-start-7">
+            <div className="col-span-3">
+              <ProductFormSizeType control={control} setValue={setValue} />
+            </div>
+            <div className="col-span-3">
+              <ProductFormSize
+                control={control}
+                setValue={setValue}
+                watch={watch}
+              />
+            </div>
+            <div className="col-span-3">
               <ProductFormBrand control={control} setValue={setValue} />
             </div>
             <div className="col-span-3 col-start-10">
               <ProductFormColor control={control} setValue={setValue} />
             </div>
-          </div>
-          <div className="space-y-3">
-            <h2 className="cursor-default text-lg font-semibold">Images</h2>
-            <div className="flex gap-x-8">
-              <div className="h-40 w-40">
-                <ProductFormImage
-                  name="productImage1"
-                  control={control}
-                  watch={watch}
-                  setValue={setValue}
-                  setError={setError}
-                  getValue={getValues}
-                  getFieldState={getFieldState}
-                  clearErrors={clearErrors}
-                  page={"edit"}
-                  productId={product._id}
-                  imageIndex={1}
-                  product={product}
-                />
-              </div>
-              <div className="h-40 w-40">
-                <ProductFormImage
-                  name="productImage2"
-                  control={control}
-                  watch={watch}
-                  setValue={setValue}
-                  setError={setError}
-                  clearErrors={clearErrors}
-                  getValue={getValues}
-                  getFieldState={getFieldState}
-                  page={"edit"}
-                  productId={product._id}
-                  imageIndex={2}
-                  product={product}
-                />
-              </div>
-              <div className="h-40 w-40">
-                <ProductFormImage
-                  name="productImage3"
-                  control={control}
-                  watch={watch}
-                  setValue={setValue}
-                  setError={setError}
-                  clearErrors={clearErrors}
-                  getValue={getValues}
-                  getFieldState={getFieldState}
-                  page={"edit"}
-                  productId={product._id}
-                  imageIndex={3}
-                  product={product}
-                />
-              </div>
-              <div className="h-40 w-40">
-                <ProductFormImage
-                  name="productImage4"
-                  control={control}
-                  watch={watch}
-                  setValue={setValue}
-                  setError={setError}
-                  clearErrors={clearErrors}
-                  getValue={getValues}
-                  getFieldState={getFieldState}
-                  page={"edit"}
-                  productId={product._id}
-                  imageIndex={4}
-                  product={product}
-                />
+            <div className="col-span-9 row-start-3 space-y-3">
+              <h2 className="cursor-default text-lg font-semibold">Images</h2>
+              <div className="flex gap-x-8">
+                <div className="h-40 w-40">
+                  <ProductFormImage
+                    name="productImage1"
+                    control={control}
+                    setValue={setValue}
+                    setError={setError}
+                    getValue={getValues}
+                    clearErrors={clearErrors}
+                    page={"edit"}
+                  />
+                </div>
+                <div className="h-40 w-40">
+                  <ProductFormImage
+                    name="productImage2"
+                    control={control}
+                    setValue={setValue}
+                    setError={setError}
+                    clearErrors={clearErrors}
+                    getValue={getValues}
+                    page={"edit"}
+                  />
+                </div>
+                <div className="h-40 w-40">
+                  <ProductFormImage
+                    name="productImage3"
+                    control={control}
+                    setValue={setValue}
+                    setError={setError}
+                    clearErrors={clearErrors}
+                    getValue={getValues}
+                    page={"edit"}
+                  />
+                </div>
+                <div className="h-40 w-40">
+                  <ProductFormImage
+                    name="productImage4"
+                    control={control}
+                    setValue={setValue}
+                    setError={setError}
+                    clearErrors={clearErrors}
+                    getValue={getValues}
+                    page={"edit"}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -301,6 +298,7 @@ const EditProductForm = ({ product }) => {
           </div>
         </form>
       </Form>
+      <DevTool control={control} />
       <DeleteConfirmationDialog
         showDeleteDialog={showDeleteDialog}
         setShowDeleteDialog={setShowDeleteDialog}

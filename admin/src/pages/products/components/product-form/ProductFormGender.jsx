@@ -14,7 +14,7 @@ import { selectAllCategories } from "../../../../features/categories/categoriesA
 
 const GENDERS = ["man", "woman", "boy", "girl"];
 
-const ProductFormGender = ({ control, resetField, watch }) => {
+const ProductFormGender = ({ control, setValue, watch }) => {
   const productMainCategory = watch("productMainCategory");
   const productSubCategory = watch("productSubCategory");
   const productCategories = useSelector(selectAllCategories);
@@ -36,8 +36,12 @@ const ProductFormGender = ({ control, resetField, watch }) => {
                       category.mainCategoryName === productMainCategory,
                   );
                   if (!keepMainCategory) {
-                    resetField("productMainCategory");
-                    resetField("productSubCategory");
+                    setValue("productMainCategory", "", {
+                      shouldValidate: false,
+                    });
+                    setValue("productSubCategory", "", {
+                      shouldValidate: false,
+                    });
                   } else {
                     if (productSubCategory) {
                       const keepSubCategory = productCategories.some(
@@ -47,7 +51,9 @@ const ProductFormGender = ({ control, resetField, watch }) => {
                           category.subCategoryName === productSubCategory,
                       );
                       if (!keepSubCategory) {
-                        resetField("productSubCategory");
+                        setValue("productSubCategory", "", {
+                          shouldValidate: false,
+                        });
                       }
                     }
                   }
@@ -55,7 +61,7 @@ const ProductFormGender = ({ control, resetField, watch }) => {
                 field.onChange(event);
               }}
               defaultValue={field.value}
-              className="flex flex-col space-y-1"
+              className="grid grid-cols-2 space-y-1"
             >
               {GENDERS.map((g) => (
                 <FormItem

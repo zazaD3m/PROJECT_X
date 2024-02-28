@@ -11,7 +11,6 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandSeparator,
 } from "../../../../components/ui/command";
 import { Button } from "../../../../components/ui/button";
 import {
@@ -21,12 +20,11 @@ import {
 } from "../../../../components/ui/popover";
 import { cn } from "../../../../lib/utils";
 
-import { Link } from "react-router-dom";
 import { CheckIcon, ChevronsUpDown } from "lucide-react";
 import { useSelector } from "react-redux";
 import { selectAllCategories } from "../../../../features/categories/categoriesApiSlice";
 
-const ProductFormMainCategory = ({ control, setValue, resetField, watch }) => {
+const ProductFormMainCategory = ({ control, setValue, watch }) => {
   const productGender = watch("productGender");
   const productCategories = useSelector(selectAllCategories);
 
@@ -71,7 +69,9 @@ const ProductFormMainCategory = ({ control, setValue, resetField, watch }) => {
                           value={category.mainCategoryName}
                           key={category.mainCategoryName}
                           onSelect={() => {
-                            resetField("productSubCategory");
+                            setValue("productSubCategory", "", {
+                              shouldValidate: false,
+                            });
                             setValue(
                               "productMainCategory",
                               category.mainCategoryName,

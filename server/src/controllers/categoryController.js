@@ -50,3 +50,23 @@ export const getAllCategories = asyncHandler(async (req, res) => {
 
   res.status(200).json(categories);
 });
+
+// @desc Get all categories
+// route GET /api/categories
+export const getMainCategories = asyncHandler(async (req, res) => {
+  const categories = await Category.find().lean();
+
+  if (!categories || categories.length < 1) {
+    ThrowErr.ServerError();
+  }
+
+  const mainCategories = [];
+
+  categories.forEach((cat) => {
+    if (!cat.isMainCategory) return;
+    if (mainCategories.includes(cat.mainCategoryName)) return;
+    mainCategories.push(cat.mainCategoryName);
+  });
+
+  res.status(200).json(mainCategories);
+});

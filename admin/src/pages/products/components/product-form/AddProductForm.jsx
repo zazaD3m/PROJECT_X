@@ -18,10 +18,14 @@ import { Form } from "../../../../components/ui/form";
 import { useCreateProductMutation } from "../../../../features/products/productsApiSlice";
 import { useToast } from "../../../../components/ui/use-toast";
 import Loader from "../../../../components/Loader";
+import ProductFormSize from "./ProductFormSize";
+import ProductFormSizeType from "./ProductFormSizeType";
 
 const addProductSchema = yup.object().shape({
   productTitle: yup.string().required("Product title is required"),
   productDescription: yup.string().required("Product description is required"),
+  productSize: yup.string().required("Product size is required"),
+  productSizeType: yup.string().optional(),
   productPrice: yup
     .number()
     .required("Product price is required")
@@ -52,6 +56,8 @@ const AddProductForm = () => {
       productTitle: "",
       productDescription: "",
       productPrice: "",
+      productSize: "",
+      productSizeType: "",
       productMainCategory: "",
       productSubCategory: "",
       productGender: "",
@@ -106,6 +112,7 @@ const AddProductForm = () => {
     newProduct.color = data.productColor;
     newProduct.brand = data.productBrand;
     newProduct.description = data.productDescription;
+    newProduct.size = data.productSize;
     newProduct.gender = data.productGender;
     newProduct.mainCategory = data.productMainCategory;
     newProduct.subCategory = data.productSubCategory;
@@ -128,7 +135,7 @@ const AddProductForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(handleAddProduct)} className="space-y-8">
-        <div className="grid grid-cols-12  gap-x-16 gap-y-8">
+        <div className="grid grid-cols-12 gap-x-16 gap-y-8">
           <div className="col-span-3 row-span-2 space-y-6">
             <ProductFormText
               control={control}
@@ -150,15 +157,14 @@ const AddProductForm = () => {
           <div className="col-span-3">
             <ProductFormGender
               control={control}
-              resetField={resetField}
               watch={watch}
+              setValue={setValue}
             />
           </div>
           <div className="col-span-3 ">
             <ProductFormMainCategory
               control={control}
               setValue={setValue}
-              resetField={resetField}
               watch={watch}
             />
           </div>
@@ -169,63 +175,69 @@ const AddProductForm = () => {
               watch={watch}
             />
           </div>
-          <div className="col-span-3 col-start-7">
+          <div className="col-span-3">
+            <ProductFormSizeType control={control} setValue={setValue} />
+          </div>
+          <div className="col-span-3">
+            <ProductFormSize
+              control={control}
+              setValue={setValue}
+              watch={watch}
+            />
+          </div>
+          <div className="col-span-3">
             <ProductFormBrand control={control} setValue={setValue} />
           </div>
           <div className="col-span-3 col-start-10">
             <ProductFormColor control={control} setValue={setValue} />
           </div>
-        </div>
-        <div className="space-y-3">
-          <h2 className="cursor-default text-lg font-semibold">Images</h2>
-          <div className="flex gap-x-8">
-            <div className="h-40 w-40">
-              <ProductFormImage
-                isCreateProductSuccess={isSuccess}
-                getValue={getValues}
-                name="productImage1"
-                control={control}
-                isCreateSuccess={isSuccess}
-                setValue={setValue}
-                setError={setError}
-                clearErrors={clearErrors}
-              />
-            </div>
-            <div className="h-40 w-40">
-              <ProductFormImage
-                isCreateProductSuccess={isSuccess}
-                getValue={getValues}
-                name="productImage2"
-                control={control}
-                isCreateSuccess={isSuccess}
-                setValue={setValue}
-                setError={setError}
-                clearErrors={clearErrors}
-              />
-            </div>
-            <div className="h-40 w-40">
-              <ProductFormImage
-                isCreateProductSuccess={isSuccess}
-                getValue={getValues}
-                name="productImage3"
-                control={control}
-                isCreateSuccess={isSuccess}
-                setValue={setValue}
-                setError={setError}
-                clearErrors={clearErrors}
-              />
-            </div>
-            <div className="h-40 w-40">
-              <ProductFormImage
-                isCreateProductSuccess={isSuccess}
-                getValue={getValues}
-                name="productImage4"
-                control={control}
-                isCreateSuccess={isSuccess}
-                setValue={setValue}
-                setError={setError}
-                clearErrors={clearErrors}
-              />
+          <div className="col-span-9 row-start-3 space-y-3">
+            <h2 className="cursor-default text-lg font-semibold">Images</h2>
+            <div className="flex gap-x-8">
+              <div className="h-40 w-40">
+                <ProductFormImage
+                  isCreateProductSuccess={isSuccess}
+                  getValue={getValues}
+                  name="productImage1"
+                  control={control}
+                  setValue={setValue}
+                  setError={setError}
+                  clearErrors={clearErrors}
+                />
+              </div>
+              <div className="h-40 w-40">
+                <ProductFormImage
+                  isCreateProductSuccess={isSuccess}
+                  getValue={getValues}
+                  name="productImage2"
+                  control={control}
+                  setValue={setValue}
+                  setError={setError}
+                  clearErrors={clearErrors}
+                />
+              </div>
+              <div className="h-40 w-40">
+                <ProductFormImage
+                  isCreateProductSuccess={isSuccess}
+                  getValue={getValues}
+                  name="productImage3"
+                  control={control}
+                  setValue={setValue}
+                  setError={setError}
+                  clearErrors={clearErrors}
+                />
+              </div>
+              <div className="h-40 w-40">
+                <ProductFormImage
+                  isCreateProductSuccess={isSuccess}
+                  getValue={getValues}
+                  name="productImage4"
+                  control={control}
+                  setValue={setValue}
+                  setError={setError}
+                  clearErrors={clearErrors}
+                />
+              </div>
             </div>
           </div>
         </div>

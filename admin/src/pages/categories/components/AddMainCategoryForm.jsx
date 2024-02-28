@@ -68,7 +68,6 @@ const AddMainCategoryForm = () => {
 
     try {
       const res = await createCategory(newMainCategory).unwrap();
-      console.log(res);
       setFocus("mainCategoryName");
       toast({
         variant: "success",
@@ -81,9 +80,6 @@ const AddMainCategoryForm = () => {
         });
       }
     }
-
-    console.log(data);
-    console.log(categories);
   }
 
   return (

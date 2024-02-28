@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   createCategory,
   getAllCategories,
+  getMainCategories,
 } from "../../controllers/categoryController.js";
 import {
   categoryValidator,
@@ -17,6 +18,7 @@ router
   .post([categoryValidator, validate], createCategory)
   .get(getAllCategories);
 
+router.route("/maincategories").get(getMainCategories);
 // router
 //   .route("/brand/:id")
 //   .put([paramIdValidator, brandValidator, validate], updateBrand)

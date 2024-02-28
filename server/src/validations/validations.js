@@ -17,7 +17,7 @@ export const validateObjectId = (id) => {
 };
 
 export const brandValidator = [
-  body("brandName").notEmpty().trim().escape().toLowerCase(),
+  body("brandName").notEmpty().trim().escape(),
   checkExact(),
 ];
 
