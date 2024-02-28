@@ -1,31 +1,30 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import ProductFormText from "./ProductFormText";
-import ProductFormMainCategory from "./ProductFormMainCategory";
-import ProductFormSubCategory from "./ProductFormSubCategory";
-import ProductFormGender from "./ProductFormGender";
-import ProductFormBrand from "./ProductFormBrand";
-import ProductFormColor from "./ProductFormColor";
-import ProductFormImage from "./ProductFormImage";
-
-import { DevTool } from "@hookform/devtools";
-
-import { Button } from "../../../../components/ui/button";
-import { Form } from "../../../../components/ui/form";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
+import * as yup from "yup";
+
+import ProductFormBrand from "./ProductFormBrand";
+import ProductFormColor from "./ProductFormColor";
+import ProductFormGender from "./ProductFormGender";
+import ProductFormImage from "./ProductFormImage";
+import ProductFormMainCategory from "./ProductFormMainCategory";
+import ProductFormSubCategory from "./ProductFormSubCategory";
+import ProductFormText from "./ProductFormText";
+import ProductFormSize from "./ProductFormSize";
+import ProductFormSizeType from "./ProductFormSizeType";
+
+import DeleteConfirmationDialog from "../../../../components/DeleteConfirmationDialog";
+import Loader from "../../../../components/Loader";
+import { Button } from "../../../../components/ui/button";
+import { Form } from "../../../../components/ui/form";
 import { useToast } from "../../../../components/ui/use-toast";
 import {
   useDeleteProductMutation,
   useUpdateProductMutation,
 } from "../../../../features/products/productsApiSlice";
-import Loader from "../../../../components/Loader";
-import { useNavigate, useParams } from "react-router-dom";
-import DeleteConfirmationDialog from "../../../../components/DeleteConfirmationDialog";
 import { getDefaultSizeType } from "../../constants/productSizes";
-import ProductFormSizeType from "./ProductFormSizeType";
-import ProductFormSize from "./ProductFormSize";
 
 const editProductSchema = yup.object().shape({
   productTitle: yup.string().required("Product title is required"),
@@ -298,7 +297,6 @@ const EditProductForm = ({ product }) => {
           </div>
         </form>
       </Form>
-      <DevTool control={control} />
       <DeleteConfirmationDialog
         showDeleteDialog={showDeleteDialog}
         setShowDeleteDialog={setShowDeleteDialog}

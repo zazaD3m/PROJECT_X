@@ -1,11 +1,6 @@
 import { CheckIcon, ChevronsUpDown } from "lucide-react";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../../../../components/ui/form";
+
+import { Button } from "../../../../components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -14,12 +9,18 @@ import {
   CommandItem,
 } from "../../../../components/ui/command";
 import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../../../../components/ui/form";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "../../../../components/ui/popover";
 import { cn } from "../../../../lib/utils";
-import { Button } from "../../../../components/ui/button";
 import { PRODUCT_SIZES } from "../../constants/productSizes";
 
 const ProductFormSize = ({ control, setValue, watch }) => {

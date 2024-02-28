@@ -1,25 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import ProductFormText from "./ProductFormText";
-import ProductFormMainCategory from "./ProductFormMainCategory";
-import ProductFormSubCategory from "./ProductFormSubCategory";
-import ProductFormGender from "./ProductFormGender";
-import ProductFormBrand from "./ProductFormBrand";
-import ProductFormColor from "./ProductFormColor";
-import ProductFormImage from "./ProductFormImage";
-
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+
+import ProductFormBrand from "./ProductFormBrand";
+import ProductFormColor from "./ProductFormColor";
+import ProductFormGender from "./ProductFormGender";
+import ProductFormImage from "./ProductFormImage";
+import ProductFormMainCategory from "./ProductFormMainCategory";
+import ProductFormSubCategory from "./ProductFormSubCategory";
+import ProductFormText from "./ProductFormText";
+import ProductFormSize from "./ProductFormSize";
+import ProductFormSizeType from "./ProductFormSizeType";
 
 import { Button } from "../../../../components/ui/button";
 import { Form } from "../../../../components/ui/form";
-
-import { useCreateProductMutation } from "../../../../features/products/productsApiSlice";
-import { useToast } from "../../../../components/ui/use-toast";
 import Loader from "../../../../components/Loader";
-import ProductFormSize from "./ProductFormSize";
-import ProductFormSizeType from "./ProductFormSizeType";
+import { useToast } from "../../../../components/ui/use-toast";
+import { useCreateProductMutation } from "../../../../features/products/productsApiSlice";
 
 const addProductSchema = yup.object().shape({
   productTitle: yup.string().required("Product title is required"),

@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import {
   FormControl,
   FormField,
@@ -9,7 +10,6 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "../../../../components/ui/radio-group";
-import { useSelector } from "react-redux";
 import { selectAllCategories } from "../../../../features/categories/categoriesApiSlice";
 
 const GENDERS = ["man", "woman", "boy", "girl"];

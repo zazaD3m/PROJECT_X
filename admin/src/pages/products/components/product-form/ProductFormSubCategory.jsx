@@ -1,3 +1,6 @@
+import { CheckIcon, ChevronsUpDown } from "lucide-react";
+import { useSelector } from "react-redux";
+
 import {
   FormControl,
   FormField,
@@ -20,8 +23,6 @@ import {
 } from "../../../../components/ui/popover";
 import { cn } from "../../../../lib/utils";
 
-import { CheckIcon, ChevronsUpDown } from "lucide-react";
-import { useSelector } from "react-redux";
 import { selectAllCategories } from "../../../../features/categories/categoriesApiSlice";
 
 const ProductFormSubCategory = ({ control, setValue, watch }) => {

@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import Dropzone from "../../../../components/ui/dropZone";
 import {
@@ -8,12 +9,10 @@ import {
   FormItem,
   FormMessage,
 } from "../../../../components/ui/form";
-
 import {
   useDeleteImageMutation,
   useUploadImageMutation,
 } from "../../../../features/images/imagesApiSlice";
-import { useParams } from "react-router-dom";
 
 const ProductFormImage = ({
   name,

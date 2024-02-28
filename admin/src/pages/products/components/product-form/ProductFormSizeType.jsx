@@ -1,3 +1,5 @@
+import { CheckIcon, ChevronsUpDown } from "lucide-react";
+
 import {
   FormControl,
   FormField,
@@ -19,9 +21,6 @@ import {
   PopoverTrigger,
 } from "../../../../components/ui/popover";
 import { cn } from "../../../../lib/utils";
-
-import { CheckIcon, ChevronsUpDown } from "lucide-react";
-
 import { PRODUCT_SIZE_TYPES } from "../../constants/productSizes";
 
 const ProductFormSizeType = ({ control, setValue }) => {

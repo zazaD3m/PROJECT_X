@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import { Button } from "../../components/ui/button";
+import Loader from "../../components/Loader";
 import {
   Container,
   ContainerContent,
@@ -9,7 +10,6 @@ import {
 } from "../../components/ui/container";
 import AddProductForm from "./components/product-form/AddProductForm";
 import { useGetCategoriesQuery } from "../../features/categories/categoriesApiSlice";
-import Loader from "../../components/Loader";
 import { useGetBrandsQuery } from "../../features/brands/brandsApiSlice";
 import { useGetColorsQuery } from "../../features/colors/colorsApiSlice";
 

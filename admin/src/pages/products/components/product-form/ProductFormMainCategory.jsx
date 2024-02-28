@@ -1,3 +1,14 @@
+import { CheckIcon, ChevronsUpDown } from "lucide-react";
+import { useSelector } from "react-redux";
+
+import { Button } from "../../../../components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "../../../../components/ui/command";
 import {
   FormControl,
   FormField,
@@ -6,22 +17,11 @@ import {
   FormMessage,
 } from "../../../../components/ui/form";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "../../../../components/ui/command";
-import { Button } from "../../../../components/ui/button";
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "../../../../components/ui/popover";
 import { cn } from "../../../../lib/utils";
-
-import { CheckIcon, ChevronsUpDown } from "lucide-react";
-import { useSelector } from "react-redux";
 import { selectAllCategories } from "../../../../features/categories/categoriesApiSlice";
 
 const ProductFormMainCategory = ({ control, setValue, watch }) => {
