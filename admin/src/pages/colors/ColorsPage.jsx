@@ -17,7 +17,7 @@ import DynamicTable from "../../components/dynamic-table/DynamicTable";
 import {
   colorAddNewLink as addNewLink,
   colorColumns as columns,
-  colorFilters as filters,
+  colorFilters as filter,
   colorDefaultSort as defaultSort,
 } from "./colorsTableData";
 
@@ -38,7 +38,7 @@ const ColorsPage = () => {
         {isSuccess ? (
           <DynamicTable
             data={data}
-            filters={filters}
+            filter={filter}
             columns={columns}
             defaultSort={defaultSort}
             addNewLink={addNewLink}

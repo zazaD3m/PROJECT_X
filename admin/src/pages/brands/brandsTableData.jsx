@@ -1,12 +1,7 @@
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { Button } from "../../components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../../components/ui/dropdown-menu";
+import { DropdownMenuItem } from "../../components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
+import { ColumnHeader } from "../../components/data-table/ColumnHeader";
+import { RowActions } from "../../components/data-table/RowActions";
 
 export const brandFilters = [
   { value: "brandName", label: "Brand", className: "w-60" },
@@ -17,18 +12,8 @@ export const brandAddNewLink = "addbrand";
 export const brandColumns = [
   {
     accessorKey: "brandName",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="px-2"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Brand
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    accessorFn: (row) => row.brandName || "",
+    header: ({ column }) => <ColumnHeader column={column} title="Brand" />,
     cell: ({ row }) => (
       <div className="px-2 text-base lowercase">
         {row.getValue("brandName")}
@@ -41,19 +26,11 @@ export const brandColumns = [
     cell: ({ row }) => {
       const brandId = row.original._id;
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem asChild>
-              <Link to={`editbrand/${brandId}`}>Edit</Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <RowActions>
+          <DropdownMenuItem asChild>
+            <Link to={`editbrand/${brandId}`}>Edit</Link>
+          </DropdownMenuItem>
+        </RowActions>
       );
     },
   },

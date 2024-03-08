@@ -32,6 +32,18 @@ export const getProduct = asyncHandler(async (req, res) => {
   res.status(200).json(product);
 });
 
+// @desc Get All Products
+// route GET /api/products
+export const getAllProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find().lean();
+
+  if (!products || products.length < 1) {
+    ThrowErr.ServerError();
+  }
+
+  res.status(200).json(products);
+});
+
 // @desc Update product by id
 // route PUT /api/products/product/:id
 export const updateProduct = asyncHandler(async (req, res) => {

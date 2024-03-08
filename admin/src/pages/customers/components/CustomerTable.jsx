@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -11,7 +11,7 @@ import {
 } from "@tanstack/react-table";
 
 import { Toolbar } from "../../../components/data-table/Toolbar";
-import { customerColumns as columns } from "./customersTableData";
+import { customerColumns } from "../customersTableData";
 import {
   Table,
   TableBody,
@@ -27,6 +27,8 @@ const CustomerTable = ({ data }) => {
   const [columnVisibility, setColumnVisibility] = useState({});
   const [columnFilters, setColumnFilters] = useState([]);
   const [sorting, setSorting] = useState([]);
+
+  const columns = useMemo(() => customerColumns, []);
 
   const table = useReactTable({
     data,
@@ -57,8 +59,8 @@ const CustomerTable = ({ data }) => {
           { placeHolder: "First name", value: "firstName" },
           { placeHolder: "Last name", value: "lastName" },
           { placeHolder: "E-Mail", value: "email" },
-          { placeHolder: "Phone number", value: "phoneNumber" },
           { placeHolder: "Address", value: "address" },
+          { placeHolder: "Phone number", value: "phoneNumber" },
         ]}
         facetedFilter={[]}
       />

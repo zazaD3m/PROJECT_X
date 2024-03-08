@@ -11,6 +11,7 @@ const userSchema = new Schema(
     },
     lastName: {
       type: String,
+      default: "",
     },
     email: {
       type: String,
@@ -19,12 +20,13 @@ const userSchema = new Schema(
     },
     phoneNumber: {
       type: String,
+      default: "",
     },
     password: {
       type: String,
       required: true,
     },
-    address: { type: String },
+    address: { type: String, default: "" },
     role: {
       type: String,
       default: "user",

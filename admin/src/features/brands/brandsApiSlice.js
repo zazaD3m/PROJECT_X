@@ -6,7 +6,6 @@ import { BRANDS_URL } from "../../lib/constants";
 
 const brandsAdapter = createEntityAdapter({
   selectId: (brand) => brand._id,
-  sortComparer: (a, b) => a.brandName.localeCompare(b.brandName),
 });
 
 const initialState = brandsAdapter.getInitialState();

@@ -17,7 +17,7 @@ import DynamicTable from "../../components/dynamic-table/DynamicTable";
 import {
   brandAddNewLink as addNewLink,
   brandColumns as columns,
-  brandFilters as filters,
+  brandFilters as filter,
   brandDefaultSort as defaultSort,
 } from "./brandsTableData";
 
@@ -37,7 +37,7 @@ const BrandsPage = () => {
         {isSuccess ? (
           <DynamicTable
             data={data}
-            filters={filters}
+            filter={filter}
             columns={columns}
             defaultSort={defaultSort}
             addNewLink={addNewLink}

@@ -6,7 +6,6 @@ import { CATEGORIES_URL } from "../../lib/constants";
 
 const categoriesAdapter = createEntityAdapter({
   selectId: (category) => category._id,
-  sortComparer: (a, b) => a.mainCategoryName.localeCompare(b.mainCategoryName),
 });
 
 const initialState = categoriesAdapter.getInitialState();

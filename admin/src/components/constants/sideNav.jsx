@@ -5,7 +5,6 @@ import {
   LayoutGrid,
   Palette,
   Pentagon,
-  Ruler,
   ShoppingCart,
   User2,
 } from "lucide-react";
@@ -65,16 +64,6 @@ export const NAV_ITEMS = [
         title: "Color List",
         href: "/catalog/colors",
         icon: <Palette size={24} />,
-      },
-      {
-        title: "Add Size",
-        href: "/catalog/sizes/addsize",
-        icon: <Ruler size={24} />,
-      },
-      {
-        title: "Size List",
-        href: "/catalog/sizes",
-        icon: <Ruler size={24} />,
       },
     ],
   },

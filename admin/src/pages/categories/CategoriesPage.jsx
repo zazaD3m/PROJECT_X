@@ -16,7 +16,7 @@ import { useSelector } from "react-redux";
 import {
   categoryAddNewLink as addNewLink,
   categoryColumns as columns,
-  categoryFilters as filters,
+  categoryFilters as filter,
   categoryFacetedFilter as facetedFilter,
   categoryDefaultSort as defaultSort,
   categoryColumnFilter as columnFilter,
@@ -39,7 +39,7 @@ const CategoriesPage = () => {
         {isSuccess ? (
           <DynamicTable
             data={data}
-            filters={filters}
+            filter={filter}
             columns={columns}
             defaultSort={defaultSort}
             facetedFilter={facetedFilter}

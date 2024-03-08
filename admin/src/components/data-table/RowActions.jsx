@@ -4,12 +4,10 @@ import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
-export function RowActions() {
+export function RowActions({ children }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -21,15 +19,7 @@ export function RowActions() {
           <span className="sr-only">Open menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
-        <DropdownMenuItem>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem>Favorite</DropdownMenuItem>
-        <DropdownMenuItem>
-          Delete
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
+      <DropdownMenuContent align="end">{children}</DropdownMenuContent>
     </DropdownMenu>
   );
 }

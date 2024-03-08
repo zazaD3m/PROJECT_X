@@ -10,7 +10,7 @@ import { Button } from "../ui/button";
 
 import { Settings2 } from "lucide-react";
 
-export function ViewOptions({ table }) {
+export function ViewOptions({ table, columnFilter }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -19,7 +19,7 @@ export function ViewOptions({ table }) {
           View
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[150px]">
+      <DropdownMenuContent align="end">
         <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {table
@@ -36,7 +36,7 @@ export function ViewOptions({ table }) {
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                {column.id}
+                {columnFilter[column.id]}
               </DropdownMenuCheckboxItem>
             );
           })}

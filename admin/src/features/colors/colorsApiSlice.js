@@ -6,7 +6,6 @@ import { COLORS_URL } from "../../lib/constants";
 
 const colorsAdapter = createEntityAdapter({
   selectId: (color) => color._id,
-  sortComparer: (a, b) => a.colorName.localeCompare(b.colorName),
 });
 
 const initialState = colorsAdapter.getInitialState();

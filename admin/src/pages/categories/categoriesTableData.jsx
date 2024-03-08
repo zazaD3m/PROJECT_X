@@ -1,5 +1,6 @@
-import { ArrowUpDown, User2 } from "lucide-react";
-import { Button } from "../../components/ui/button";
+import { User2 } from "lucide-react";
+import { ColumnHeader } from "../../components/data-table/ColumnHeader";
+
 export const categoryFilters = [
   { value: "mainCategoryName", label: "Main category", className: "w-52" },
   { value: "subCategoryName", label: "Sub category", className: "w-52" },
@@ -58,18 +59,11 @@ export const categoryFacetedFilter = [
 export const categoryColumns = [
   {
     accessorKey: "mainCategoryName",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="px-2"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Main category
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    accessorFn: (row) => row.mainCategoryName || "",
+
+    header: ({ column }) => (
+      <ColumnHeader column={column} title="Main Category" />
+    ),
     cell: ({ row }) => (
       <div className="px-2 text-base lowercase">
         {row.getValue("mainCategoryName")}
@@ -78,18 +72,10 @@ export const categoryColumns = [
   },
   {
     accessorKey: "subCategoryName",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="px-2"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Sub category
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    accessorFn: (row) => row.subCategoryName || "",
+    header: ({ column }) => (
+      <ColumnHeader column={column} title="Sub Category" />
+    ),
     cell: ({ row }) => (
       <div className="px-2 text-base lowercase">
         {row.getValue("subCategoryName")}
@@ -98,18 +84,9 @@ export const categoryColumns = [
   },
   {
     accessorKey: "genderName",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="px-2"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Gender
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <ColumnHeader column={column} title="Gender Name" />
+    ),
     cell: ({ row }) => (
       <div className="px-2 text-base lowercase">
         {row.getValue("genderName")}
@@ -121,18 +98,7 @@ export const categoryColumns = [
   },
   {
     accessorKey: "isMainCategory",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="px-2"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Type
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: ({ column }) => <ColumnHeader column={column} title="Type" />,
     cell: ({ row }) => (
       <div className="px-2 text-base lowercase">
         {row.getValue("isMainCategory") ? "Main" : "Sub"}

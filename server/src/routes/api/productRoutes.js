@@ -6,7 +6,7 @@ import {
 import { authenticateUser, isAdmin } from "../../middleware/authMiddleware.js";
 import {
   createProduct,
-  // getAllProducts,
+  getAllProducts,
   updateProduct,
   deleteProduct,
   // deleteProductImage,
@@ -22,6 +22,7 @@ const router = Router();
 
 router
   .route("/")
+  .get([authenticateUser, isAdmin], getAllProducts)
   .post(
     [authenticateUser, isAdmin],
     [productValidator, validate],

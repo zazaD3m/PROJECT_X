@@ -5,7 +5,6 @@ import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 
 const usersAdapter = createEntityAdapter({
   selectId: (user) => user._id,
-  sortComparer: (a, b) => a.firstName.localeCompare(b.firstName),
 });
 
 const initialState = usersAdapter.getInitialState();

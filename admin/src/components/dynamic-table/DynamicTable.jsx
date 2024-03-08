@@ -1,24 +1,14 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import {
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ChevronDownIcon, Plus, X } from "lucide-react";
-
-import { Button } from "../ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { Input } from "../ui/input";
 import {
   Table,
   TableBody,
@@ -27,16 +17,16 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { FacetedFilter } from "../data-table/FacetedFilter";
-import { cn } from "../../lib/utils";
+import { Pagination } from "../data-table/Pagination";
+import { Toolbar } from "../data-table/Toolbar";
 
 const DynamicTable = ({
-  filters,
   data,
+  filter,
+  facetedFilter,
   columns,
   columnFilter,
   defaultSort,
-  facetedFilter,
   addNewLink,
 }) => {
   const [sorting, setSorting] = useState(defaultSort ? defaultSort : []);
@@ -60,91 +50,21 @@ const DynamicTable = ({
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
-  const isFiltered = table.getState().columnFilters.length > 0;
-
   return (
-    <div className="pt-4">
-      <div className="mb-4 flex flex-col items-end gap-4 lg:flex-row lg:items-center">
-        {filters.map((filter, i) => (
-          <Input
-            placeholder={`Find by ${filter.label}`}
-            value={table.getColumn(filter.value)?.getFilterValue() ?? ""}
-            onChange={(event) =>
-              table.getColumn(filter.value)?.setFilterValue(event.target.value)
-            }
-            className={cn("max-w-xs self-center", filter.className)}
-            key={i}
-          />
-        ))}
-        {facetedFilter &&
-          facetedFilter.map((filterItem, i) => {
-            return (
-              table.getColumn(filterItem.column) && (
-                <FacetedFilter
-                  key={i}
-                  column={table.getColumn(filterItem.column)}
-                  title={filterItem.title}
-                  options={filterItem.options}
-                />
-              )
-            );
-          })}
-        {isFiltered && (
-          <Button
-            variant="ghost"
-            onClick={() => table.resetColumnFilters()}
-            className="h-8 px-2 lg:px-3"
-          >
-            Reset
-            <X className="ml-2 h-4 w-4" />
-          </Button>
-        )}
-        {columnFilter && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {columnFilter[column.id]}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
-        {addNewLink && (
-          <Button
-            asChild
-            variant="outline"
-            className={cn("gap-x-1", !columnFilter && "ml-auto")}
-          >
-            <Link to={addNewLink}>
-              <Plus className="h-4 w-4" />
-              Add New
-            </Link>
-          </Button>
-        )}
-      </div>
+    <div className="space-y-4">
+      <Toolbar
+        table={table}
+        filter={filter}
+        facetedFilter={facetedFilter}
+        columnFilter={columnFilter}
+        addNewLink={addNewLink}
+      />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -154,6 +74,7 @@ const DynamicTable = ({
                   return (
                     <TableHead
                       key={header.id}
+                      colSpan={header.colSpan}
                       className="[&:has([role=checkbox])]:pl-3"
                     >
                       {header.isPlaceholder
@@ -178,7 +99,7 @@ const DynamicTable = ({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      className=" py-2 [&:has([role=checkbox])]:pl-3"
+                      className="py-2 [&:has([role=checkbox])]:pl-3"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -201,12 +122,7 @@ const DynamicTable = ({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 pt-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-      </div>
+      <Pagination table={table} />
     </div>
   );
 };
