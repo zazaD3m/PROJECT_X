@@ -44,6 +44,16 @@ const productSchema = new Schema(
       default: true,
       index: true,
     },
+    status: {
+      type: String,
+      default: "forsale",
+      index: true,
+    },
+    sale: {
+      type: Number,
+      default: 0,
+      index: true,
+    },
     images: { type: Object },
   },
   { timestamps: true }

@@ -3,8 +3,10 @@ import {
   Gauge,
   Layers3,
   LayoutGrid,
+  Megaphone,
   Palette,
   Pentagon,
+  Percent,
   ShoppingCart,
   User2,
 } from "lucide-react";
@@ -65,16 +67,43 @@ export const NAV_ITEMS = [
         href: "/catalog/colors",
         icon: <Palette size={24} />,
       },
+      {
+        title: "Add Size",
+        href: "/catalog/sizes/addsize",
+        icon: <ClipboardList size={24} />,
+      },
+      {
+        title: "Size List",
+        href: "/catalog/sizes",
+        icon: <ClipboardList size={24} />,
+      },
     ],
   },
   {
-    title: "Orders",
-    href: "/orders",
-    icon: <ClipboardList size={26} />,
+    title: "Promotion",
+    icon: <Megaphone size={26} />,
+    isChildren: true,
+    children: [
+      {
+        title: "Add Sale",
+        href: "/promotion/sales/addsale",
+        icon: <Percent size={24} />,
+      },
+      {
+        title: "Sale List",
+        href: "/promotion/sales",
+        icon: <Percent size={24} />,
+      },
+    ],
   },
-  {
-    title: "Enquiries",
-    href: "/enquiries",
-    icon: <ClipboardList size={26} />,
-  },
+  // {
+  //   title: "Orders",
+  //   href: "/orders",
+  //   icon: <ClipboardList size={26} />,
+  // },
+  // {
+  //   title: "Enquiries",
+  //   href: "/enquiries",
+  //   icon: <ClipboardList size={26} />,
+  // },
 ];

@@ -45,6 +45,7 @@ export function Toolbar({
                     column={table.getColumn(ff.column)}
                     title={ff.title}
                     options={ff.options}
+                    search={ff?.search}
                   />
                 )
               );

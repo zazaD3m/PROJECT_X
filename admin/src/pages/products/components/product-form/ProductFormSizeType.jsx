@@ -21,7 +21,7 @@ import {
   PopoverTrigger,
 } from "../../../../components/ui/popover";
 import { cn } from "../../../../lib/utils";
-import { PRODUCT_SIZE_TYPES } from "../../constants/productSizes";
+import { PRODUCT_SIZE_TYPES } from "../../constants/productDetails";
 
 const ProductFormSizeType = ({ control, setValue }) => {
   return (

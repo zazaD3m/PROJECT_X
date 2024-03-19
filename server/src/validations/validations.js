@@ -21,6 +21,19 @@ export const brandValidator = [
   checkExact(),
 ];
 
+export const sizeValidator = [
+  body("sizeType").notEmpty().trim().escape(),
+  body("sizeName").notEmpty().trim().escape(),
+  checkExact(),
+];
+
+export const saleValidator = [
+  body("saleName").notEmpty().trim().escape(),
+  body("expiry").notEmpty().trim().escape(),
+  body("discount").notEmpty().trim().escape().isNumeric(),
+  checkExact(),
+];
+
 export const productValidator = [
   body("description").notEmpty().trim().escape(),
   body("title").notEmpty().trim().escape(),

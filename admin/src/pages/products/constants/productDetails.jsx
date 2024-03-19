@@ -37,3 +37,5 @@ export const getDefaultSizeType = (size) => {
   }
   return "";
 };
+
+export const PRODUCT_STATUS = ["forsale", "sold", "transit"];

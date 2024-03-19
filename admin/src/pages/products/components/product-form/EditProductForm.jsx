@@ -24,7 +24,7 @@ import {
   useDeleteProductMutation,
   useUpdateProductMutation,
 } from "../../../../features/products/productsApiSlice";
-import { getDefaultSizeType } from "../../constants/productSizes";
+import { getDefaultSizeType } from "../../constants/productDetails";
 
 const editProductSchema = yup.object().shape({
   productTitle: yup.string().required("Product title is required"),

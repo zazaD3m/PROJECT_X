@@ -7,6 +7,8 @@ import colorRoutes from "./colorRoutes.js";
 import userRoutes from "./userRoutes.js";
 import categoryRoutes from "./categoryRoutes.js";
 import productRoutes from "./productRoutes.js";
+import saleRoutes from "./saleRoutes.js";
+import sizeRoutes from "./sizeRoutes.js";
 import imageRoutes from "./imageRoutes.js";
 
 const router = Router();
@@ -14,8 +16,10 @@ const router = Router();
 router.use("/brands", authenticateUser, isAdmin, brandRoutes);
 router.use("/colors", authenticateUser, isAdmin, colorRoutes);
 router.use("/categories", authenticateUser, isAdmin, categoryRoutes);
+router.use("/sizes", sizeRoutes);
 router.use("/images", authenticateUser, isAdmin, imageRoutes);
 router.use("/products", productRoutes);
+router.use("/sales", saleRoutes);
 router.use("/users", authenticateUser, isAdmin, userRoutes);
 
 router.all("*", (req, res, next) => {

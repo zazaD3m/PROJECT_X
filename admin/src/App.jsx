@@ -8,8 +8,10 @@ import { lazy, Suspense } from "react";
 
 // PAGES START
 import LoginPage from "./pages/auth/LoginPage";
+import SalesPage from "./pages/sales/SalesPage";
 const DashboardPage = lazy(() => import("./pages/dashboard/DashboardPage"));
 const BrandsPage = lazy(() => import("./pages/brands/BrandsPage"));
+const SizesPage = lazy(() => import("./pages/sizes/SizesPage"));
 const ColorsPage = lazy(() => import("./pages/colors/ColorsPage"));
 const CategoriesPage = lazy(() => import("./pages/categories/CategoriesPage"));
 const ProductsPage = lazy(() => import("./pages/products/ProductsPage"));
@@ -26,6 +28,7 @@ import AddSubCategory from "./pages/categories/AddSubCategory";
 import AddCategory from "./pages/categories/AddCategory";
 import AddProduct from "./pages/products/AddProduct";
 import EditProduct from "./pages/products/EditProduct";
+import AddSale from "./pages/sales/AddSale";
 // CATALOG COMPONENTS END
 
 import RequireAuth from "./components/RequireAuth";
@@ -56,6 +59,12 @@ const router = createBrowserRouter(
                 </Suspense>
               }
             />
+            <Route path="promotion">
+              <Route path="sales">
+                <Route index element={<SalesPage />} />
+                <Route path="addsale" element={<AddSale />} />
+              </Route>
+            </Route>
             <Route path="catalog">
               <Route path="brands">
                 <Route
@@ -68,6 +77,16 @@ const router = createBrowserRouter(
                 />
                 <Route path="addbrand" element={<AddBrand />} />
                 <Route path="editbrand/:brandId" element={<EditBrand />} />
+              </Route>
+              <Route path="sizes">
+                <Route
+                  index
+                  element={
+                    <Suspense fallback={<Loader />}>
+                      <SizesPage />
+                    </Suspense>
+                  }
+                />
               </Route>
               <Route path="colors">
                 <Route

@@ -1,4 +1,3 @@
-import { useMemo, useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -9,9 +8,9 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
-import { Toolbar } from "../../../components/data-table/Toolbar";
-import { customerColumns } from "../customersTableData";
+import { useState } from "react";
+import ProductTableToolbar from "./ProductTableToolbar";
+import { Pagination } from "../../../components/data-table/Pagination";
 import {
   Table,
   TableBody,
@@ -20,24 +19,21 @@ import {
   TableHeader,
   TableRow,
 } from "../../../components/ui/table";
-import { Pagination } from "../../../components/data-table/Pagination";
 
-const CustomerTable = ({ data }) => {
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState({});
-  const [columnFilters, setColumnFilters] = useState([]);
+const ProductTable = ({ data, columns }) => {
   const [sorting, setSorting] = useState([]);
-
-  const columns = useMemo(() => customerColumns, []);
+  const [columnFilters, setColumnFilters] = useState([]);
+  const [columnVisibility, setColumnVisibility] = useState({});
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data,
     columns,
     state: {
       sorting,
+      columnFilters,
       columnVisibility,
       rowSelection,
-      columnFilters,
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
@@ -53,17 +49,7 @@ const CustomerTable = ({ data }) => {
   });
   return (
     <div className="space-y-4">
-      <Toolbar
-        table={table}
-        filter={[
-          { placeHolder: "First name", value: "firstName" },
-          { placeHolder: "Last name", value: "lastName" },
-          { placeHolder: "E-Mail", value: "email" },
-          { placeHolder: "Address", value: "address" },
-          { placeHolder: "Phone number", value: "phoneNumber" },
-        ]}
-        facetedFilter={[]}
-      />
+      <ProductTableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -71,7 +57,11 @@ const CustomerTable = ({ data }) => {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
+                    <TableHead
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      className="[&:has([role=checkbox])]:pl-3"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -92,7 +82,10 @@ const CustomerTable = ({ data }) => {
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell className="py-3" key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className="py-2 [&:has([role=checkbox])]:pl-3"
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -118,4 +111,4 @@ const CustomerTable = ({ data }) => {
     </div>
   );
 };
-export default CustomerTable;
+export default ProductTable;
