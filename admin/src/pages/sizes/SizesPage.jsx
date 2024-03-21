@@ -21,7 +21,7 @@ const SizesPage = () => {
           <Link to="/dashboard">Go Back To Dashboard</Link>
         </Button>
       </ContainerHeader>
-      <ContainerContent>
+      <ContainerContent className="min-h-[75vh]">
         {isSuccess ? <AddSizeForm sizes={sizes} /> : <Loader />}
       </ContainerContent>
     </Container>

@@ -21,10 +21,12 @@ import {
   PopoverTrigger,
 } from "../../../../components/ui/popover";
 import { cn } from "../../../../lib/utils";
-import { PRODUCT_SIZES } from "../../constants/productDetails";
+import { useSelector } from "react-redux";
+import { selectAllSizes } from "../../../../features/sizes/sizesApiSlice";
 
 const ProductFormSize = ({ control, setValue, watch }) => {
   const productSizeType = watch("productSizeType");
+  const sizes = useSelector(selectAllSizes);
 
   return (
     <FormField
@@ -57,28 +59,30 @@ const ProductFormSize = ({ control, setValue, watch }) => {
                 </CommandEmpty>
                 <CommandGroup>
                   {productSizeType ? (
-                    PRODUCT_SIZES[productSizeType].map((productSize) => (
-                      <CommandItem
-                        value={productSize}
-                        key={productSize}
-                        onSelect={() => {
-                          setValue("productSize", productSize, {
-                            shouldValidate: true,
-                            shouldDirty: true,
-                          });
-                        }}
-                      >
-                        <CheckIcon
-                          className={cn(
-                            "mr-2 h-4 w-4",
-                            productSize === field.value
-                              ? "opacity-100"
-                              : "opacity-0",
-                          )}
-                        />
-                        {productSize}
-                      </CommandItem>
-                    ))
+                    sizes
+                      .filter((s) => s.sizeType === productSizeType)[0]
+                      .sizeNames.map((productSize) => (
+                        <CommandItem
+                          value={productSize}
+                          key={productSize}
+                          onSelect={() => {
+                            setValue("productSize", productSize, {
+                              shouldValidate: true,
+                              shouldDirty: true,
+                            });
+                          }}
+                        >
+                          <CheckIcon
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              productSize === field.value
+                                ? "opacity-100"
+                                : "opacity-0",
+                            )}
+                          />
+                          {productSize}
+                        </CommandItem>
+                      ))
                   ) : (
                     <p className="cursor-default py-4 text-center font-semibold text-destructive">
                       Choose Size Type

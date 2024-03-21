@@ -5,17 +5,36 @@ import { Button } from "../../../components/ui/button";
 import { X } from "lucide-react";
 import { ViewOptions } from "../../../components/data-table/ViewOptions";
 import { productColumnFilter as columnFilter } from "./productTableData";
+import { selectAllSizes } from "../../../features/sizes/sizesApiSlice";
+import { selectAllCategories } from "../../../features/categories/categoriesApiSlice";
+import {
+  convertStringToValueAndLabelObj,
+  getUniqueValues,
+} from "../components/utils";
 
 const ProductTableToolbar = ({ table }) => {
   const isFiltered = table.getState().columnFilters.length > 0;
 
   const brands = useSelector(selectAllBrands);
-  const brandOptions = brands.map((brand) => {
-    return {
-      value: brand.brandName,
-      label: brand.brandName,
-    };
-  });
+  const brandOptions = brands.map((brand) =>
+    convertStringToValueAndLabelObj(brand.brandName),
+  );
+
+  const sizes = useSelector(selectAllSizes);
+  const sizeOptions = sizes
+    .flatMap((size) => size.sizeNames)
+    .map((size) => convertStringToValueAndLabelObj(size));
+
+  const categories = useSelector(selectAllCategories);
+  const mainCategoryOptions = getUniqueValues(
+    categories,
+    "mainCategoryName",
+  ).map((cat) => convertStringToValueAndLabelObj(cat));
+  const subCategoryOptions = getUniqueValues(
+    categories.filter((obj) => !obj.isMainCategory),
+    "subCategoryName",
+  ).map((cat) => convertStringToValueAndLabelObj(cat));
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 flex-wrap items-center gap-x-2 gap-y-2">
@@ -23,6 +42,24 @@ const ProductTableToolbar = ({ table }) => {
           column={table.getColumn("brand")}
           title="Brand"
           options={brandOptions}
+          search={true}
+        />
+        <FacetedFilter
+          column={table.getColumn("size")}
+          title="Size"
+          options={sizeOptions}
+          search={true}
+        />
+        <FacetedFilter
+          column={table.getColumn("mainCategory")}
+          title="Main Cat"
+          options={mainCategoryOptions}
+          search={true}
+        />
+        <FacetedFilter
+          column={table.getColumn("subCategory")}
+          title="Sub Cat"
+          options={subCategoryOptions}
           search={true}
         />
         {isFiltered && (

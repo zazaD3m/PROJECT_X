@@ -21,9 +21,11 @@ import {
   PopoverTrigger,
 } from "../../../../components/ui/popover";
 import { cn } from "../../../../lib/utils";
-import { PRODUCT_SIZE_TYPES } from "../../constants/productDetails";
+import { useSelector } from "react-redux";
+import { selectAllSizes } from "../../../../features/sizes/sizesApiSlice";
 
 const ProductFormSizeType = ({ control, setValue }) => {
+  const sizes = useSelector(selectAllSizes);
   return (
     <FormField
       control={control}
@@ -56,15 +58,15 @@ const ProductFormSizeType = ({ control, setValue }) => {
                   </p>
                 </CommandEmpty>
                 <CommandGroup>
-                  {PRODUCT_SIZE_TYPES.map((p) => (
+                  {sizes.map((s) => (
                     <CommandItem
-                      value={p}
-                      key={p}
+                      value={s.sizeType}
+                      key={s.sizeType}
                       onSelect={() => {
                         setValue("productSize", "", {
                           shouldValidate: false,
                         });
-                        setValue("productSizeType", p, {
+                        setValue("productSizeType", s.sizeType, {
                           shouldValidate: true,
                           shouldDirty: true,
                         });
@@ -73,10 +75,12 @@ const ProductFormSizeType = ({ control, setValue }) => {
                       <CheckIcon
                         className={cn(
                           "mr-2 h-4 w-4",
-                          p === field.value ? "opacity-100" : "opacity-0",
+                          s.sizeType === field.value
+                            ? "opacity-100"
+                            : "opacity-0",
                         )}
                       />
-                      {p}
+                      {s.sizeType}
                     </CommandItem>
                   ))}
                 </CommandGroup>

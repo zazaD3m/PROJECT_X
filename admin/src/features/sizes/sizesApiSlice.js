@@ -64,3 +64,10 @@ export const {
   useGetSizesQuery,
   useDeleteSizeMutation,
 } = sizesApiSlice;
+
+export const selectSizesResult = sizesApiSlice.endpoints.getSizes.select();
+
+export const selectAllSizes = createSelector(
+  selectSizesResult,
+  (sizesResult) => sizesResult.data,
+);

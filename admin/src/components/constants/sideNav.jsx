@@ -1,12 +1,12 @@
 import {
-  ClipboardList,
-  Gauge,
+  BarChart3,
   Layers3,
   LayoutGrid,
   Megaphone,
   Palette,
   Pentagon,
   Percent,
+  RulerIcon,
   ShoppingCart,
   User2,
 } from "lucide-react";
@@ -15,7 +15,7 @@ export const NAV_ITEMS = [
   {
     title: "Dashboard",
     href: "/dashboard",
-    icon: <Gauge size={26} />,
+    icon: <BarChart3 size={26} />,
   },
   {
     title: "Customers",
@@ -68,14 +68,9 @@ export const NAV_ITEMS = [
         icon: <Palette size={24} />,
       },
       {
-        title: "Add Size",
-        href: "/catalog/sizes/addsize",
-        icon: <ClipboardList size={24} />,
-      },
-      {
-        title: "Size List",
+        title: "Sizes",
         href: "/catalog/sizes",
-        icon: <ClipboardList size={24} />,
+        icon: <RulerIcon size={24} />,
       },
     ],
   },

@@ -60,7 +60,6 @@ export const categoryColumns = [
   {
     accessorKey: "mainCategoryName",
     accessorFn: (row) => row.mainCategoryName || "",
-
     header: ({ column }) => (
       <ColumnHeader column={column} title="Main Category" />
     ),

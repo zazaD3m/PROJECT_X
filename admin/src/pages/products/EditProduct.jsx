@@ -15,6 +15,7 @@ import EditProductForm from "./components/product-form/EditProductForm";
 import { useGetCategoriesQuery } from "../../features/categories/categoriesApiSlice";
 import { useGetBrandsQuery } from "../../features/brands/brandsApiSlice";
 import { useGetColorsQuery } from "../../features/colors/colorsApiSlice";
+import { useGetSizesQuery } from "../../features/sizes/sizesApiSlice";
 
 const EditProduct = () => {
   const { productId } = useParams();
@@ -23,7 +24,6 @@ const EditProduct = () => {
   const {
     data: product,
     isSuccess: isProductSuccess,
-    isLoading: isProductLoading,
     isError: isProductError,
   } = useGetProductByIdQuery(productId);
 
@@ -33,13 +33,10 @@ const EditProduct = () => {
     }
   }, [isProductError]);
 
-  const { isSuccess: isCategoriesSuccess, isLoading: isCategoriesLoading } =
-    useGetCategoriesQuery();
-  const { isSuccess: isBrandsSuccess, isLoading: isBrandsLoading } =
-    useGetBrandsQuery();
-  const { isSuccess: isColorsSuccess, isLoading: isColorsLoading } =
-    useGetColorsQuery();
-
+  const { isSuccess: isCategoriesSuccess } = useGetCategoriesQuery();
+  const { isSuccess: isBrandsSuccess } = useGetBrandsQuery();
+  const { isSuccess: isColorsSuccess } = useGetColorsQuery();
+  const { isSuccess: isSizesSuccess } = useGetSizesQuery();
   return (
     <Container>
       <ContainerHeader>
@@ -51,14 +48,15 @@ const EditProduct = () => {
         </Button>
       </ContainerHeader>
       <ContainerContent>
-        {(isCategoriesLoading ||
-          isBrandsLoading ||
-          isColorsLoading ||
-          isProductLoading) && <Loader />}
         {isCategoriesSuccess &&
-          isBrandsSuccess &&
-          isColorsSuccess &&
-          isProductSuccess && <EditProductForm product={product} />}
+        isBrandsSuccess &&
+        isColorsSuccess &&
+        isProductSuccess &&
+        isSizesSuccess ? (
+          <EditProductForm product={product} />
+        ) : (
+          <Loader />
+        )}
       </ContainerContent>
     </Container>
   );

@@ -3,6 +3,10 @@ import { Checkbox } from "../../../components/ui/checkbox";
 
 export const productColumnFilter = {
   brand: "brand",
+  size: "size",
+  mainCategory: "main cat",
+  subCategory: "sub cat",
+  price: "price",
 };
 
 export const productColumns = [
@@ -39,5 +43,47 @@ export const productColumns = [
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
+  },
+  {
+    accessorKey: "size",
+    header: ({ column }) => <ColumnHeader column={column} title="Size" />,
+    cell: ({ row }) => (
+      <div className="px-2 text-base">{row.getValue("size")}</div>
+    ),
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: "mainCategory",
+    header: ({ column }) => <ColumnHeader column={column} title="Main Cat" />,
+    cell: ({ row }) => (
+      <div className="px-2 text-base">{row.getValue("mainCategory")}</div>
+    ),
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: "subCategory",
+    header: ({ column }) => <ColumnHeader column={column} title="Sub Cat" />,
+    cell: ({ row }) => (
+      <div className="px-2 text-base">{row.getValue("subCategory")}</div>
+    ),
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: "price",
+    header: ({ column }) => <ColumnHeader column={column} title="Price" />,
+    cell: ({ row }) => (
+      <div className="px-2 text-base">{row.getValue("price")}</div>
+    ),
+    filterFn: "inNumberRange",
+    filterSelectOptions: [
+      { text: "Less than $10", start: 0, end: 100 },
+      { text: "10 - 20", start: 100, end: 1000 },
+    ],
   },
 ];

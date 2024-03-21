@@ -42,7 +42,7 @@ export const createCategory = asyncHandler(async (req, res) => {
 // @desc Get all categories
 // route GET /api/categories
 export const getAllCategories = asyncHandler(async (req, res) => {
-  const categories = await Category.find();
+  const categories = await Category.find().lean();
 
   if (!categories) {
     ThrowErr.ServerError();

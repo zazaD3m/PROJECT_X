@@ -15,15 +15,19 @@ import { Link } from "react-router-dom";
 import ProductTable from "./product-table/ProductTable";
 import { useSelector } from "react-redux";
 import { useGetBrandsQuery } from "../../features/brands/brandsApiSlice";
+import { useGetSizesQuery } from "../../features/sizes/sizesApiSlice";
+import { useGetCategoriesQuery } from "../../features/categories/categoriesApiSlice";
 
 const ProductsPage = () => {
   const { isSuccess: isProductsSuccess } = useGetProductsQuery();
   const { isSuccess: isBrandsSuccess } = useGetBrandsQuery();
+  const { isSuccess: isSizesSuccess } = useGetSizesQuery();
+  const { isSuccess: isCategoriesSuccess } = useGetCategoriesQuery();
 
   const data = useSelector(selectAllProducts);
 
   return (
-    <Container>
+    <Container className="2xl:px-8">
       <ContainerHeader>
         <ContainerTitle>All Products</ContainerTitle>
         <Button asChild variant="outline" size="lg">
@@ -31,7 +35,10 @@ const ProductsPage = () => {
         </Button>
       </ContainerHeader>
       <ContainerContent>
-        {isProductsSuccess && isBrandsSuccess ? (
+        {isProductsSuccess &&
+        isBrandsSuccess &&
+        isSizesSuccess &&
+        isCategoriesSuccess ? (
           <ProductTable data={data} columns={columns} />
         ) : (
           <Loader />

@@ -25,6 +25,8 @@ import {
   useUpdateProductMutation,
 } from "../../../../features/products/productsApiSlice";
 import { getDefaultSizeType } from "../../constants/productDetails";
+import { useSelector } from "react-redux";
+import { selectAllSizes } from "../../../../features/sizes/sizesApiSlice";
 
 const editProductSchema = yup.object().shape({
   productTitle: yup.string().required("Product title is required"),
@@ -53,6 +55,7 @@ const EditProductForm = ({ product }) => {
   const navigate = useNavigate();
   const { productId } = useParams();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const sizes = useSelector(selectAllSizes);
 
   const [
     updateProduct,
@@ -79,7 +82,7 @@ const EditProductForm = ({ product }) => {
       productDescription: product.description,
       productPrice: product.price,
       productSize: product.size,
-      productSizeType: getDefaultSizeType(product.size),
+      productSizeType: getDefaultSizeType(sizes, product.size),
       productMainCategory: product.mainCategory,
       productSubCategory: product.subCategory,
       productGender: product.gender,
