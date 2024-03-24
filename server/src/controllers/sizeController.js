@@ -33,6 +33,11 @@ export const getAllSizes = asyncHandler(async (req, res) => {
     ThrowErr.ServerError();
   }
 
+  const toNumber = (str) => {
+    const num = Number(str);
+    return isNaN(num) ? str : num;
+  };
+
   const convertSizesIntoObj = (s) => {
     // [{sizeType: "shoes", sizeNames: ["38", "40"]}]
     return s.reduce((acc, curr) => {
@@ -40,9 +45,9 @@ export const getAllSizes = asyncHandler(async (req, res) => {
       const existingType = acc.find((item) => item.sizeType === sizeType);
 
       if (existingType) {
-        existingType.sizeNames.push(sizeName);
+        existingType.sizeNames.push(toNumber(sizeName));
       } else {
-        acc.push({ sizeType, sizeNames: [sizeName] });
+        acc.push({ sizeType, sizeNames: [toNumber(sizeName)] });
       }
 
       return acc;
@@ -52,6 +57,29 @@ export const getAllSizes = asyncHandler(async (req, res) => {
   sizes = convertSizesIntoObj(sizes);
 
   res.status(200).json(sizes);
+});
+
+// @desc Get filtered-sizes
+// route GET /api/sizes/filtered-sizes
+export const getAllSizesForFilter = asyncHandler(async (req, res) => {
+  let sizes = await Size.find().lean();
+
+  if (!sizes) {
+    ThrowErr.ServerError();
+  }
+
+  const toNumber = (str) => {
+    const num = Number(str);
+    return isNaN(num) ? str : num;
+  };
+
+  const newSizes = sizes
+    .map((s) => toNumber(s.sizeName))
+    .toSorted((a, b) => a - b);
+
+  console.log(newSizes);
+
+  res.status(200).json(newSizes);
 });
 
 // @desc Delete size

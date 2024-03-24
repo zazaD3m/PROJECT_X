@@ -17,6 +17,7 @@ import { Separator } from "../ui/separator";
 export function FacetedFilter({ column, title, options, search }) {
   const facets = column?.getFacetedUniqueValues();
   const selectedValues = new Set(column?.getFilterValue());
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -33,26 +34,17 @@ export function FacetedFilter({ column, title, options, search }) {
                 {selectedValues.size}
               </Badge>
               <div className="hidden space-x-1 lg:flex">
-                {selectedValues.size > 2 ? (
-                  <Badge
-                    variant="secondary"
-                    className="rounded-sm px-1 font-normal"
-                  >
-                    {selectedValues.size} selected
-                  </Badge>
-                ) : (
-                  options
-                    .filter((option) => selectedValues.has(option.value))
-                    .map((option) => (
-                      <Badge
-                        variant="secondary"
-                        key={option.value}
-                        className="rounded-sm px-1 font-normal"
-                      >
-                        {option.label}
-                      </Badge>
-                    ))
-                )}
+                {options
+                  .filter((option) => selectedValues.has(option.value))
+                  .map((option) => (
+                    <Badge
+                      variant="secondary"
+                      key={option.value}
+                      className="rounded-sm px-1 font-normal"
+                    >
+                      {option.label}
+                    </Badge>
+                  ))}
               </div>
             </>
           )}
@@ -65,7 +57,9 @@ export function FacetedFilter({ column, title, options, search }) {
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
               {options
-                .filter((option) => facets.has(option.value))
+                .toSorted((a, b) => {
+                  return a.value - b.value;
+                })
                 .map((option) => {
                   const isSelected = selectedValues.has(option.value);
                   return (

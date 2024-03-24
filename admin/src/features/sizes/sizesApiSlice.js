@@ -10,6 +10,10 @@ const sizesApiSlice = apiSlice.injectEndpoints({
       query: () => `${SIZES_URL}`,
       providesTags: ["Size"],
     }),
+    getFilteredSizes: builder.query({
+      query: () => `${SIZES_URL}/filtered-sizes`,
+      providesTags: ["Size"],
+    }),
     // getSizeById: builder.query({
     //   query: (sizeId) => `${SIZES_URL}/size/${sizeId}`,
     // }),
@@ -63,11 +67,19 @@ export const {
   useCreateSizeMutation,
   useGetSizesQuery,
   useDeleteSizeMutation,
+  useGetFilteredSizesQuery,
 } = sizesApiSlice;
 
 export const selectSizesResult = sizesApiSlice.endpoints.getSizes.select();
+export const selectFilteredSizesResult =
+  sizesApiSlice.endpoints.getFilteredSizes.select();
 
 export const selectAllSizes = createSelector(
   selectSizesResult,
   (sizesResult) => sizesResult.data,
+);
+
+export const selectFilteredSizes = createSelector(
+  selectFilteredSizesResult,
+  (res) => res.data,
 );

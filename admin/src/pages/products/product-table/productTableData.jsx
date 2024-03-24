@@ -1,5 +1,6 @@
 import { ColumnHeader } from "../../../components/data-table/ColumnHeader";
 import { Checkbox } from "../../../components/ui/checkbox";
+import { toNumber } from "../components/utils";
 
 export const productColumnFilter = {
   brand: "brand",
@@ -46,6 +47,7 @@ export const productColumns = [
   },
   {
     accessorKey: "size",
+    accessorFn: (row) => toNumber(row.size) || "",
     header: ({ column }) => <ColumnHeader column={column} title="Size" />,
     cell: ({ row }) => (
       <div className="px-2 text-base">{row.getValue("size")}</div>
@@ -80,10 +82,6 @@ export const productColumns = [
     cell: ({ row }) => (
       <div className="px-2 text-base">{row.getValue("price")}</div>
     ),
-    filterFn: "inNumberRange",
-    filterSelectOptions: [
-      { text: "Less than $10", start: 0, end: 100 },
-      { text: "10 - 20", start: 100, end: 1000 },
-    ],
+    footer: (props) => props.column.id,
   },
 ];

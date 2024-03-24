@@ -14,3 +14,8 @@ export const convertStringToValueAndLabelObj = (str) => {
     label: str,
   };
 };
+
+export const toNumber = (str) => {
+  const num = Number(str);
+  return isNaN(num) ? str : num;
+};

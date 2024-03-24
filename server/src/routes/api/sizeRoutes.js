@@ -3,6 +3,7 @@ import {
   createSize,
   getAllSizes,
   deleteSize,
+  getAllSizesForFilter,
 } from "../../controllers/sizeController.js";
 import {
   sizeValidator,
@@ -18,5 +19,9 @@ router
   .post([authenticateUser, isAdmin], [sizeValidator, validate], createSize)
   .get([authenticateUser, isAdmin], getAllSizes)
   .delete([authenticateUser, isAdmin], [sizeValidator, validate], deleteSize);
+
+router
+  .route("/filtered-sizes")
+  .get([authenticateUser, isAdmin], getAllSizesForFilter);
 
 export default router;
