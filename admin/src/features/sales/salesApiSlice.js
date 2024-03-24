@@ -14,10 +14,10 @@ const salesApiSlice = apiSlice.injectEndpoints({
     //   query: (saleId) => `${SALES_URL}/sale/${saleId}`,
     // }),
     createSale: builder.mutation({
-      query: ({ saleName, discount, expiry }) => ({
+      query: ({ saleName, saleAmount, expiry }) => ({
         url: `${SALES_URL}`,
         method: "POST",
-        body: { saleName, discount, expiry },
+        body: { saleName, saleAmount, expiry },
       }),
       invalidatesTags: ["Sale"],
     }),
@@ -65,3 +65,9 @@ export const {
   // useGetSaleByIdQuery,
   useDeleteSaleMutation,
 } = salesApiSlice;
+
+export const selectSalesResult = salesApiSlice.endpoints.getSales.select();
+export const selectAllSales = createSelector(
+  selectSalesResult,
+  (salesResult) => salesResult.data,
+);

@@ -15,9 +15,9 @@ export const createSale = asyncHandler(async (req, res) => {
     ThrowErr.ServerError();
   }
 
-  const { saleName, discount, expiry } = newSale;
+  const { saleName, saleAmount, expiry } = newSale;
 
-  return res.status(201).json({ saleName, discount, expiry });
+  return res.status(201).json({ saleName, saleAmount, expiry });
   // return res.status(201).json({ message: "success" });
 });
 

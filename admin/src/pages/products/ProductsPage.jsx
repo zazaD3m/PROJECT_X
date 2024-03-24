@@ -17,12 +17,16 @@ import { useSelector } from "react-redux";
 import { useGetBrandsQuery } from "../../features/brands/brandsApiSlice";
 import { useGetSizesQuery } from "../../features/sizes/sizesApiSlice";
 import { useGetCategoriesQuery } from "../../features/categories/categoriesApiSlice";
+import { useGetColorsQuery } from "../../features/colors/colorsApiSlice";
+import { useGetSalesQuery } from "../../features/sales/salesApiSlice";
 
 const ProductsPage = () => {
   const { isSuccess: isProductsSuccess } = useGetProductsQuery();
   const { isSuccess: isBrandsSuccess } = useGetBrandsQuery();
   const { isSuccess: isSizesSuccess } = useGetSizesQuery();
   const { isSuccess: isCategoriesSuccess } = useGetCategoriesQuery();
+  const { isSuccess: isColorsSuccess } = useGetColorsQuery();
+  const { isSuccess: isSalesSuccess } = useGetSalesQuery();
 
   const data = useSelector(selectAllProducts);
 
@@ -38,6 +42,8 @@ const ProductsPage = () => {
         {isProductsSuccess &&
         isBrandsSuccess &&
         isSizesSuccess &&
+        isColorsSuccess &&
+        isSalesSuccess &&
         isCategoriesSuccess ? (
           <ProductTable data={data} columns={columns} />
         ) : (

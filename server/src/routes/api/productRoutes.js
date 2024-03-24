@@ -9,6 +9,7 @@ import {
   getAllProducts,
   updateProduct,
   deleteProduct,
+  uuuuu,
   // deleteProductImage,
   getProduct,
 } from "../../controllers/productController.js";
@@ -27,7 +28,8 @@ router
     [authenticateUser, isAdmin],
     [productValidator, validate],
     createProduct
-  );
+  )
+  .put(uuuuu);
 
 // .get(getAllProducts);
 

@@ -30,7 +30,7 @@ export const sizeValidator = [
 export const saleValidator = [
   body("saleName").notEmpty().trim().escape(),
   body("expiry").notEmpty().trim().escape(),
-  body("discount").notEmpty().trim().escape().isNumeric(),
+  body("saleAmount").notEmpty().trim().escape().isNumeric(),
   checkExact(),
 ];
 

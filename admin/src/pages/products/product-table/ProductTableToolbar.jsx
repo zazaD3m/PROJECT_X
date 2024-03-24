@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { FacetedFilter } from "../../../components/data-table/FacetedFilter";
 import { selectAllBrands } from "../../../features/brands/brandsApiSlice";
 import { Button } from "../../../components/ui/button";
-import { X } from "lucide-react";
+import { Circle, X } from "lucide-react";
 import { ViewOptions } from "../../../components/data-table/ViewOptions";
 import { productColumnFilter as columnFilter } from "./productTableData";
 import { selectAllSizes } from "../../../features/sizes/sizesApiSlice";
@@ -10,9 +10,11 @@ import { selectAllCategories } from "../../../features/categories/categoriesApiS
 import {
   convertStringToValueAndLabelObj,
   getUniqueValues,
-  toNumber,
 } from "../components/utils";
 import PriceRange from "./PriceRange";
+import { selectAllColors } from "../../../features/colors/colorsApiSlice";
+import { selectAllSales } from "../../../features/sales/salesApiSlice";
+import ProductTableActions from "./ProductTableActions";
 
 const ProductTableToolbar = ({ table }) => {
   const isFiltered = table.getState().columnFilters.length > 0;
@@ -27,6 +29,42 @@ const ProductTableToolbar = ({ table }) => {
     .flatMap((size) => size.sizeNames)
     .map((size) => convertStringToValueAndLabelObj(size));
 
+  const sales = useSelector(selectAllSales);
+  const saleOptions = sales.map((sale) => ({
+    value: sale.saleName,
+    label: `${sale.saleName} - ${sale.saleAmount}%`,
+  }));
+
+  const genderOptions = [
+    {
+      label: "Man",
+      value: "man",
+    },
+    {
+      label: "Woman",
+      value: "woman",
+    },
+    {
+      label: "Boy",
+      value: "boy",
+    },
+    {
+      label: "Girl",
+      value: "girl",
+    },
+  ];
+
+  const statusOptions = [
+    {
+      label: "Forsale",
+      value: "forsale",
+    },
+    {
+      label: "Hidden",
+      value: "hidden",
+    },
+  ];
+
   const categories = useSelector(selectAllCategories);
   const mainCategoryOptions = getUniqueValues(
     categories,
@@ -35,6 +73,19 @@ const ProductTableToolbar = ({ table }) => {
   const subCategoryOptions = getUniqueValues(categories, "subCategoryName").map(
     (cat) => convertStringToValueAndLabelObj(cat),
   );
+
+  const colors = useSelector(selectAllColors);
+  const colorOptions = colors.map((color) => ({
+    ...convertStringToValueAndLabelObj(color.colorName),
+    icon: (
+      <Circle
+        size={16}
+        fill={`#${color.hexValue}`}
+        color={`#${color.hexValue}`}
+        className="mr-2"
+      />
+    ),
+  }));
 
   return (
     <>
@@ -64,6 +115,27 @@ const ProductTableToolbar = ({ table }) => {
             options={subCategoryOptions}
             search={true}
           />
+          <FacetedFilter
+            column={table.getColumn("color")}
+            title="Color"
+            options={colorOptions}
+            search={true}
+          />
+          <FacetedFilter
+            column={table.getColumn("gender")}
+            title="Gender"
+            options={genderOptions}
+          />
+          <FacetedFilter
+            column={table.getColumn("status")}
+            title="Status"
+            options={statusOptions}
+          />
+          <FacetedFilter
+            column={table.getColumn("sale")}
+            title="Sale"
+            options={saleOptions}
+          />
           <PriceRange column={table.getColumn("price")} />
           {isFiltered && (
             <Button
@@ -76,7 +148,10 @@ const ProductTableToolbar = ({ table }) => {
             </Button>
           )}
         </div>
-        <ViewOptions table={table} columnFilter={columnFilter} />
+        <div className="flex gap-x-4">
+          <ProductTableActions table={table} />
+          <ViewOptions table={table} columnFilter={columnFilter} />
+        </div>
       </div>
     </>
   );

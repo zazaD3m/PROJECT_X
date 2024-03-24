@@ -34,7 +34,7 @@ const saleSchema = yup.object({
     .trim()
     .max(15, "Sale must be under 15 chars.")
     .required("Enter sale"),
-  discount: yup.number().min(10).max(70).required("Enter discount"),
+  saleAmount: yup.number().min(10).max(70).required("Enter discount"),
   expiry: yup.date().required("Enter expiry"),
 });
 
@@ -49,7 +49,7 @@ const AddSaleForm = () => {
   const form = useForm({
     defaultValues: {
       saleName: "",
-      discount: 10,
+      saleAmount: 10,
       expiry: "",
     },
     resolver: yupResolver(saleSchema),
@@ -60,7 +60,7 @@ const AddSaleForm = () => {
     if (isSuccess) {
       resetField("saleName");
       setFocus("saleName");
-      resetField("discount");
+      resetField("saleAmount");
       resetField("expiry");
       toast({
         variant: "success",
@@ -99,8 +99,8 @@ const AddSaleForm = () => {
   const { isDirty, isValid } = formState;
 
   const onSubmit = async (data) => {
-    const { saleName, discount, expiry } = data;
-    await createSale({ saleName, discount, expiry });
+    const { saleName, saleAmount, expiry } = data;
+    await createSale({ saleName, saleAmount, expiry });
   };
 
   return (
@@ -127,14 +127,14 @@ const AddSaleForm = () => {
           />
           <FormField
             control={control}
-            name="discount"
+            name="saleAmount"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-lg font-semibold">
-                  Discount
+                  Sale Amount
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="Discount" type="number" {...field} />
+                  <Input placeholder="Sale Amount" type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

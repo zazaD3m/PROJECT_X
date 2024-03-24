@@ -29,20 +29,26 @@ const Sale = ({ sale }) => {
 
   return (
     <div className="flex w-full gap-x-8">
-      <div className="flex flex-col gap-y-2 border-x-4 px-4 py-2">
-        <h2 className=" text-center text-lg font-bold">Sale Name</h2>
+      <div className="flex min-w-44 flex-col gap-y-2 border-x-4 px-4 py-2">
+        <h2 className="text-center text-lg font-bold">Sale Name</h2>
         <p className="text-center">{sale.saleName}</p>
       </div>
-      <div className="flex flex-col gap-y-2 border-x-4 px-4 py-2">
-        <h2 className=" text-center text-lg font-bold">Discount</h2>
-        <p className="text-center">{sale.discount} %</p>
+      <div className="flex min-w-44 flex-col gap-y-2 border-x-4 px-4 py-2">
+        <h2 className="text-center text-lg font-bold">Sale Amount</h2>
+        <p className="text-center">{sale.saleAmount} %</p>
+      </div>
+      <div className="flex min-w-44 flex-col gap-y-2 border-x-4 px-4 py-2">
+        <h2 className="text-center text-lg font-bold">Expiry</h2>
+        <p className="text-center">
+          {sale.saleName !== "no sale" ? (
+            format(sale.expiry, "PPP")
+          ) : (
+            <span>&#8734;</span>
+          )}
+        </p>
       </div>
       <div className="flex flex-col gap-y-2 border-x-4 px-4 py-2">
-        <h2 className=" text-center text-lg font-bold">Expiry</h2>
-        <p className="text-center">{format(sale.expiry, "PPP")}</p>
-      </div>
-      <div className="flex flex-col gap-y-2 border-x-4 px-4 py-2">
-        <h2 className=" text-center text-lg font-bold">Discounted Products</h2>
+        <h2 className="text-center text-lg font-bold">Discounted Products</h2>
         <p className="text-center">{sale.products.length}</p>
       </div>
       <div className="ml-auto flex items-center">

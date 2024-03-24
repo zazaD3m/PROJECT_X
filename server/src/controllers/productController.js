@@ -16,6 +16,24 @@ export const createProduct = asyncHandler(async (req, res) => {
 
   return res.status(201).json(newProduct);
 });
+// @desc Create new product
+// route POST /api/products/
+export const uuuuu = asyncHandler(async (req, res) => {
+  const products = await Product.updateMany(
+    {},
+    {
+      $set: {
+        status: "forsale",
+        sale: {
+          saleName: "testsale",
+          saleAmount: 25,
+        },
+      },
+    }
+  );
+
+  return res.status(201).json(products);
+});
 
 // @desc Get product by id
 // route GET /api/products/product/:id

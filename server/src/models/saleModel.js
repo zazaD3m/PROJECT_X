@@ -6,7 +6,7 @@ const saleSchema = new Schema({
     required: true,
     unique: true,
   },
-  discount: {
+  saleAmount: {
     type: Number,
     required: true,
   },
@@ -17,7 +17,6 @@ const saleSchema = new Schema({
   ],
   expiry: {
     type: Date,
-    required: true,
   },
 });
 

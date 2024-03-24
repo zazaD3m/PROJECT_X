@@ -50,9 +50,8 @@ const productSchema = new Schema(
       index: true,
     },
     sale: {
-      type: Number,
-      default: 0,
-      index: true,
+      saleAmount: { type: Number, default: 0 },
+      saleName: { type: String, default: "no sale" },
     },
     images: { type: Object },
   },

@@ -8,6 +8,10 @@ export const productColumnFilter = {
   mainCategory: "main cat",
   subCategory: "sub cat",
   price: "price",
+  gender: "Gender",
+  sale: "Sale",
+  color: "Color",
+  status: "Status",
 };
 
 export const productColumns = [
@@ -16,10 +20,10 @@ export const productColumns = [
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllRowsSelected() ||
+          (table.getIsSomeRowsSelected() && "indeterminate")
         }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        onCheckedChange={(value) => table.toggleAllRowsSelected(!!value)}
         aria-label="Select all"
         className="translate-y-[2px]"
       />
@@ -39,7 +43,7 @@ export const productColumns = [
     accessorKey: "brand",
     header: ({ column }) => <ColumnHeader column={column} title="Brand" />,
     cell: ({ row }) => (
-      <div className="px-2 text-base lowercase">{row.getValue("brand")}</div>
+      <div className=" text-base lowercase">{row.getValue("brand")}</div>
     ),
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
@@ -49,8 +53,35 @@ export const productColumns = [
     accessorKey: "size",
     accessorFn: (row) => toNumber(row.size) || "",
     header: ({ column }) => <ColumnHeader column={column} title="Size" />,
+    cell: ({ row }) => <div className=" text-base">{row.getValue("size")}</div>,
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: "sale",
+    accessorFn: (row) => row.sale.saleName || "",
+    header: ({ column }) => <ColumnHeader column={column} title="Sale" />,
+    cell: ({ row }) => <div className=" text-base">{row.getValue("sale")}</div>,
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: "gender",
+    header: ({ column }) => <ColumnHeader column={column} title="Gender" />,
     cell: ({ row }) => (
-      <div className="px-2 text-base">{row.getValue("size")}</div>
+      <div className=" text-base lowercase">{row.getValue("gender")}</div>
+    ),
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: "color",
+    header: ({ column }) => <ColumnHeader column={column} title="Color" />,
+    cell: ({ row }) => (
+      <div className="text-base lowercase">{row.getValue("color")}</div>
     ),
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
@@ -60,7 +91,7 @@ export const productColumns = [
     accessorKey: "mainCategory",
     header: ({ column }) => <ColumnHeader column={column} title="Main Cat" />,
     cell: ({ row }) => (
-      <div className="px-2 text-base">{row.getValue("mainCategory")}</div>
+      <div className=" text-base">{row.getValue("mainCategory")}</div>
     ),
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
@@ -70,7 +101,17 @@ export const productColumns = [
     accessorKey: "subCategory",
     header: ({ column }) => <ColumnHeader column={column} title="Sub Cat" />,
     cell: ({ row }) => (
-      <div className="px-2 text-base">{row.getValue("subCategory")}</div>
+      <div className=" text-base">{row.getValue("subCategory")}</div>
+    ),
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => <ColumnHeader column={column} title="Status" />,
+    cell: ({ row }) => (
+      <div className=" text-base">{row.getValue("status")}</div>
     ),
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
@@ -80,7 +121,7 @@ export const productColumns = [
     accessorKey: "price",
     header: ({ column }) => <ColumnHeader column={column} title="Price" />,
     cell: ({ row }) => (
-      <div className="px-2 text-base">{row.getValue("price")}</div>
+      <div className=" text-base">{row.getValue("price")}</div>
     ),
     footer: (props) => props.column.id,
   },

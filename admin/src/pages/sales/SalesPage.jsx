@@ -30,9 +30,9 @@ const SalesPage = () => {
             {sales.map((sale, i) => (
               <li
                 key={sale._id}
-                className="flex items-center gap-x-12 border px-4 shadow hover:shadow-sm"
+                className="flex items-center border transition-all hover:shadow "
               >
-                <span className="text-xl">{i + 1}</span>
+                <span className="px-7 text-xl">{i + 1}</span>
                 <Sale sale={sale} />
               </li>
             ))}
