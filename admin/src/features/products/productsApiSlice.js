@@ -67,12 +67,12 @@ const productsApiSlice = apiSlice.injectEndpoints({
       ],
     }),
     addSaleToProducts: builder.mutation({
-      query: ({ saleId, productIds }) => ({
+      query: ({ saleId, productIds, productsAlreadyOnSale }) => ({
         url: `${PRODUCTS_URL}/applysale`,
         method: "PUT",
-        body: { saleId, productIds },
+        body: { saleId, productIds, productsAlreadyOnSale },
       }),
-      invalidateTags: ["Sale", { type: "Product", id: "LIST" }],
+      invalidatesTags: ["Sale", { type: "Product", id: "LIST" }],
     }),
   }),
 });

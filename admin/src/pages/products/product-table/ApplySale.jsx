@@ -33,10 +33,33 @@ const ApplySale = ({ table }) => {
   } = useGetSalesQuery();
 
   const handleApplySale = (data) => {
-    const productIds = table
+    const { saleId } = data;
+    const saleName = sales.find((sale) => sale._id === saleId).saleName;
+    const selectedProducts = table
       .getSelectedRowModel()
-      .flatRows.map((row) => row.original._id);
-    applySale({ saleId: data.saleId, productIds });
+      .flatRows.map((row) => row.original);
+    const selectedProductIds = selectedProducts.map((product) => product._id);
+
+    const checkProductsAlreadyOnSale = () => {
+      const tempProductsAlreadyOnSale = {};
+      selectedProducts.forEach((product) => {
+        if (product.sale.saleName !== saleName) {
+          if (!tempProductsAlreadyOnSale[product.sale.saleName]) {
+            tempProductsAlreadyOnSale[product.sale.saleName] = [product._id];
+          }
+          tempProductsAlreadyOnSale[product.sale.saleName].push(product._id);
+        }
+      });
+      return tempProductsAlreadyOnSale;
+    };
+
+    const productsAlreadyOnSale = checkProductsAlreadyOnSale();
+
+    applySale({
+      saleId: data.saleId,
+      productIds: selectedProductIds,
+      productsAlreadyOnSale,
+    });
   };
 
   const form = useForm({

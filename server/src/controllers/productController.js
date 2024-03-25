@@ -117,7 +117,7 @@ export const deleteProduct = asyncHandler(async (req, res) => {
 // @desc Add sale to products
 // route PUT /api/products/applysale
 export const updateProductSale = asyncHandler(async (req, res) => {
-  const { productIds, saleId } = req.body;
+  const { productIds, saleId, productsAlreadyOnSale } = req.body;
   validateObjectId(productIds);
   validateObjectId(saleId);
 
@@ -125,6 +125,19 @@ export const updateProductSale = asyncHandler(async (req, res) => {
 
   if (!sale) {
     ThrowErr.ServerError();
+  }
+
+  if (Object.keys(productsAlreadyOnSale).length > 0) {
+    for (const saleNameToRemove in productsAlreadyOnSale) {
+      await Sale.updateOne(
+        { saleName: saleNameToRemove },
+        {
+          $pull: {
+            products: { $in: productsAlreadyOnSale[saleNameToRemove] },
+          },
+        }
+      );
+    }
   }
 
   const result = await Product.updateMany(
