@@ -1,5 +1,6 @@
 import Loader from "../../../components/Loader";
 import { Button } from "../../../components/ui/button";
+import * as yup from "yup";
 import {
   Form,
   FormControl,
@@ -20,17 +21,25 @@ import {
 } from "../../../components/ui/dialog";
 import { useAddSaleToProductsMutation } from "../../../features/products/productsApiSlice";
 import { useGetSalesQuery } from "../../../features/sales/salesApiSlice";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect } from "react";
+
+const applySaleSchema = yup.object().shape({
+  saleId: yup.string().required("Sale is required"),
+});
 
 const ApplySale = ({ table }) => {
   const [
     applySale,
-    { isSuccess: isApplySaleSuccess, isLoading, isApplySaleLoading },
+    { isSuccess: isApplySaleSuccess, isLoading: isApplySaleLoading },
   ] = useAddSaleToProductsMutation();
-  const {
-    data: sales,
-    isSuccess: isSalesSuccess,
-    isLoading: isSalesLoading,
-  } = useGetSalesQuery();
+  const { data: sales, isSuccess: isSalesSuccess } = useGetSalesQuery();
+
+  const form = useForm({
+    defaultValues: { saleId: "" },
+    resolver: yupResolver(applySaleSchema),
+    mode: "onSubmit",
+  });
 
   const handleApplySale = (data) => {
     const { saleId } = data;
@@ -62,9 +71,11 @@ const ApplySale = ({ table }) => {
     });
   };
 
-  const form = useForm({
-    defaultValues: { saleId: "" },
-  });
+  useEffect(() => {
+    if (isApplySaleSuccess) {
+      console.log("huuraay");
+    }
+  }, [isApplySaleSuccess]);
 
   return (
     <>
@@ -77,7 +88,7 @@ const ApplySale = ({ table }) => {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleApplySale)}
-              className="w-2/3 space-y-6"
+              className="space-y-6"
             >
               <FormField
                 control={form.control}
@@ -100,7 +111,7 @@ const ApplySale = ({ table }) => {
                               <RadioGroupItem value={sale._id} />
                             </FormControl>
                             <FormLabel className="font-normal">
-                              {sale.saleName}
+                              {`${sale.saleName} - ${sale.saleAmount}%`}
                             </FormLabel>
                           </FormItem>
                         ))}
@@ -110,7 +121,10 @@ const ApplySale = ({ table }) => {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Submit</Button>
+              <div className="flex justify-between">
+                <Button type="submit">Confirm</Button>
+                <Button variant="destructive">Cancel</Button>
+              </div>
             </form>
           </Form>
         ) : (

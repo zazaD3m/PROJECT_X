@@ -152,9 +152,10 @@ export const updateProductSale = asyncHandler(async (req, res) => {
     }
   );
 
-  console.log(result);
+  Sale.findByIdAndUpdate("asdfdas");
+  Sale.updateOne({ _id: "asdf" });
 
-  await Sale.findOneAndUpdate(
+  await Sale.updateOne(
     { _id: saleId },
     { $addToSet: { products: { $each: productIds } } }
   );

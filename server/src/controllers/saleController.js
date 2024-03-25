@@ -49,12 +49,19 @@ export const deleteSale = asyncHandler(async (req, res) => {
   if (productIds?.length > 0) {
     const updatedProducts = await Product.updateMany(
       { _id: { $in: productIds } },
-      { $set: { sale: 0 } }
+      { $set: { sale: { saleAmount: 0, saleName: "no sale" } } }
     );
     if (updatedProducts.matchedCount !== updatedProducts.modifiedCount) {
       ThrowErr.ServerError();
     }
   }
+
+  await Sale.findOneAndUpdate(
+    { saleName: "no sale" },
+    {
+      $push: { products: { $each: productIds } },
+    }
+  );
   const deletedSale = await sale.deleteOne();
 
   if (deletedSale.deletedCount !== 1) {
