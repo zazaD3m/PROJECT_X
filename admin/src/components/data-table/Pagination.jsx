@@ -21,9 +21,7 @@ export function Pagination({ table }) {
         {table.getAllColumns()[0].id !== "select"
           ? null
           : `
-        ${table.getFilteredSelectedRowModel().rows.length} of ${
-          table.getFilteredRowModel().rows.length
-        } row(s) selected.`}
+        ${table.getSelectedRowModel().rows.length} row(s) selected.`}
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">

@@ -12,6 +12,7 @@ import {
   uuuuu,
   // deleteProductImage,
   getProduct,
+  updateProductSale,
 } from "../../controllers/productController.js";
 import {
   productValidator,
@@ -32,6 +33,7 @@ router
   .put(uuuuu);
 
 // .get(getAllProducts);
+router.route("/applysale").put([authenticateUser, isAdmin], updateProductSale);
 
 router
   .route("/product/:id")

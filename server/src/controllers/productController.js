@@ -3,6 +3,7 @@ import Product from "../models/productModel.js";
 import { validateObjectId } from "../validations/validations.js";
 import { ThrowErr } from "../utils/CustomError.js";
 import { deleteImageFromCloudinary } from "../middleware/imageMiddleware.js";
+import Sale from "../models/saleModel.js";
 // import { deleteFromCloudinary } from "../middleware/imageMiddleware.js";
 
 // @desc Create new product
@@ -111,4 +112,39 @@ export const deleteProduct = asyncHandler(async (req, res) => {
   }
 
   res.status(200).json({ message: "Product deleted successfully" });
+});
+
+// @desc Add sale to products
+// route PUT /api/products/applysale
+export const updateProductSale = asyncHandler(async (req, res) => {
+  const { productIds, saleId } = req.body;
+  validateObjectId(productIds);
+  validateObjectId(saleId);
+
+  const sale = await Sale.findById(saleId);
+
+  if (!sale) {
+    ThrowErr.ServerError();
+  }
+
+  const result = await Product.updateMany(
+    { _id: { $in: productIds } },
+    {
+      $set: {
+        sale: {
+          saleAmount: sale.saleAmount,
+          saleName: sale.saleName,
+        },
+      },
+    }
+  );
+
+  console.log(result);
+
+  await Sale.findOneAndUpdate(
+    { _id: saleId },
+    { $addToSet: { products: { $each: productIds } } }
+  );
+
+  res.status(200).json({ message: "olaa" });
 });

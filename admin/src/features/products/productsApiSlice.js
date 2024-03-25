@@ -66,6 +66,14 @@ const productsApiSlice = apiSlice.injectEndpoints({
         { type: "Product", id: arg.productId },
       ],
     }),
+    addSaleToProducts: builder.mutation({
+      query: ({ saleId, productIds }) => ({
+        url: `${PRODUCTS_URL}/applysale`,
+        method: "PUT",
+        body: { saleId, productIds },
+      }),
+      invalidateTags: ["Sale", { type: "Product", id: "LIST" }],
+    }),
   }),
 });
 
@@ -76,6 +84,7 @@ export const {
   useGetProductByIdQuery,
   useDeleteProductMutation,
   useDeleteProductImageMutation,
+  useAddSaleToProductsMutation,
 } = productsApiSlice;
 
 export const selectProductsResult =
