@@ -1,5 +1,5 @@
 import Loader from "../../../components/Loader";
-import { Button } from "../../../components/ui/button";
+import { Button, LoadingButton } from "../../../components/ui/button";
 import * as yup from "yup";
 import {
   Form,
@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from "../../../components/ui/form";
 import { RadioGroup, RadioGroupItem } from "../../../components/ui/radio-group";
-import { toast } from "../../../components/ui/use-toast";
+import { toast, useToast } from "../../../components/ui/use-toast";
 import { useForm } from "react-hook-form";
 import {
   Dialog,
@@ -28,10 +28,16 @@ const applySaleSchema = yup.object().shape({
   saleId: yup.string().required("Sale is required"),
 });
 
-const ApplySale = ({ table }) => {
+const ApplySale = ({ table, closeDialog }) => {
+  const { toast } = useToast();
   const [
     applySale,
-    { isSuccess: isApplySaleSuccess, isLoading: isApplySaleLoading },
+    {
+      data: applySaleResponse,
+      isSuccess: isApplySaleSuccess,
+      isLoading: isApplySaleLoading,
+      isError: isApplyError,
+    },
   ] = useAddSaleToProductsMutation();
   const { data: sales, isSuccess: isSalesSuccess } = useGetSalesQuery();
 
@@ -48,6 +54,14 @@ const ApplySale = ({ table }) => {
       .getSelectedRowModel()
       .flatRows.map((row) => row.original);
     const selectedProductIds = selectedProducts.map((product) => product._id);
+
+    if (selectedProducts.length === 0) {
+      toast({
+        variant: "destructive",
+        title: "Please first select products to apply sale.",
+      });
+      return;
+    }
 
     const checkProductsAlreadyOnSale = () => {
       const tempProductsAlreadyOnSale = {};
@@ -73,9 +87,18 @@ const ApplySale = ({ table }) => {
 
   useEffect(() => {
     if (isApplySaleSuccess) {
-      console.log("huuraay");
+      toast({
+        variant: "success",
+        title: applySaleResponse.message,
+      });
     }
-  }, [isApplySaleSuccess]);
+    if (isApplyError) {
+      toast({
+        variant: "destructive",
+        title: `Server error, Please try again`,
+      });
+    }
+  }, [isApplySaleSuccess, isApplyError]);
 
   return (
     <>
@@ -122,8 +145,18 @@ const ApplySale = ({ table }) => {
                 )}
               />
               <div className="flex justify-between">
-                <Button type="submit">Confirm</Button>
-                <Button variant="destructive">Cancel</Button>
+                <LoadingButton type="submit" loading={isApplySaleLoading}>
+                  Confirm
+                </LoadingButton>
+                <Button
+                  variant="destructive"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    closeDialog();
+                  }}
+                >
+                  Cancel
+                </Button>
               </div>
             </form>
           </Form>

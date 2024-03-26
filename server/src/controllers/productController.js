@@ -15,6 +15,11 @@ export const createProduct = asyncHandler(async (req, res) => {
     ThrowErr.ServerError();
   }
 
+  await Sale.findOneAndUpdate(
+    { saleName: "no sale" },
+    { $addToSet: { products: newProduct._id } }
+  );
+
   return res.status(201).json(newProduct);
 });
 // @desc Create new product
@@ -127,6 +132,8 @@ export const updateProductSale = asyncHandler(async (req, res) => {
     ThrowErr.ServerError();
   }
 
+  // check if there is some other sale on product before applying new
+  // and if so go to sale.products and remove productId
   if (Object.keys(productsAlreadyOnSale).length > 0) {
     for (const saleNameToRemove in productsAlreadyOnSale) {
       await Sale.updateOne(
@@ -140,7 +147,7 @@ export const updateProductSale = asyncHandler(async (req, res) => {
     }
   }
 
-  const result = await Product.updateMany(
+  const productUpdateResult = await Product.updateMany(
     { _id: { $in: productIds } },
     {
       $set: {
@@ -152,13 +159,21 @@ export const updateProductSale = asyncHandler(async (req, res) => {
     }
   );
 
-  Sale.findByIdAndUpdate("asdfdas");
-  Sale.updateOne({ _id: "asdf" });
+  const saleUpdateResult = await Sale.findByIdAndUpdate(saleId, {
+    $addToSet: { products: { $each: productIds } },
+  });
 
-  await Sale.updateOne(
-    { _id: saleId },
-    { $addToSet: { products: { $each: productIds } } }
-  );
+  if (!saleUpdateResult) {
+    ThrowErr.ServerError(`Please retry`);
+  }
 
-  res.status(200).json({ message: "olaa" });
+  if (productIds.length !== productUpdateResult.modifiedCount) {
+    ThrowErr.ServerError(
+      `Sale applied to ${productUpdateResult.modifiedCount} out of ${productIds.length}, Please retry`
+    );
+  }
+
+  res.status(201).json({
+    message: `Success, Sale applied to ${productUpdateResult.modifiedCount} out of ${productIds.length} selected product.`,
+  });
 });
