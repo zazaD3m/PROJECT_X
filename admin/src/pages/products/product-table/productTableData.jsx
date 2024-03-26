@@ -1,6 +1,9 @@
 import { ColumnHeader } from "../../../components/data-table/ColumnHeader";
 import { Checkbox } from "../../../components/ui/checkbox";
+import { RowActions } from "../../../components/data-table/RowActions";
 import { toNumber } from "../components/utils";
+import { DropdownMenuItem } from "../../../components/ui/dropdown-menu";
+import { Link } from "react-router-dom";
 
 export const productColumnFilter = {
   brand: "brand",
@@ -12,6 +15,7 @@ export const productColumnFilter = {
   sale: "Sale",
   color: "Color",
   status: "Status",
+  _id: "ID",
 };
 
 export const productColumns = [
@@ -38,6 +42,13 @@ export const productColumns = [
     ),
     enableSorting: false,
     enableHiding: false,
+  },
+  {
+    accessorKey: "_id",
+    header: ({ column }) => <ColumnHeader column={column} title="ID" />,
+    cell: ({ row }) => (
+      <div className=" text-xs lowercase">{row.getValue("_id")}</div>
+    ),
   },
   {
     accessorKey: "brand",
@@ -120,9 +131,20 @@ export const productColumns = [
   {
     accessorKey: "price",
     header: ({ column }) => <ColumnHeader column={column} title="Price" />,
-    cell: ({ row }) => (
-      <div className=" text-base">{row.getValue("price")}</div>
-    ),
+    cell: ({ row }) => <div className="text-base">{row.getValue("price")}</div>,
     footer: (props) => props.column.id,
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const product = row.original;
+      return (
+        <RowActions>
+          <DropdownMenuItem asChild>
+            <Link to={`editproduct/${product._id}`}>Edit Product</Link>
+          </DropdownMenuItem>
+        </RowActions>
+      );
+    },
   },
 ];

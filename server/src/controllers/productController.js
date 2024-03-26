@@ -185,9 +185,6 @@ export const updateProductSale = asyncHandler(async (req, res) => {
 // route PUT /api/products/status
 export const updateProductStatus = asyncHandler(async (req, res) => {
   const { productStatus, productIds } = req.body;
-  if (!PRODUCT_STATUS.includes(productStatus)) {
-    ThrowErr.BadRequest();
-  }
   validateObjectId(productIds);
 
   const updatedProductsResult = await Product.updateMany(

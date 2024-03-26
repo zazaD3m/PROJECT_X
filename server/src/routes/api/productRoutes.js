@@ -17,6 +17,7 @@ import {
 } from "../../controllers/productController.js";
 import {
   productValidator,
+  productStatusValidator,
   paramIdValidator,
 } from "../../validations/validations.js";
 import { validate } from "../../middleware/validationMiddleware.js";
@@ -35,7 +36,13 @@ router
 
 // .get(getAllProducts);
 router.route("/applysale").put([authenticateUser, isAdmin], updateProductSale);
-router.route("/status").put([authenticateUser, isAdmin], updateProductStatus);
+router
+  .route("/status")
+  .put(
+    [authenticateUser, isAdmin],
+    [productStatusValidator, validate],
+    updateProductStatus
+  );
 
 router
   .route("/product/:id")

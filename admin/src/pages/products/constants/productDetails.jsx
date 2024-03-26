@@ -6,4 +6,4 @@ export const getDefaultSizeType = (sizes, size) => {
   return "";
 };
 
-export const PRODUCT_STATUS = ["forsale", "sold", "transit"];
+export const PRODUCT_STATUS = ["forsale", "sold", "hidden"];

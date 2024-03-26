@@ -2,6 +2,7 @@ import { isObjectIdOrHexString } from "mongoose";
 import { body, checkExact, param } from "express-validator";
 import { ThrowErr } from "../utils/CustomError.js";
 import { slugify } from "../utils/helpers.js";
+import { PRODUCT_STATUS } from "../utils/constants.js";
 
 export const validateObjectId = (id) => {
   let isValid;
@@ -44,6 +45,10 @@ export const productValidator = [
   body("subCategory").notEmpty().trim().escape(),
   body("slug").notEmpty().trim().escape().customSanitizer(slugify),
   body("price").notEmpty().trim().escape().toInt(),
+];
+
+export const productStatusValidator = [
+  body("productStatus").notEmpty().trim().escape().isIn(PRODUCT_STATUS),
 ];
 
 export const colorValidator = [

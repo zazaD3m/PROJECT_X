@@ -24,7 +24,9 @@ import {
 const ProductTable = ({ data, columns }) => {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
-  const [columnVisibility, setColumnVisibility] = useState({});
+  const [columnVisibility, setColumnVisibility] = useState({
+    _id: false,
+  });
   const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({

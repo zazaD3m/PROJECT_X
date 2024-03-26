@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Loader from "../../../components/Loader";
 import { Button, LoadingButton } from "../../../components/ui/button";
 import * as yup from "yup";
@@ -10,15 +11,9 @@ import {
   FormMessage,
 } from "../../../components/ui/form";
 import { RadioGroup, RadioGroupItem } from "../../../components/ui/radio-group";
-import { toast, useToast } from "../../../components/ui/use-toast";
+import { useToast } from "../../../components/ui/use-toast";
 import { useForm } from "react-hook-form";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogTitle,
-  DialogTrigger,
-} from "../../../components/ui/dialog";
+import { DialogTitle } from "../../../components/ui/dialog";
 import { useAddSaleToProductsMutation } from "../../../features/products/productsApiSlice";
 import { useGetSalesQuery } from "../../../features/sales/salesApiSlice";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -155,7 +150,7 @@ const ApplySale = ({ table, closeDialog }) => {
                     closeDialog();
                   }}
                 >
-                  Cancel
+                  Exit
                 </Button>
               </div>
             </form>
