@@ -39,14 +39,9 @@ const productSchema = new Schema(
       type: String,
       index: true,
     },
-    hidden: {
-      type: Boolean,
-      default: true,
-      index: true,
-    },
     status: {
       type: String,
-      default: "forsale",
+      default: "hidden",
       index: true,
     },
     sale: {

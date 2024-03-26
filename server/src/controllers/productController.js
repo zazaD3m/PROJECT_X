@@ -1,9 +1,12 @@
 import asyncHandler from "express-async-handler";
 import Product from "../models/productModel.js";
+import mongoose from "mongoose";
+
 import { validateObjectId } from "../validations/validations.js";
 import { ThrowErr } from "../utils/CustomError.js";
 import { deleteImageFromCloudinary } from "../middleware/imageMiddleware.js";
 import Sale from "../models/saleModel.js";
+import { PRODUCT_STATUS } from "../utils/constants.js";
 // import { deleteFromCloudinary } from "../middleware/imageMiddleware.js";
 
 // @desc Create new product
@@ -175,5 +178,34 @@ export const updateProductSale = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     message: `Success, Sale applied to ${productUpdateResult.modifiedCount} out of ${productIds.length} selected product.`,
+  });
+});
+
+// @desc Add sale to products
+// route PUT /api/products/status
+export const updateProductStatus = asyncHandler(async (req, res) => {
+  const { productStatus, productIds } = req.body;
+  if (!PRODUCT_STATUS.includes(productStatus)) {
+    ThrowErr.BadRequest();
+  }
+  validateObjectId(productIds);
+
+  const updatedProductsResult = await Product.updateMany(
+    { _id: { $in: productIds } },
+    {
+      $set: {
+        status: productStatus,
+      },
+    }
+  );
+
+  if (
+    updatedProductsResult.modifiedCount !== updatedProductsResult.matchedCount
+  ) {
+    ThrowErr.ServerError();
+  }
+
+  res.status(201).json({
+    message: `Success, Status changed to ${productStatus} for selected ${productIds.length} products.`,
   });
 });

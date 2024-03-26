@@ -13,6 +13,7 @@ import {
   // deleteProductImage,
   getProduct,
   updateProductSale,
+  updateProductStatus,
 } from "../../controllers/productController.js";
 import {
   productValidator,
@@ -34,6 +35,7 @@ router
 
 // .get(getAllProducts);
 router.route("/applysale").put([authenticateUser, isAdmin], updateProductSale);
+router.route("/status").put([authenticateUser, isAdmin], updateProductStatus);
 
 router
   .route("/product/:id")

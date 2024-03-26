@@ -11,3 +11,5 @@ export const ADMIN_URL = isProduction
 export const API_URL = isProduction
   ? process.env.API_URL_PROD
   : process.env.API_URL_DEV;
+
+export const PRODUCT_STATUS = ["forsale", "hidden", "sold"];

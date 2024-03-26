@@ -9,7 +9,7 @@ import {
 import ApplySale from "./ApplySale";
 import { useState } from "react";
 import { Dialog, DialogContent } from "../../../components/ui/dialog";
-import RemoveSale from "./RemoveSale";
+import ChangeStatus from "./ChangeStatus";
 
 const ProductTableActions = ({ table }) => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -41,17 +41,10 @@ const ProductTableActions = ({ table }) => {
           <DropdownMenuItem
             onClick={() => {
               setOpenDialog(true);
-              setAction("removeSale");
+              setAction("changeStatus");
             }}
           >
-            Remove Sale
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              setOpenDialog(true);
-            }}
-          >
-            Open
+            Change Status
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -73,8 +66,8 @@ const ProductTableActions = ({ table }) => {
         >
           {action === "applySale" ? (
             <ApplySale table={table} closeDialog={closeDialog} />
-          ) : action === "removeSale" ? (
-            <RemoveSale table={table} closeDialog={closeDialog} />
+          ) : action === "changeStatus" ? (
+            <ChangeStatus table={table} closeDialog={closeDialog} />
           ) : null}
         </DialogContent>
       </Dialog>

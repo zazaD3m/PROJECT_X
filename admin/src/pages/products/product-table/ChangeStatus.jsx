@@ -1,4 +1,4 @@
-const RemoveSale = ({ table }) => {
+const ChangeStatus = ({ table }) => {
   return (
     <div
       onClick={() => {
@@ -11,4 +11,4 @@ const RemoveSale = ({ table }) => {
     </div>
   );
 };
-export default RemoveSale;
+export default ChangeStatus;

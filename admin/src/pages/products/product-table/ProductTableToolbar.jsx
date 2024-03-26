@@ -63,6 +63,10 @@ const ProductTableToolbar = ({ table }) => {
       label: "Hidden",
       value: "hidden",
     },
+    {
+      label: "Sold",
+      value: "sold",
+    },
   ];
 
   const categories = useSelector(selectAllCategories);
