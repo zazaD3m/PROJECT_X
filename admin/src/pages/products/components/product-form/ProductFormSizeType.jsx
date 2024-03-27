@@ -13,6 +13,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "../../../../components/ui/command";
 import { Button } from "../../../../components/ui/button";
 import {
@@ -52,38 +53,40 @@ const ProductFormSizeType = ({ control, setValue }) => {
             <PopoverContent className="w-[200px] p-0">
               <Command>
                 <CommandInput placeholder="Search Size Type..." />
-                <CommandEmpty className="px-8 py-4">
-                  <p className="mb-2 text-center text-sm">
-                    No size type found...
-                  </p>
-                </CommandEmpty>
-                <CommandGroup>
-                  {sizes.map((s) => (
-                    <CommandItem
-                      value={s.sizeType}
-                      key={s.sizeType}
-                      onSelect={() => {
-                        setValue("productSize", "", {
-                          shouldValidate: false,
-                        });
-                        setValue("productSizeType", s.sizeType, {
-                          shouldValidate: true,
-                          shouldDirty: true,
-                        });
-                      }}
-                    >
-                      <CheckIcon
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          s.sizeType === field.value
-                            ? "opacity-100"
-                            : "opacity-0",
-                        )}
-                      />
-                      {s.sizeType}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
+                <CommandList>
+                  <CommandEmpty className="px-8 py-4">
+                    <p className="mb-2 text-center text-sm">
+                      No size type found...
+                    </p>
+                  </CommandEmpty>
+                  <CommandGroup>
+                    {sizes.map((s) => (
+                      <CommandItem
+                        value={s.sizeType}
+                        key={s.sizeType}
+                        onSelect={() => {
+                          setValue("productSize", "", {
+                            shouldValidate: false,
+                          });
+                          setValue("productSizeType", s.sizeType, {
+                            shouldValidate: true,
+                            shouldDirty: true,
+                          });
+                        }}
+                      >
+                        <CheckIcon
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            s.sizeType === field.value
+                              ? "opacity-100"
+                              : "opacity-0",
+                          )}
+                        />
+                        {s.sizeType}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
               </Command>
             </PopoverContent>
           </Popover>

@@ -3,12 +3,9 @@ import mongoose, { Schema, model } from "mongoose";
 const saleSchema = new Schema({
   saleName: {
     type: String,
-    required: true,
-    unique: true,
   },
   saleAmount: {
     type: Number,
-    required: true,
   },
   products: [
     {

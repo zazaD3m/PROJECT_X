@@ -52,7 +52,7 @@ export const productStatusValidator = [
 ];
 
 export const colorValidator = [
-  body("colorName").notEmpty().trim().escape().toLowerCase(),
+  body("colorName").notEmpty().trim().escape(),
   body("hexValue").notEmpty().trim().escape(),
   checkExact(),
 ];

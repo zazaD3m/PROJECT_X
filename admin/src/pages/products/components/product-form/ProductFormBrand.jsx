@@ -8,6 +8,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "../../../../components/ui/command";
 import {
   FormControl,
@@ -53,33 +54,37 @@ const ProductFormBrand = ({ control, setValue }) => {
             <PopoverContent className="w-[200px] p-0">
               <Command>
                 <CommandInput placeholder="Search Brand..." />
-                <CommandEmpty className="px-8 py-4">
-                  <p className="mb-2 text-center text-sm">No brand found...</p>
-                </CommandEmpty>
-                <CommandGroup>
-                  {productBrands.map((brand) => (
-                    <CommandItem
-                      value={brand.brandName}
-                      key={brand.brandName}
-                      onSelect={() => {
-                        setValue("productBrand", brand.brandName, {
-                          shouldValidate: true,
-                          shouldDirty: true,
-                        });
-                      }}
-                    >
-                      <CheckIcon
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          brand.brandName === field.value
-                            ? "opacity-100"
-                            : "opacity-0",
-                        )}
-                      />
-                      {brand.brandName}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
+                <CommandList>
+                  <CommandEmpty className="px-8 py-4">
+                    <p className="mb-2 text-center text-sm">
+                      No brand found...
+                    </p>
+                  </CommandEmpty>
+                  <CommandGroup>
+                    {productBrands.map((brand) => (
+                      <CommandItem
+                        value={brand.brandName}
+                        key={brand.brandName}
+                        onSelect={() => {
+                          setValue("productBrand", brand.brandName, {
+                            shouldValidate: true,
+                            shouldDirty: true,
+                          });
+                        }}
+                      >
+                        <CheckIcon
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            brand.brandName === field.value
+                              ? "opacity-100"
+                              : "opacity-0",
+                          )}
+                        />
+                        {brand.brandName}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
               </Command>
             </PopoverContent>
           </Popover>

@@ -8,6 +8,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "../../../../components/ui/command";
 import {
   FormControl,
@@ -63,37 +64,41 @@ const ProductFormColor = ({ control, setValue }) => {
             <PopoverContent className="w-[200px] p-0">
               <Command>
                 <CommandInput placeholder="Search Color..." />
-                <CommandEmpty className="px-8 py-4">
-                  <p className="mb-2 text-center text-sm">No color found...</p>
-                </CommandEmpty>
-                <CommandGroup>
-                  {productColors.map((color) => (
-                    <CommandItem
-                      value={color.colorName}
-                      key={color.colorName}
-                      onSelect={() => {
-                        setValue("productColor", color.colorName, {
-                          shouldValidate: true,
-                          shouldDirty: true,
-                        });
-                      }}
-                    >
-                      <CheckIcon
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          color.colorName === field.value
-                            ? "opacity-100"
-                            : "opacity-0",
-                        )}
-                      />
-                      {color.colorName}
-                      <div
-                        className="absolute right-4 h-5 w-5 rounded-full hover:right-3 hover:h-8 hover:w-8"
-                        style={{ backgroundColor: `#${color.hexValue}` }}
-                      ></div>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
+                <CommandList>
+                  <CommandEmpty className="px-8 py-4">
+                    <p className="mb-2 text-center text-sm">
+                      No color found...
+                    </p>
+                  </CommandEmpty>
+                  <CommandGroup>
+                    {productColors.map((color) => (
+                      <CommandItem
+                        value={color.colorName}
+                        key={color.colorName}
+                        onSelect={() => {
+                          setValue("productColor", color.colorName, {
+                            shouldValidate: true,
+                            shouldDirty: true,
+                          });
+                        }}
+                      >
+                        <CheckIcon
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            color.colorName === field.value
+                              ? "opacity-100"
+                              : "opacity-0",
+                          )}
+                        />
+                        {color.colorName}
+                        <div
+                          className="absolute right-4 h-5 w-5 rounded-full hover:right-3 hover:h-8 hover:w-8"
+                          style={{ backgroundColor: `#${color.hexValue}` }}
+                        ></div>
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
               </Command>
             </PopoverContent>
           </Popover>

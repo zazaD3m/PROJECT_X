@@ -45,6 +45,7 @@ export const productColumns = [
   },
   {
     accessorKey: "_id",
+    accessorFn: (row) => row._id || "",
     header: ({ column }) => <ColumnHeader column={column} title="ID" />,
     cell: ({ row }) => (
       <div className=" text-xs lowercase">{row.getValue("_id")}</div>
@@ -52,6 +53,7 @@ export const productColumns = [
   },
   {
     accessorKey: "brand",
+    accessorFn: (row) => row.brand || "",
     header: ({ column }) => <ColumnHeader column={column} title="Brand" />,
     cell: ({ row }) => (
       <div className=" text-base lowercase">{row.getValue("brand")}</div>
@@ -80,6 +82,7 @@ export const productColumns = [
   },
   {
     accessorKey: "gender",
+    accessorFn: (row) => row.gender || "",
     header: ({ column }) => <ColumnHeader column={column} title="Gender" />,
     cell: ({ row }) => (
       <div className=" text-base lowercase">{row.getValue("gender")}</div>
@@ -90,6 +93,7 @@ export const productColumns = [
   },
   {
     accessorKey: "color",
+    accessorFn: (row) => row.color || "",
     header: ({ column }) => <ColumnHeader column={column} title="Color" />,
     cell: ({ row }) => (
       <div className="text-base lowercase">{row.getValue("color")}</div>
@@ -100,6 +104,7 @@ export const productColumns = [
   },
   {
     accessorKey: "mainCategory",
+    accessorFn: (row) => row.mainCategory || "",
     header: ({ column }) => <ColumnHeader column={column} title="Main Cat" />,
     cell: ({ row }) => (
       <div className=" text-base">{row.getValue("mainCategory")}</div>
@@ -110,6 +115,7 @@ export const productColumns = [
   },
   {
     accessorKey: "subCategory",
+    accessorFn: (row) => row.subCategory || "",
     header: ({ column }) => <ColumnHeader column={column} title="Sub Cat" />,
     cell: ({ row }) => (
       <div className=" text-base">{row.getValue("subCategory")}</div>
@@ -120,6 +126,7 @@ export const productColumns = [
   },
   {
     accessorKey: "status",
+    accessorFn: (row) => row.status || "",
     header: ({ column }) => <ColumnHeader column={column} title="Status" />,
     cell: ({ row }) => (
       <div className=" text-base">{row.getValue("status")}</div>

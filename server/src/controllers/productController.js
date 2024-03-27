@@ -1,13 +1,10 @@
 import asyncHandler from "express-async-handler";
 import Product from "../models/productModel.js";
-import mongoose from "mongoose";
 
 import { validateObjectId } from "../validations/validations.js";
 import { ThrowErr } from "../utils/CustomError.js";
 import { deleteImageFromCloudinary } from "../middleware/imageMiddleware.js";
 import Sale from "../models/saleModel.js";
-import { PRODUCT_STATUS } from "../utils/constants.js";
-// import { deleteFromCloudinary } from "../middleware/imageMiddleware.js";
 
 // @desc Create new product
 // route POST /api/products/
@@ -24,24 +21,6 @@ export const createProduct = asyncHandler(async (req, res) => {
   );
 
   return res.status(201).json(newProduct);
-});
-// @desc Create new product
-// route POST /api/products/
-export const uuuuu = asyncHandler(async (req, res) => {
-  const products = await Product.updateMany(
-    {},
-    {
-      $set: {
-        status: "forsale",
-        sale: {
-          saleName: "testsale",
-          saleAmount: 25,
-        },
-      },
-    }
-  );
-
-  return res.status(201).json(products);
 });
 
 // @desc Get product by id

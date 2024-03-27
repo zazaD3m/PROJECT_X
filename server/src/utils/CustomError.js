@@ -29,6 +29,9 @@ class ThrowErr {
   static Conflict(message = "Conflict") {
     throw new CustomError(message, 409);
   }
+  static Duplicate(message = "Duplicate input") {
+    throw new CustomError(message, 409);
+  }
   static ServerError(message = "Internal Server Error") {
     throw new CustomError(message, 500);
   }

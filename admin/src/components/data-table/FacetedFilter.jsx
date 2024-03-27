@@ -87,7 +87,7 @@ export function FacetedFilter({ column, title, options, search }) {
                       >
                         <Check className={cn("h-4 w-4")} />
                       </div>
-                      {option.icon && option.icon}
+                      {option.icon ? option.icon : null}
                       <span>{option.label}</span>
                       {facets?.get(option.value) && (
                         <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
@@ -98,20 +98,18 @@ export function FacetedFilter({ column, title, options, search }) {
                   );
                 })}
             </CommandGroup>
-            {selectedValues.size > 0 && (
-              <>
-                <CommandSeparator />
-                <CommandGroup>
-                  <CommandItem
-                    onSelect={() => column?.setFilterValue(undefined)}
-                    className="justify-center text-center"
-                  >
-                    Clear filters
-                  </CommandItem>
-                </CommandGroup>
-              </>
-            )}
           </CommandList>
+          {selectedValues.size > 0 && (
+            <>
+              <CommandSeparator />
+              <CommandItem
+                onSelect={() => column?.setFilterValue(undefined)}
+                className="justify-center py-3 text-center"
+              >
+                Clear filters
+              </CommandItem>
+            </>
+          )}
         </Command>
       </PopoverContent>
     </Popover>

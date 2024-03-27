@@ -1,4 +1,3 @@
-import { User2 } from "lucide-react";
 import { ColumnHeader } from "../../components/data-table/ColumnHeader";
 
 export const categoryFilters = [
@@ -21,22 +20,18 @@ export const categoryFacetedFilter = [
       {
         label: "Man",
         value: "man",
-        icon: User2,
       },
       {
         label: "Woman",
         value: "woman",
-        icon: User2,
       },
       {
         label: "Boy",
         value: "boy",
-        icon: User2,
       },
       {
         label: "Girl",
         value: "girl",
-        icon: User2,
       },
     ],
   },

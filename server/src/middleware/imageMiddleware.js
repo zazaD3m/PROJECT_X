@@ -29,12 +29,18 @@ export const uploadToCloudinary = async (req, res, next) => {
   try {
     const resizedBuffer = await sharp(file.buffer)
       .webp({ lossless: true, quality: 100 })
-      .resize({ width: 600, height: 600, fit: "contain" })
+      .resize({
+        width: 400,
+        height: 600,
+        fit: "contain",
+        background: "white",
+      })
       .toBuffer();
 
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         resource_type: "image",
+        allowed_formats: "webp",
         folder: "products",
         access_mode: "public",
       },

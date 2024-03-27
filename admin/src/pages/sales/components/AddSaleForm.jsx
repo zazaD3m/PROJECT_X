@@ -34,7 +34,12 @@ const saleSchema = yup.object({
     .trim()
     .max(15, "Sale must be under 15 chars.")
     .required("Enter sale"),
-  saleAmount: yup.number().min(10).max(70).required("Enter discount"),
+  saleAmount: yup
+    .number()
+    .typeError("Sale Amount must be a number")
+    .min(10)
+    .max(70)
+    .required("Enter discount"),
   expiry: yup.date().required("Enter expiry"),
 });
 

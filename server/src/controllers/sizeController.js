@@ -1,18 +1,16 @@
 import asyncHandler from "express-async-handler";
 
 import Size from "../models/sizeModel.js";
-import Product from "../models/productModel.js";
-import { validateObjectId } from "../validations/validations.js";
 import { ThrowErr } from "../utils/CustomError.js";
 
 // @desc Create new size
 // route POST /api/sizes/
 export const createSize = asyncHandler(async (req, res) => {
   const { sizeType, sizeName } = req.body;
-  const duplicate = await Size.findOne({ sizeType, sizeName });
+  const isDuplicate = await Size.findOne({ sizeType, sizeName });
 
-  if (duplicate) {
-    ThrowErr.Conflict("this size already exists");
+  if (isDuplicate) {
+    ThrowErr.Duplicate("this size already exists");
   }
 
   const newSize = await Size.create({ sizeType, sizeName });

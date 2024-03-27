@@ -7,6 +7,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "../../../../components/ui/command";
 import {
   FormControl,
@@ -54,41 +55,43 @@ const ProductFormSize = ({ control, setValue, watch }) => {
             <PopoverContent className="w-[200px] p-0">
               <Command>
                 <CommandInput placeholder="Search Size..." />
-                <CommandEmpty className="px-8 py-4">
-                  <p className="mb-2 text-center text-sm">No Size Found</p>
-                </CommandEmpty>
-                <CommandGroup>
-                  {productSizeType ? (
-                    sizes
-                      .filter((s) => s.sizeType === productSizeType)[0]
-                      .sizeNames.map((productSize) => (
-                        <CommandItem
-                          value={productSize}
-                          key={productSize}
-                          onSelect={() => {
-                            setValue("productSize", productSize, {
-                              shouldValidate: true,
-                              shouldDirty: true,
-                            });
-                          }}
-                        >
-                          <CheckIcon
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              productSize === field.value
-                                ? "opacity-100"
-                                : "opacity-0",
-                            )}
-                          />
-                          {productSize}
-                        </CommandItem>
-                      ))
-                  ) : (
-                    <p className="cursor-default py-4 text-center font-semibold text-destructive">
-                      Choose Size Type
-                    </p>
-                  )}
-                </CommandGroup>
+                <CommandList>
+                  <CommandEmpty className="px-8 py-4">
+                    <p className="mb-2 text-center text-sm">No Size Found</p>
+                  </CommandEmpty>
+                  <CommandGroup>
+                    {productSizeType ? (
+                      sizes
+                        .filter((s) => s.sizeType === productSizeType)[0]
+                        .sizeNames.map((productSize) => (
+                          <CommandItem
+                            value={productSize}
+                            key={productSize}
+                            onSelect={() => {
+                              setValue("productSize", productSize, {
+                                shouldValidate: true,
+                                shouldDirty: true,
+                              });
+                            }}
+                          >
+                            <CheckIcon
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                productSize === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0",
+                              )}
+                            />
+                            {productSize}
+                          </CommandItem>
+                        ))
+                    ) : (
+                      <p className="cursor-default py-4 text-center font-semibold text-destructive">
+                        Choose Size Type
+                      </p>
+                    )}
+                  </CommandGroup>
+                </CommandList>
               </Command>
             </PopoverContent>
           </Popover>

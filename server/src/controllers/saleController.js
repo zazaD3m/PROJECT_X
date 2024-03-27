@@ -8,7 +8,6 @@ import { ThrowErr } from "../utils/CustomError.js";
 // @desc Create new sale
 // route POST /api/sales/
 export const createSale = asyncHandler(async (req, res) => {
-  // console.log(req.body);
   const newSale = await Sale.create(req.body);
 
   if (!newSale) {

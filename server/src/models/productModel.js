@@ -1,4 +1,5 @@
 import mongoose, { Schema, model } from "mongoose";
+import uniqid from "uniqid";
 
 const productSchema = new Schema(
   {
@@ -48,6 +49,9 @@ const productSchema = new Schema(
       saleAmount: { type: Number, default: 0 },
       saleName: { type: String, default: "no sale" },
     },
+    sku: {
+      type: String,
+    },
     images: { type: Object },
   },
   { timestamps: true }
@@ -55,6 +59,7 @@ const productSchema = new Schema(
 
 productSchema.pre("save", function (next) {
   this.slug = this.slug + "-" + this._id;
+  this.sku = uniqid.time("p-");
   next();
 });
 

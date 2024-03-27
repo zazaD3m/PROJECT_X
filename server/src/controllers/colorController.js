@@ -7,6 +7,12 @@ import { ThrowErr } from "../utils/CustomError.js";
 // @desc Create new color
 // route POST /api/colors/
 export const createColor = asyncHandler(async (req, res) => {
+  const isDuplicate = await Color.findOne({ colorName: req.body.colorName });
+
+  if (isDuplicate) {
+    ThrowErr.Duplicate();
+  }
+
   const newColor = await Color.create(req.body);
 
   if (!newColor) {

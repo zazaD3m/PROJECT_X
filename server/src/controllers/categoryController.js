@@ -24,10 +24,10 @@ export const createCategory = asyncHandler(async (req, res) => {
     tempNewCategory.subCategoryName = subCategoryName;
   }
 
-  const duplicateCategory = await Category.findOne(tempNewCategory).lean();
+  const isDuplicate = await Category.findOne(tempNewCategory).lean();
 
-  if (duplicateCategory) {
-    ThrowErr.Conflict("Category already exists");
+  if (isDuplicate) {
+    ThrowErr.Duplicate("Category already exists");
   }
 
   const newCategory = await Category.create(tempNewCategory);

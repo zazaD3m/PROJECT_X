@@ -114,7 +114,7 @@ const ProductFormImage = ({
     }
 
     const file = acceptedFiles[0];
-    const allowedTypes = ["image/jpeg"];
+    const allowedTypes = ["image/jpeg", "image/avif"];
     const allowedSize = 2500000; // 2.5 mb
     const isValidType = allowedTypes.find(
       (allowedType) => allowedType === file.type,

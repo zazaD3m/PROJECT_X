@@ -3,7 +3,6 @@ import mongoose, { Schema, model } from "mongoose";
 const categorySchema = new Schema({
   mainCategoryName: {
     type: String,
-    required: true,
   },
   isMainCategory: {
     type: Boolean,
@@ -13,7 +12,6 @@ const categorySchema = new Schema({
   },
   genderName: {
     type: String,
-    required: true,
   },
 });
 

@@ -14,6 +14,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "../../../../components/ui/command";
 import { Button } from "../../../../components/ui/button";
 import {
@@ -57,45 +58,47 @@ const ProductFormSubCategory = ({ control, setValue, watch }) => {
               {productGender && productMainCategory ? (
                 <Command>
                   <CommandInput placeholder="Search Sub Category..." />
-                  <CommandEmpty className="px-8 py-4">
-                    <p className="mb-2 text-center text-sm">
-                      No sub category found...
-                    </p>
-                  </CommandEmpty>
-                  <CommandGroup>
-                    {productCategories.map((category) => {
-                      if (category.isMainCategory) return null;
-                      if (category.genderName !== productGender) return null;
-                      if (category.mainCategoryName !== productMainCategory)
-                        return null;
-                      return (
-                        <CommandItem
-                          value={category.subCategoryName}
-                          key={category.subCategoryName}
-                          onSelect={() => {
-                            setValue(
-                              "productSubCategory",
-                              category.subCategoryName,
-                              {
-                                shouldValidate: true,
-                                shouldDirty: true,
-                              },
-                            );
-                          }}
-                        >
-                          <CheckIcon
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              category.subCategoryName === field.value
-                                ? "opacity-100"
-                                : "opacity-0",
-                            )}
-                          />
-                          {category.subCategoryName}
-                        </CommandItem>
-                      );
-                    })}
-                  </CommandGroup>
+                  <CommandList>
+                    <CommandEmpty className="px-8 py-4">
+                      <p className="mb-2 text-center text-sm">
+                        No sub category found...
+                      </p>
+                    </CommandEmpty>
+                    <CommandGroup>
+                      {productCategories.map((category) => {
+                        if (category.isMainCategory) return null;
+                        if (category.genderName !== productGender) return null;
+                        if (category.mainCategoryName !== productMainCategory)
+                          return null;
+                        return (
+                          <CommandItem
+                            value={category.subCategoryName}
+                            key={category.subCategoryName}
+                            onSelect={() => {
+                              setValue(
+                                "productSubCategory",
+                                category.subCategoryName,
+                                {
+                                  shouldValidate: true,
+                                  shouldDirty: true,
+                                },
+                              );
+                            }}
+                          >
+                            <CheckIcon
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                category.subCategoryName === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0",
+                              )}
+                            />
+                            {category.subCategoryName}
+                          </CommandItem>
+                        );
+                      })}
+                    </CommandGroup>
+                  </CommandList>
                 </Command>
               ) : (
                 <p className="cursor-default px-4 py-4 text-center font-semibold text-destructive">

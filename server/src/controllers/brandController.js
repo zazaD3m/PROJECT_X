@@ -9,6 +9,12 @@ import { ThrowErr } from "../utils/CustomError.js";
 export const createBrand = asyncHandler(async (req, res) => {
   const { brandName } = req.body;
 
+  const isDuplicate = await Brand.findOne({ brandName });
+
+  if (isDuplicate) {
+    ThrowErr.Duplicate();
+  }
+
   const newBrand = await Brand.create({ brandName });
 
   if (!newBrand) {
@@ -36,6 +42,13 @@ export const updateBrand = asyncHandler(async (req, res) => {
   const { id: brandId } = req.params;
   const { brandName } = req.body;
   validateObjectId(brandId);
+
+  const isDuplicate = await Brand.findOne({ brandName });
+
+  if (isDuplicate) {
+    ThrowErr.Duplicate();
+  }
+
   const updatedBrand = await Brand.findByIdAndUpdate(
     brandId,
     { brandName },
