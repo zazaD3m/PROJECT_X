@@ -15,7 +15,7 @@ import PriceRange from "./PriceRange";
 import { selectAllColors } from "../../../features/colors/colorsApiSlice";
 import { selectAllSales } from "../../../features/sales/salesApiSlice";
 import ProductTableActions from "./ProductTableActions";
-import ProductTableFilterId from "./ProductTableFilterId";
+import ProductTableFilterSku from "./ProductTableFilterSku";
 
 const ProductTableToolbar = ({ table }) => {
   const isFiltered = table.getState().columnFilters.length > 0;
@@ -96,7 +96,7 @@ const ProductTableToolbar = ({ table }) => {
     <>
       <div className="flex flex-wrap items-center justify-between gap-y-2">
         <div className="w-full">
-          <ProductTableFilterId column={table.getColumn("_id")} />
+          <ProductTableFilterSku column={table.getColumn("sku")} />
         </div>
         <div className="flex flex-1 flex-wrap items-center gap-x-2 gap-y-2">
           <FacetedFilter

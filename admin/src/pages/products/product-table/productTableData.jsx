@@ -15,7 +15,7 @@ export const productColumnFilter = {
   sale: "Sale",
   color: "Color",
   status: "Status",
-  _id: "ID",
+  sku: "SKU",
 };
 
 export const productColumns = [
@@ -44,11 +44,11 @@ export const productColumns = [
     enableHiding: false,
   },
   {
-    accessorKey: "_id",
-    accessorFn: (row) => row._id || "",
-    header: ({ column }) => <ColumnHeader column={column} title="ID" />,
+    accessorKey: "sku",
+    accessorFn: (row) => row.sku || "",
+    header: ({ column }) => <ColumnHeader column={column} title="SKU" />,
     cell: ({ row }) => (
-      <div className=" text-xs lowercase">{row.getValue("_id")}</div>
+      <div className=" text-xs lowercase">{row.getValue("sku")}</div>
     ),
   },
   {

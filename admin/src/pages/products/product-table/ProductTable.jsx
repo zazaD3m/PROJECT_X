@@ -25,7 +25,7 @@ const ProductTable = ({ data, columns }) => {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({
-    _id: false,
+    sku: false,
   });
   const [rowSelection, setRowSelection] = useState({});
 
