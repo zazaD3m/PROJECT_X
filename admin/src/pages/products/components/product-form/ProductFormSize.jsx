@@ -28,7 +28,6 @@ import { selectAllSizes } from "../../../../features/sizes/sizesApiSlice";
 const ProductFormSize = ({ control, setValue, watch }) => {
   const productSizeType = watch("productSizeType");
   const sizes = useSelector(selectAllSizes);
-
   return (
     <FormField
       control={control}
@@ -63,7 +62,8 @@ const ProductFormSize = ({ control, setValue, watch }) => {
                     {productSizeType ? (
                       sizes
                         .filter((s) => s.sizeType === productSizeType)[0]
-                        .sizeNames.map((productSize) => (
+                        .sizeNames.toSorted()
+                        .map((productSize) => (
                           <CommandItem
                             value={productSize}
                             key={productSize}

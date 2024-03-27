@@ -70,3 +70,18 @@ export const getMainCategories = asyncHandler(async (req, res) => {
 
   res.status(200).json(mainCategories);
 });
+
+// @desc Get all categories
+// route GET /api/categories
+export const deleteCategory = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateObjectId(id);
+
+  const deletedCategory = await Category.findByIdAndDelete(id, { new: true });
+
+  if (!deletedCategory) {
+    ThrowErr.ServerError();
+  }
+
+  res.status(201).json(deletedCategory);
+});

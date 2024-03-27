@@ -1,12 +1,13 @@
 import { Router } from "express";
 import {
   createCategory,
+  deleteCategory,
   getAllCategories,
   getMainCategories,
 } from "../../controllers/categoryController.js";
 import {
   categoryValidator,
-  // paramIdValidator,
+  paramIdValidator,
 } from "../../validations/validations.js";
 import { validate } from "../../middleware/validationMiddleware.js";
 
@@ -19,10 +20,8 @@ router
   .get(getAllCategories);
 
 router.route("/maincategories").get(getMainCategories);
-// router
-//   .route("/brand/:id")
-//   .put([paramIdValidator, brandValidator, validate], updateBrand)
-//   .delete([paramIdValidator, validate], deleteBrand)
-//   .get([paramIdValidator, validate], getBrand);
+router
+  .route("/category/:id")
+  .delete([paramIdValidator, validate], deleteCategory);
 
 export default router;

@@ -29,9 +29,6 @@ const categoriesApiSlice = apiSlice.injectEndpoints({
       query: () => `${CATEGORIES_URL}/maincategories`,
       providesTags: [{ type: "Category", id: "LIST" }],
     }),
-    // getColorById: builder.query({
-    //   query: (colorId) => `${COLORS_URL}/color/${colorId}`,
-    // }),
     createCategory: builder.mutation({
       query: (categoryData) => ({
         url: `${CATEGORIES_URL}`,
@@ -39,6 +36,15 @@ const categoriesApiSlice = apiSlice.injectEndpoints({
         body: categoryData,
       }),
       invalidatesTags: [{ type: "Category", id: "LIST" }],
+    }),
+    deleteCategory: builder.mutation({
+      query: ({ categoryId }) => ({
+        url: `${CATEGORIES_URL}/category/${categoryId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: "Category", id: "LIST" },
+      ],
     }),
     // updateColor: builder.mutation({
     //   query: ({ colorId, colorName, hexValue }) => ({
@@ -70,15 +76,6 @@ const categoriesApiSlice = apiSlice.injectEndpoints({
     //     { type: "Color", id: arg.colorId },
     //   ],
     // }),
-    // deleteColor: builder.mutation({
-    //   query: ({ colorId }) => ({
-    //     url: `${COLORS_URL}/color/${colorId}`,
-    //     method: "DELETE",
-    //   }),
-    //   invalidatesTags: (result, error, arg) => [
-    //     { type: "Color", id: arg.colorId },
-    //   ],
-    // }),
   }),
 });
 
@@ -86,6 +83,7 @@ export const {
   useGetCategoriesQuery,
   useCreateCategoryMutation,
   useGetMainCategoriesQuery,
+  useDeleteCategoryMutation,
 } = categoriesApiSlice;
 
 export const selectCategoriesResult =
