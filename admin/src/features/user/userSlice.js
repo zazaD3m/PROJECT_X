@@ -6,6 +6,8 @@ const userSlice = createSlice({
   initialState: {
     userInfo: null,
     siteInfo: { theme: "system" },
+    cart: [],
+    wishlist: [],
   },
   reducers: {
     setUser: (state, action) => {

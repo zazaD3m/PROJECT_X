@@ -53,7 +53,7 @@ const salesApiSlice = apiSlice.injectEndpoints({
         url: `${SALES_URL}/sale/${saleId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Sale"],
+      invalidatesTags: ["Sale", { type: "Product", id: "LIST" }],
     }),
   }),
 });

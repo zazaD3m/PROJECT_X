@@ -75,8 +75,6 @@ export const getAllSizesForFilter = asyncHandler(async (req, res) => {
     .map((s) => toNumber(s.sizeName))
     .toSorted((a, b) => a - b);
 
-  console.log(newSizes);
-
   res.status(200).json(newSizes);
 });
 

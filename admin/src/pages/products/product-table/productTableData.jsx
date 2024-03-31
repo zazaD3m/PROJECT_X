@@ -148,7 +148,9 @@ export const productColumns = [
       return (
         <RowActions>
           <DropdownMenuItem asChild>
-            <Link to={`editproduct/${product._id}`}>Edit Product</Link>
+            <Link target="_blank" to={`editproduct/${product._id}`}>
+              Edit Product
+            </Link>
           </DropdownMenuItem>
         </RowActions>
       );

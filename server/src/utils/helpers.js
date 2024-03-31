@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 export const isProduction = process.env.NODE_ENV === "production";
 
 export const formatUserInfo = (user, aT) => {
@@ -57,4 +59,8 @@ export const slugify = (string) => {
     .replace(/[^a-z0-9 -]/g, "")
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
+};
+
+export const generateObjectId = (id) => {
+  return new mongoose.Types.ObjectId(id);
 };

@@ -57,10 +57,22 @@ const productSchema = new Schema(
   { timestamps: true }
 );
 
-productSchema.pre("save", function (next) {
-  this.slug = this.slug + "-" + this._id;
-  this.sku = uniqid.time("p-");
-  next();
+productSchema.pre("save", async function (next) {
+  try {
+    // Update the slug if it doesn't already include the _id
+    if (!this.slug.includes("-" + this._id)) {
+      this.slug = this.slug + "-" + this._id;
+    }
+
+    // Generate SKU if it's not already set
+    if (!this.sku) {
+      this.sku = uniqid.time("p-");
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
 const Product = model("Product", productSchema, "products");

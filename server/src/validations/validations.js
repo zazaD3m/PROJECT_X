@@ -17,6 +17,16 @@ export const validateObjectId = (id) => {
   }
 };
 
+export const cartValidator = [
+  body("productId").notEmpty().trim().escape(),
+  checkExact(),
+];
+
+export const wishlistValidator = [
+  body("productId").notEmpty().trim().escape(),
+  checkExact(),
+];
+
 export const brandValidator = [
   body("brandName").notEmpty().trim().escape(),
   checkExact(),

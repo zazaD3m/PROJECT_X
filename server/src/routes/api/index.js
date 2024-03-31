@@ -20,7 +20,7 @@ router.use("/sizes", sizeRoutes);
 router.use("/images", authenticateUser, isAdmin, imageRoutes);
 router.use("/products", productRoutes);
 router.use("/sales", saleRoutes);
-router.use("/users", authenticateUser, isAdmin, userRoutes);
+router.use("/users", authenticateUser, userRoutes);
 
 router.all("*", (req, res, next) => {
   ThrowErr.NotFound(`Can't find ${req.originalUrl} on the server!`);
