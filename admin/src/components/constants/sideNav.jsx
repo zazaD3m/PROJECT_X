@@ -14,7 +14,7 @@ import {
 export const NAV_ITEMS = [
   {
     title: "Dashboard",
-    href: "/dashboard",
+    href: "/",
     icon: <BarChart3 size={26} />,
   },
   {

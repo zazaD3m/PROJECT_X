@@ -106,7 +106,7 @@ export const selectProductsData = createSelector(
 
 export const {
   selectAll: selectAllProducts, // maps over ids array, and returns sorted array of entities
-  selectById: selectProductById, // needs state and entity ID , returns entity with that ID
+  selectById: selectProductById, // needs state and entity ID , returns entity with that ID useSelector(state => selectProductById(state, id))
   selectEntities: selectProductEntities, // returns entities lookup table
   selectIds: selectProductIds, // selects array of ids
   selectTotal: selectTotalProducts, // returns total num of entities stored in state

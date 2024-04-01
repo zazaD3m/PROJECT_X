@@ -31,112 +31,118 @@ import EditProduct from "./pages/products/EditProduct";
 import AddSale from "./pages/sales/AddSale";
 // CATALOG COMPONENTS END
 
-import RequireAuth from "./components/RequireAuth";
+import PrivateRoute from "./components/PrivateRoute";
 import Loader from "./components/Loader";
 import RootLayout from "./components/layout/RootLayout";
-import SyncUserInfo from "./components/SyncUserInfo";
+import { store } from "./app/store";
+import { rehydrateState } from "./app/actions";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
-      <Route index element={<LoginPage />} />
-      <Route element={<RequireAuth />}>
-        <Route element={<SyncUserInfo />}>
-          <Route element={<RootLayout />}>
+      <Route path="login" element={<LoginPage />} />
+      <Route
+        element={
+          <PrivateRoute>
+            <RootLayout />
+          </PrivateRoute>
+        }
+      >
+        <Route
+          index
+          element={
+            <Suspense fallback={<Loader />}>
+              <DashboardPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="customers"
+          element={
+            <Suspense fallback={<Loader />}>
+              <CustomersPage />
+            </Suspense>
+          }
+        />
+        <Route path="promotion">
+          <Route path="sales">
+            <Route index element={<SalesPage />} />
+            <Route path="addsale" element={<AddSale />} />
+          </Route>
+        </Route>
+        <Route path="catalog">
+          <Route path="brands">
             <Route
-              path="dashboard"
+              index
               element={
                 <Suspense fallback={<Loader />}>
-                  <DashboardPage />
+                  <BrandsPage />
                 </Suspense>
               }
             />
+            <Route path="addbrand" element={<AddBrand />} />
+            <Route path="editbrand/:brandId" element={<EditBrand />} />
+          </Route>
+          <Route path="sizes">
             <Route
-              path="customers"
+              index
               element={
                 <Suspense fallback={<Loader />}>
-                  <CustomersPage />
+                  <SizesPage />
                 </Suspense>
               }
             />
-            <Route path="promotion">
-              <Route path="sales">
-                <Route index element={<SalesPage />} />
-                <Route path="addsale" element={<AddSale />} />
-              </Route>
+          </Route>
+          <Route path="colors">
+            <Route
+              index
+              element={
+                <Suspense fallback={<Loader />}>
+                  <ColorsPage />
+                </Suspense>
+              }
+            />
+            <Route path="addcolor" element={<AddColor />} />
+            <Route path="editcolor/:colorId" element={<EditColor />} />
+          </Route>
+          <Route path="categories">
+            <Route
+              index
+              element={
+                <Suspense fallback={<Loader />}>
+                  <CategoriesPage />
+                </Suspense>
+              }
+            />
+            <Route path="addcategory">
+              <Route index element={<AddCategory />} />
+              <Route path="addmaincategory" element={<AddMainCategory />} />
+              <Route path="addsubcategory" element={<AddSubCategory />} />
             </Route>
-            <Route path="catalog">
-              <Route path="brands">
-                <Route
-                  index
-                  element={
-                    <Suspense fallback={<Loader />}>
-                      <BrandsPage />
-                    </Suspense>
-                  }
-                />
-                <Route path="addbrand" element={<AddBrand />} />
-                <Route path="editbrand/:brandId" element={<EditBrand />} />
-              </Route>
-              <Route path="sizes">
-                <Route
-                  index
-                  element={
-                    <Suspense fallback={<Loader />}>
-                      <SizesPage />
-                    </Suspense>
-                  }
-                />
-              </Route>
-              <Route path="colors">
-                <Route
-                  index
-                  element={
-                    <Suspense fallback={<Loader />}>
-                      <ColorsPage />
-                    </Suspense>
-                  }
-                />
-                <Route path="addcolor" element={<AddColor />} />
-                <Route path="editcolor/:colorId" element={<EditColor />} />
-              </Route>
-              <Route path="categories">
-                <Route
-                  index
-                  element={
-                    <Suspense fallback={<Loader />}>
-                      <CategoriesPage />
-                    </Suspense>
-                  }
-                />
-                <Route path="addcategory">
-                  <Route index element={<AddCategory />} />
-                  <Route path="addmaincategory" element={<AddMainCategory />} />
-                  <Route path="addsubcategory" element={<AddSubCategory />} />
-                </Route>
-              </Route>
-              <Route path="products">
-                <Route
-                  index
-                  element={
-                    <Suspense fallback={<Loader />}>
-                      <ProductsPage />
-                    </Suspense>
-                  }
-                />
-                <Route path="addproduct" element={<AddProduct />} />
-                <Route
-                  path="editproduct/:productId"
-                  element={<EditProduct />}
-                />
-              </Route>
-            </Route>
+          </Route>
+          <Route path="products">
+            <Route
+              index
+              element={
+                <Suspense fallback={<Loader />}>
+                  <ProductsPage />
+                </Suspense>
+              }
+            />
+            <Route path="addproduct" element={<AddProduct />} />
+            <Route path="editproduct/:productId" element={<EditProduct />} />
           </Route>
         </Route>
       </Route>
     </Route>,
   ),
 );
+
+window.addEventListener("storage", (event) => {
+  if (event.key === "persist:root" && event.newValue) {
+    store.dispatch(rehydrateState());
+  }
+});
 
 function App() {
   return <RouterProvider router={router} />;

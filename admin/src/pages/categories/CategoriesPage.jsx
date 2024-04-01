@@ -32,7 +32,7 @@ const CategoriesPage = () => {
       <ContainerHeader>
         <ContainerTitle>All Categories</ContainerTitle>
         <Button asChild variant="outline" size="lg">
-          <Link to="/dashboard">Go Back To Dashboard</Link>
+          <Link to="/">Go Back To Dashboard</Link>
         </Button>
       </ContainerHeader>
       <ContainerContent>

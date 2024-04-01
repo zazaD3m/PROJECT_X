@@ -4,11 +4,11 @@ import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "../../ui/sheet";
 import NavigationMenu from "./NavigationMenu";
-import ThemeModeToggle from "../../ThemeModeToggle";
+import HeaderUserControl from "./HeaderUserControl";
 
 const Header = () => {
   return (
-    <header className="sticky top-0 z-20 flex h-14 items-center border-b bg-background px-4">
+    <header className="sticky top-0 z-20 flex h-14 w-screen items-center border-b bg-background px-4">
       <Sheet asChild>
         <SheetTrigger asChild>
           <Button variant="outline" size="icon">
@@ -28,7 +28,7 @@ const Header = () => {
         </Button>
       </div>
       <div className="ml-auto">
-        <ThemeModeToggle />
+        <HeaderUserControl />
       </div>
     </header>
   );

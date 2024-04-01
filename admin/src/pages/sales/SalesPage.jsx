@@ -21,7 +21,7 @@ const SalesPage = () => {
           <Link to="addsale">Add New Sale</Link>
         </Button>
         <Button asChild variant="outline" size="lg">
-          <Link to="/dashboard">Go Back To Dashboard</Link>
+          <Link to="/">Go Back To Dashboard</Link>
         </Button>
       </ContainerHeader>
       <ContainerContent>

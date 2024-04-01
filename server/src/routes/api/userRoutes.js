@@ -14,10 +14,13 @@ import {
   cartValidator,
   wishlistValidator,
 } from "../../validations/validations.js";
+import { getMe } from "../../controllers/userController.js";
 
 const router = Router();
 
 router.route("/").get([isAdmin], getAllUsers);
+
+router.route("/user").get(getMe);
 
 router
   .route("/user/wishlist")

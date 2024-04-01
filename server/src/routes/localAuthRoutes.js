@@ -1,6 +1,5 @@
 import { Router } from "express";
 import {
-  getMe,
   loginUser,
   logoutUser,
   refresh,
@@ -39,8 +38,5 @@ router.put(
 
 // @desc - give user new access token
 router.get("/refresh-token", refresh);
-
-// @desc - give back user info
-router.get("/me", authenticateUser, getMe);
 
 export default router;

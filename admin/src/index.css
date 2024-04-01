@@ -109,6 +109,9 @@ input[type="number"] {
     @apply border-border;
   }
   body {
-    @apply bg-background-main text-foreground;
+    @apply min-h-screen overflow-x-clip bg-background-main text-foreground;
+  }
+  #root {
+    @apply relative flex min-h-screen flex-col;
   }
 }

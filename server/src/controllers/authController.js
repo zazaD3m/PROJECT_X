@@ -8,7 +8,7 @@ import {
   generateGoogleToken,
   generateAccessToken,
 } from "../services/jwt.js";
-import { formatAdminInfo, formatUserInfo } from "../utils/helpers.js";
+import { formatUserInfo } from "../utils/helpers.js";
 import { ThrowErr } from "../utils/CustomError.js";
 
 // @desc    Register a new user
@@ -28,9 +28,7 @@ export const registerUser = asyncHandler(async (req, res) => {
   generateRefreshToken(res, _id);
   const accessToken = generateAccessToken(_id);
 
-  const formatedUser = formatUserInfo(newUser, accessToken);
-
-  return res.status(201).json(formatedUser);
+  return res.status(201).json({ accessToken });
 });
 
 // @desc    login user/set token
@@ -48,9 +46,7 @@ export const loginUser = asyncHandler(async (req, res) => {
   generateRefreshToken(res, foundUser._id);
   const accessToken = generateAccessToken(foundUser._id);
 
-  const formatedUser = formatUserInfo(foundUser, accessToken);
-
-  return res.status(201).json(formatedUser);
+  return res.status(201).json({ accessToken });
 });
 
 // @desc    Login admin/set token
@@ -76,9 +72,7 @@ export const loginAdmin = asyncHandler(async (req, res) => {
   generateRefreshToken(res, foundUser._id);
   const accessToken = generateAccessToken(foundUser._id);
 
-  const formatedUser = formatAdminInfo(foundUser, accessToken);
-
-  return res.status(201).json(formatedUser);
+  return res.status(201).json({ accessToken });
 });
 
 // @desc    Logout user
@@ -149,16 +143,6 @@ export const refresh = asyncHandler(async (req, res) => {
   const accessToken = generateAccessToken(userId);
 
   return res.status(201).json({ accessToken });
-});
-
-// @desc    Get userInfo using authMiddleware
-// route    GET /api/auth/me
-// @access Private
-export const getMe = asyncHandler(async (req, res) => {
-  const userInfo = req.user;
-  const formatedUser = formatUserInfo(userInfo);
-
-  return res.status(200).json(formatedUser);
 });
 
 // GOOGLE AUTH START

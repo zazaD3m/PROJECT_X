@@ -2,6 +2,7 @@ import { apiSlice } from "../api/apiSlice";
 import { clearCredentials, setCredentials } from "./authSlice";
 import { clearUser, setUser } from "../user/userSlice";
 import { AUTH_URL } from "../../lib/constants";
+import { userApiSlice } from "../user/userApiSlice";
 
 // this will inject endpoints into main apiSlice
 const authApiSlice = apiSlice.injectEndpoints({
@@ -35,14 +36,14 @@ const authApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const res = await queryFulfilled;
-          const { accessToken, userInfo } = res.data;
-
+          const { accessToken } = res.data;
           dispatch(setCredentials({ accessToken }));
-          dispatch(setUser({ userInfo }));
+          dispatch(userApiSlice.endpoints.getMe.initiate());
         } catch (err) {
           console.log("devERR:", err);
           dispatch(clearCredentials());
           dispatch(clearUser());
+          dispatch(apiSlice.util.resetApiState());
         }
       },
     }),
@@ -102,24 +103,6 @@ const authApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
-    getMe: builder.mutation({
-      query: () => ({
-        url: `${AUTH_URL}/me`,
-        method: "GET",
-      }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const res = await queryFulfilled;
-          const { userInfo } = res.data;
-
-          dispatch(setUser({ userInfo }));
-        } catch (err) {
-          dispatch(clearCredentials());
-          dispatch(clearUser());
-          console.log("devERR:", err);
-        }
-      },
-    }),
   }),
 });
 
@@ -128,6 +111,5 @@ export const {
   useAdminLoginMutation,
   useLogoutMutation,
   useRegisterMutation,
-  useGetMeMutation,
   useUpdateUserMutation,
 } = authApiSlice;

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Button } from "../../components/ui/button";
 import { CardContent, CardFooter } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
@@ -16,7 +17,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 const loginSchema = yup.object({
   password: yup.string().required("Password is required"),
@@ -24,10 +24,7 @@ const loginSchema = yup.object({
 });
 
 const LoginForm = () => {
-  const navigate = useNavigate();
-
-  const [login, { isError, isLoading, isSuccess, error }] =
-    useAdminLoginMutation();
+  const [login, { isError, isLoading }] = useAdminLoginMutation();
 
   const form = useForm({
     defaultValues: {
@@ -40,18 +37,15 @@ const LoginForm = () => {
 
   const { handleSubmit, control, reset } = form;
 
-  async function onSubmit(data) {
-    await login(data);
+  function onSubmit(data) {
+    login(data);
   }
 
   useEffect(() => {
     if (isError) {
       reset();
     }
-    if (isSuccess) {
-      navigate("/dashboard");
-    }
-  }, [isError, isSuccess, reset, navigate]);
+  }, [isError]);
 
   return (
     <>
@@ -80,7 +74,6 @@ const LoginForm = () => {
                 )}
               />
             </div>
-            {/* <input type="email" /> */}
             <div className="grid gap-2">
               <FormField
                 control={control}
@@ -101,7 +94,9 @@ const LoginForm = () => {
           </CardContent>
           <CardFooter className="flex-col gap-y-4">
             {isError ? (
-              <div className="text-destructive">{error.data.message}</div>
+              <div className="text-destructive">
+                Email or Password incorrect
+              </div>
             ) : null}
             {isLoading ? (
               <Loader />

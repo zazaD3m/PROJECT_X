@@ -35,7 +35,7 @@ const ProductsPage = () => {
       <ContainerHeader>
         <ContainerTitle>All Products</ContainerTitle>
         <Button asChild variant="outline" size="lg">
-          <Link to="/dashboard">Go Back To Dashboard</Link>
+          <Link to="/">Go Back To Dashboard</Link>
         </Button>
       </ContainerHeader>
       <ContainerContent>
