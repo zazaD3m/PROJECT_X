@@ -2,7 +2,11 @@ import { isObjectIdOrHexString } from "mongoose";
 import { body, checkExact, param } from "express-validator";
 import { ThrowErr } from "../utils/CustomError.js";
 import { slugify } from "../utils/helpers.js";
-import { PRODUCT_STATUS } from "../utils/constants.js";
+import {
+  PRODUCT_GENDER,
+  PRODUCT_STATUS,
+  SHIPPING_FEE,
+} from "../utils/constants.js";
 
 export const validateObjectId = (id) => {
   let isValid;
@@ -18,70 +22,89 @@ export const validateObjectId = (id) => {
 };
 
 export const cartValidator = [
-  body("productId").notEmpty().trim().escape(),
+  body("productId").isString().notEmpty().trim().escape(),
+  checkExact(),
+];
+
+export const cartShippingValidator = [
+  body("shippingType")
+    .isString()
+    .notEmpty()
+    .trim()
+    .escape()
+    .isIn(Object.keys(SHIPPING_FEE)),
   checkExact(),
 ];
 
 export const wishlistValidator = [
-  body("productId").notEmpty().trim().escape(),
+  body("productId").isString().notEmpty().trim().escape(),
   checkExact(),
 ];
 
 export const brandValidator = [
-  body("brandName").notEmpty().trim().escape(),
+  body("brandName").isString().notEmpty().trim().escape(),
   checkExact(),
 ];
 
 export const sizeValidator = [
-  body("sizeType").notEmpty().trim().escape(),
-  body("sizeName").notEmpty().trim().escape(),
+  body("sizeType").isString().notEmpty().trim().escape(),
+  body("sizeName").isString().notEmpty().trim().escape(),
   checkExact(),
 ];
 
 export const saleValidator = [
-  body("saleName").notEmpty().trim().escape(),
-  body("expiry").notEmpty().trim().escape(),
-  body("saleAmount").notEmpty().trim().escape().isNumeric(),
+  body("saleName").isString().notEmpty().trim().escape(),
+  body("expiry").isString(),
+  body("saleAmount").notEmpty().trim().isNumeric(),
   checkExact(),
 ];
 
 export const productValidator = [
-  body("description").notEmpty().trim().escape(),
-  body("title").notEmpty().trim().escape(),
-  body("brand").notEmpty().trim().escape(),
-  body("color").notEmpty().trim().escape(),
-  body("gender").notEmpty().trim().escape(),
-  body("mainCategory").notEmpty().trim().escape(),
-  body("subCategory").notEmpty().trim().escape(),
-  body("slug").notEmpty().trim().escape().customSanitizer(slugify),
-  body("price").notEmpty().trim().escape().toInt(),
+  body("description").isString().notEmpty().trim().escape(),
+  body("title").isString().notEmpty().trim().escape(),
+  body("brand").isString().notEmpty().trim().escape(),
+  body("color").isString().notEmpty().trim().escape(),
+  body("gender").isString().notEmpty().trim().escape(),
+  body("mainCategory").isString().notEmpty().trim().escape(),
+  body("subCategory").isString().notEmpty().trim().escape(),
+  body("slug").isString().notEmpty().trim().escape().customSanitizer(slugify),
+  body("price").isString().notEmpty().trim().escape().toInt(),
 ];
 
 export const productStatusValidator = [
-  body("productStatus").notEmpty().trim().escape().isIn(PRODUCT_STATUS),
+  body("productStatus")
+    .isString()
+    .notEmpty()
+    .trim()
+    .escape()
+    .isIn(PRODUCT_STATUS),
 ];
 
 export const colorValidator = [
-  body("colorName").notEmpty().trim().escape(),
-  body("hexValue").notEmpty().trim().escape(),
+  body("colorName").isString().notEmpty().trim().escape(),
+  body("hexValue").isString().notEmpty().trim().escape(),
   checkExact(),
 ];
 
 export const categoryValidator = [
-  body("mainCategoryName").notEmpty().trim().escape(),
+  body("mainCategoryName").isString().notEmpty().trim().escape(),
   body("isMainCategory").isBoolean(),
   body("subCategoryName")
     .optional({ values: "falsy" })
+    .isString()
     .notEmpty()
     .trim()
     .escape(),
   body("genderName")
+    .isString()
     .notEmpty()
     .trim()
     .escape()
-    .isIn(["woman", "man", "girl", "boy"])
+    .isIn(PRODUCT_GENDER)
     .toLowerCase(),
   checkExact(),
 ];
 
-export const paramIdValidator = [param("id").notEmpty().trim().escape()];
+export const paramIdValidator = [
+  param("id").isString().notEmpty().trim().escape(),
+];

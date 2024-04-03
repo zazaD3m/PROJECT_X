@@ -1,4 +1,5 @@
 import mongoose, { Schema, model } from "mongoose";
+import { SHIPPING_FEE } from "../utils/constants.js";
 
 const { ObjectId } = mongoose.Schema.Types;
 
@@ -11,6 +12,16 @@ const cartSchema = new Schema({
     type: Number,
     default: 0,
   },
+  shipping: {
+    type: {
+      type: String,
+      default: "standard",
+    },
+    fee: {
+      type: Number,
+      default: 5,
+    },
+  },
   products: [
     {
       type: ObjectId,
@@ -18,6 +29,7 @@ const cartSchema = new Schema({
     },
   ],
   cartFor: {
+    index: true,
     type: ObjectId,
     ref: "User",
   },
@@ -50,6 +62,16 @@ cartSchema.pre("save", async function (next) {
     // Set the calculated totals
     this.total = total;
     this.totalAfterDiscount = parseFloat(totalAfterDiscount.toFixed(1));
+
+    if (totalAfterDiscount >= SHIPPING_FEE.minPriceForFreeType) {
+      if (this.shipping.type === "standard") {
+        this.shipping = SHIPPING_FEE.free;
+      }
+    } else {
+      if (this.shipping.type === "free") {
+        this.shipping = SHIPPING_FEE.standard;
+      }
+    }
 
     next();
   } catch (error) {

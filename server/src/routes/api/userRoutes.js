@@ -1,20 +1,13 @@
 import { Router } from "express";
-// import { validate } from "../../middleware/validationMiddleware.js";
 import {
   getAllUsers,
-  addProductToCart,
-  getUserCart,
-  removeProductFromUserCart,
   addProductToWishlist,
   removeProductFromWishlist,
+  getMe,
 } from "../../controllers/userController.js";
 import { isAdmin } from "../../middleware/authMiddleware.js";
 import { validate } from "../../middleware/validationMiddleware.js";
-import {
-  cartValidator,
-  wishlistValidator,
-} from "../../validations/validations.js";
-import { getMe } from "../../controllers/userController.js";
+import { wishlistValidator } from "../../validations/validations.js";
 
 const router = Router();
 
@@ -26,11 +19,5 @@ router
   .route("/user/wishlist")
   .put([wishlistValidator, validate], addProductToWishlist)
   .delete([wishlistValidator, validate], removeProductFromWishlist);
-
-router
-  .route("/user/cart")
-  .get(getUserCart)
-  .put([cartValidator, validate], addProductToCart)
-  .delete([cartValidator, validate], removeProductFromUserCart);
 
 export default router;

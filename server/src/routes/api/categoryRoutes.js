@@ -13,7 +13,6 @@ import { validate } from "../../middleware/validationMiddleware.js";
 
 const router = Router();
 
-// /api/categories/
 router
   .route("/")
   .post([categoryValidator, validate], createCategory)

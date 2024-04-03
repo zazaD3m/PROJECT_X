@@ -13,3 +13,21 @@ export const API_URL = isProduction
   : process.env.API_URL_DEV;
 
 export const PRODUCT_STATUS = ["forsale", "hidden", "sold"];
+
+export const PRODUCT_GENDER = ["woman", "man", "girl", "boy"];
+
+export const SHIPPING_FEE = {
+  free: {
+    type: "free",
+    fee: 0,
+  },
+  standard: {
+    type: "standard",
+    fee: 5,
+  },
+  express: {
+    type: "express",
+    fee: 10,
+  },
+  minPriceForFreeType: 150,
+};

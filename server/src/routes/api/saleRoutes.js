@@ -2,9 +2,7 @@ import { Router } from "express";
 import {
   createSale,
   getAllSales,
-  // updateSale,
   deleteSale,
-  // getSale,
 } from "../../controllers/saleController.js";
 import {
   saleValidator,
@@ -22,12 +20,10 @@ router
 
 router
   .route("/sale/:id")
-  // .put([paramIdValidator, saleValidator, validate], updateSale)
   .delete(
     [authenticateUser, isAdmin],
     [paramIdValidator, validate],
     deleteSale
   );
-// .get([paramIdValidator, validate], getSale);
 
 export default router;
