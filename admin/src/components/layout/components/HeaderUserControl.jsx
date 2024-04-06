@@ -47,8 +47,3 @@ const HeaderUserControl = () => {
   );
 };
 export default HeaderUserControl;
-
-// <Button variant="outline" size="icon" onClick={() => {}}>
-//       <User />
-//     </Button>
-//     <ThemeModeToggle />

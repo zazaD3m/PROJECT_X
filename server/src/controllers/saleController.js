@@ -14,9 +14,7 @@ export const createSale = asyncHandler(async (req, res) => {
     ThrowErr.ServerError();
   }
 
-  const { saleName, saleAmount, expiry } = newSale;
-
-  return res.status(201).json({ saleName, saleAmount, expiry });
+  return res.status(201).json(newSale);
   // return res.status(201).json({ message: "success" });
 });
 
@@ -55,12 +53,15 @@ export const deleteSale = asyncHandler(async (req, res) => {
     }
   }
 
+  // if (sale.saleType === "discount") {
   await Sale.findOneAndUpdate(
     { saleName: "no sale" },
     {
       $push: { products: { $each: productIds } },
     }
   );
+  // }
+
   const deletedSale = await sale.deleteOne();
 
   if (deletedSale.deletedCount !== 1) {

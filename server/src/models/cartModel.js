@@ -12,16 +12,6 @@ const cartSchema = new Schema({
     type: Number,
     default: 0,
   },
-  shipping: {
-    type: {
-      type: String,
-      default: "standard",
-    },
-    fee: {
-      type: Number,
-      default: 5,
-    },
-  },
   products: [
     {
       type: ObjectId,
@@ -62,16 +52,6 @@ cartSchema.pre("save", async function (next) {
     // Set the calculated totals
     this.total = total;
     this.totalAfterDiscount = parseFloat(totalAfterDiscount.toFixed(1));
-
-    if (totalAfterDiscount >= SHIPPING_FEE.minPriceForFreeType) {
-      if (this.shipping.type === "standard") {
-        this.shipping = SHIPPING_FEE.free;
-      }
-    } else {
-      if (this.shipping.type === "free") {
-        this.shipping = SHIPPING_FEE.standard;
-      }
-    }
 
     next();
   } catch (error) {

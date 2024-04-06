@@ -110,7 +110,7 @@ export const updateProductSale = asyncHandler(async (req, res) => {
 
   const sale = await Sale.findById(saleId);
 
-  if (!sale) {
+  if (!sale || sale.saleType === "coupon") {
     ThrowErr.ServerError();
   }
 

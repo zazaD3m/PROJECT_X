@@ -5,6 +5,7 @@ import { slugify } from "../utils/helpers.js";
 import {
   PRODUCT_GENDER,
   PRODUCT_STATUS,
+  SALE_TYPE,
   SHIPPING_FEE,
 } from "../utils/constants.js";
 
@@ -24,6 +25,25 @@ export const validateObjectId = (id) => {
 export const cartValidator = [
   body("productId").isString().notEmpty().trim().escape(),
   checkExact(),
+];
+
+export const orderValidator = [
+  body("shippingInfoType")
+    .isString()
+    .notEmpty()
+    .trim()
+    .escape()
+    .isIn(Object.keys(SHIPPING_FEE)),
+  body("shippingInfoFee").notEmpty().trim().isNumeric().toFloat(),
+  body("shippingInfoFirstName").isString().notEmpty().trim().escape(),
+  body("shippingInfoLastName").isString().notEmpty().trim().escape(),
+  body("shippingInfoCity").isString().notEmpty().trim().escape(),
+  body("shippingInfoAddress").isString().notEmpty().trim().escape(),
+  body("shippingInfoPhoneNumber").isString().notEmpty().trim().escape(),
+  body("totalPrice").notEmpty().trim().isNumeric().toFloat(),
+  body("totalPriceAfterDiscount").notEmpty().trim().isNumeric().toFloat(),
+  body("orderItems").isArray(),
+  // checkExact(),
 ];
 
 export const cartShippingValidator = [
@@ -54,8 +74,9 @@ export const sizeValidator = [
 
 export const saleValidator = [
   body("saleName").isString().notEmpty().trim().escape(),
+  // body("saleType").isString().notEmpty().trim().escape().isIn(SALE_TYPE),
   body("expiry").isString(),
-  body("saleAmount").notEmpty().trim().isNumeric(),
+  body("saleAmount").notEmpty().trim().isNumeric().toFloat(),
   checkExact(),
 ];
 

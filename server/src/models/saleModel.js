@@ -7,6 +7,9 @@ const saleSchema = new Schema({
   saleAmount: {
     type: Number,
   },
+  // saleType: {
+  //   type: String,
+  // },
   products: [
     {
       type: Schema.Types.ObjectId,

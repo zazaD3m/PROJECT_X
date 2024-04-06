@@ -31,3 +31,14 @@ export const SHIPPING_FEE = {
   },
   minPriceForFreeType: 150,
 };
+
+export const SALE_TYPE = ["coupon", "discount"];
+
+export const ORDER_STATUS = [
+  "Initial",
+  "paid",
+  "Awaiting dispatch",
+  "Dispatched",
+  "Delivered",
+  "Cancelled",
+];

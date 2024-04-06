@@ -11,6 +11,7 @@ import saleRoutes from "./saleRoutes.js";
 import sizeRoutes from "./sizeRoutes.js";
 import imageRoutes from "./imageRoutes.js";
 import cartRoutes from "./cartRoutes.js";
+import orderRoutes from "./orderRoutes.js";
 
 const router = Router();
 
@@ -23,6 +24,7 @@ router.use("/products", productRoutes);
 router.use("/sales", saleRoutes);
 router.use("/users", authenticateUser, userRoutes);
 router.use("/carts", authenticateUser, cartRoutes);
+router.use("/orders", authenticateUser, orderRoutes);
 
 router.all("*", (req, res, next) => {
   ThrowErr.NotFound(`Can't find ${req.originalUrl} on the server!`);
