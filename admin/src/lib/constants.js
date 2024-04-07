@@ -6,4 +6,5 @@ export const COLORS_URL = "/colors";
 export const USERS_URL = "/users";
 export const CATEGORIES_URL = "/categories";
 export const PRODUCTS_URL = "/products";
+export const ORDERS_URL = "/orders";
 export const PRODUCT_IMAGES_URL = "/images/product";
