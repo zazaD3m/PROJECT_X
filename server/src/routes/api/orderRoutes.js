@@ -3,6 +3,9 @@ import {
   createOrder,
   getAllOrders,
   deleteOrder,
+  getOrderById,
+  getAllUserOrders,
+  updateOrder,
 } from "../../controllers/orderController.js";
 import {
   orderValidator,
@@ -18,8 +21,12 @@ router
   .post([orderValidator, validate], createOrder)
   .get([isAdmin], getAllOrders);
 
+router.route("/user-orders").get(getAllUserOrders);
+
 router
   .route("/order/:id")
-  .delete([isAdmin], [paramIdValidator, validate], deleteOrder);
+  .delete([isAdmin], [paramIdValidator, validate], deleteOrder)
+  .get([isAdmin], [paramIdValidator, validate], getOrderById)
+  .put([isAdmin], [paramIdValidator, validate], updateOrder);
 
 export default router;

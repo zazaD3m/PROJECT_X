@@ -45,9 +45,6 @@ export const createOrder = asyncHandler(async (req, res) => {
     orderItems,
   };
 
-  console.log(typeof totalPriceAfterDiscount);
-  console.log(typeof shippingInfoFee);
-
   let newOrder = await Order.create(newOrderObject);
 
   newOrder = await newOrder.populate([
@@ -74,9 +71,25 @@ export const getAllOrders = asyncHandler(async (req, res) => {
   res.status(200).json(orders);
 });
 
-// @desc Delete order and reset products to order: 0
-// route DELETE /api/orders/order/:orderId
-export const deleteOrder = asyncHandler(async (req, res) => {
+// @desc Get user's all orders
+// route GET /api/orders/user-orders
+export const getAllUserOrders = asyncHandler(async (req, res) => {
+  const { _id: userId } = req.user;
+
+  const userOrders = await Order.find({ user: userId }).populate([
+    { path: "orderItems", select: "price sale slug title size images.1" },
+  ]);
+
+  if (!userOrders) {
+    ThrowErr.ServerError();
+  }
+
+  res.status(200).json(userOrders);
+});
+
+// @desc Get order by id
+// route GET /api/orders/order/:orderId
+export const getOrderById = asyncHandler(async (req, res) => {
   const { id: orderId } = req.params;
   validateObjectId(orderId);
 
@@ -85,32 +98,39 @@ export const deleteOrder = asyncHandler(async (req, res) => {
   if (!order) {
     ThrowErr.ServerError();
   }
-  const productIds = order.products;
 
-  if (productIds?.length > 0) {
-    const updatedProducts = await Product.updateMany(
-      { _id: { $in: productIds } },
-      { $set: { order: { orderAmount: 0, orderName: "no order" } } }
-    );
-    if (updatedProducts.matchedCount !== updatedProducts.modifiedCount) {
-      ThrowErr.ServerError();
-    }
-  }
+  res.status(200).json(order);
+});
 
-  if (order.orderType === "discount") {
-    await Order.findOneAndUpdate(
-      { orderName: "no order" },
-      {
-        $push: { products: { $each: productIds } },
-      }
-    );
-  }
+// @desc Delete order
+// route DELETE /api/orders/order/:orderId
+export const updateOrder = asyncHandler(async (req, res) => {
+  const { id: orderId } = req.params;
+  validateObjectId(orderId);
 
-  const deletedOrder = await order.deleteOne();
+  const updatedOrder = await Order.findByIdAndUpdate(
+    { _id: orderId },
+    req.body
+  );
 
-  if (deletedOrder.deletedCount !== 1) {
+  if (!updatedOrder) {
     ThrowErr.ServerError();
   }
 
-  res.status(200).json(order);
+  res.status(201).json(updatedOrder);
+});
+
+// @desc Delete order
+// route DELETE /api/orders/order/:orderId
+export const deleteOrder = asyncHandler(async (req, res) => {
+  const { id: orderId } = req.params;
+  validateObjectId(orderId);
+
+  const order = await Order.findByIdAndDelete(orderId);
+
+  if (!order) {
+    ThrowErr.ServerError();
+  }
+
+  res.status(201).json(order);
 });
