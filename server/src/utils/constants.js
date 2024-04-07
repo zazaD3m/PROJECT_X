@@ -36,7 +36,7 @@ export const SALE_TYPE = ["coupon", "discount"];
 
 export const ORDER_STATUS = [
   "Initial",
-  "paid",
+  "Paid",
   "Awaiting dispatch",
   "Dispatched",
   "Delivered",

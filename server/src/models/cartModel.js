@@ -31,9 +31,7 @@ cartSchema.pre("save", async function (next) {
       next();
     }
     // Populate products and calculate totals
-    await this.populate([
-      { path: "products", select: "price sale slug title size images.1" },
-    ]);
+    await this.populate([{ path: "products", select: "price sale" }]);
 
     let total = 0;
     let totalAfterDiscount = 0;

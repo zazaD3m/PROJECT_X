@@ -102,15 +102,16 @@ export const getOrderById = asyncHandler(async (req, res) => {
   res.status(200).json(order);
 });
 
-// @desc Delete order
-// route DELETE /api/orders/order/:orderId
+// @desc Update order
+// route PUT /api/orders/order/:orderId
 export const updateOrder = asyncHandler(async (req, res) => {
   const { id: orderId } = req.params;
   validateObjectId(orderId);
 
   const updatedOrder = await Order.findByIdAndUpdate(
     { _id: orderId },
-    req.body
+    req.body,
+    { new: true }
   );
 
   if (!updatedOrder) {
